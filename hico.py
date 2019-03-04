@@ -26,7 +26,6 @@ class Frame:
         S = ''
         for i in self.nest: S += i.gen() + '\n'
         return S
-
         
 class Primitive(Frame): pass
 
@@ -34,21 +33,48 @@ class String(Primitive):
     def gen(self):
         return self.value
     
+class Container(Frame): pass
+
+class Group(Container): pass
+    
 class IO(Frame): pass
     
 class File(IO):
     def gen(self):
         return self.head() + '\n\n' + Frame.gen(self)
+    
+class Meta(Frame): pass
 
-class Project(Frame): pass
+class Project(Meta): pass
 
 hico = Project('hico')
 readme = File('README.md') ; hico // readme 
-readme // '# hico' // '## homoiconic Python bootstrap' // '' // '(c) Dmitry Ponyatov <dponyatov@gmail.com> CC BY-NC-ND' // '' // 'github: https://github.com/ponyatov/hico'
+readme // '# hico' // '## homoiconic Python bootstrap' // '' // '(c) Dmitry Ponyatov <<dponyatov@gmail.com>> CC BY-NC-ND' // '' // 'github: https://github.com/ponyatov/hico'
 
 gitignore = File('.gitignore') ; hico // gitignore
 gitignore // '*~' // '*.swp' // '*.pyc' // '*.log'
 
+eclipse = Group('Eclipse') ; hico // eclipse
+e_project = File('.project') ; eclipse // e_project
+e_project // '''<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+    <name>hico</name>
+    <comment></comment>
+    <projects>
+    </projects>
+    <buildSpec>
+        <buildCommand>
+            <name>org.python.pydev.PyDevBuilder</name>
+            <arguments>
+            </arguments>
+        </buildCommand>
+    </buildSpec>
+    <natures>
+        <nature>org.python.pydev.pythonNature</nature>
+    </natures>
+</projectDescription>'''
+
 print hico.gen()
 
-print hico
+# print e_project.gen()
+
