@@ -1,0 +1,2 @@
+# hico
+homoiconic Python bootstrap
