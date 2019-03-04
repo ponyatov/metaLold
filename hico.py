@@ -46,6 +46,9 @@ hico = Project('hico')
 readme = File('README.md') ; hico // readme 
 readme // '# hico' // '## homoiconic Python bootstrap' // '' // '(c) Dmitry Ponyatov <dponyatov@gmail.com> CC BY-NC-ND' // '' // 'github: https://github.com/ponyatov/hico'
 
+gitignore = File('.gitignore') ; hico // gitignore
+gitignore // '*~' // '*.swp' // '*.pyc' // '*.log'
+
 print hico.gen()
 
 print hico
