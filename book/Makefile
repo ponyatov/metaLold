@@ -1,5 +1,6 @@
 TEX  = hico.tex header.tex
-TEX += intro/intro.tex intro/denial.tex intro/meta.tex intro/homoiconic.tex
+TEX += intro/intro.tex intro/denial.tex intro/meta.tex 
+TEX += intro/brooks.tex intro/lop.tex intro/homoiconic.tex
 TEX += frames/frames.tex
 TEX += forth/forth.tex
 TEX += bib/bib.tex
