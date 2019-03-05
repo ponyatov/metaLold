@@ -25,8 +25,8 @@
 % xcolor fixes
 \usepackage{xcolor}
 \definecolor{red}{rgb}{0.7,0,0}
-\definecolor{green}{rgb}{0,0.6,0}
-\definecolor{blue}{rgb}{0,0,0.7}
+\definecolor{green}{rgb}{0,0.3,0}
+\definecolor{blue}{rgb}{0,0,0.5}
 \definecolor{magenta}{rgb}{0.7,0,0.7}
 
 % Cyrillization
@@ -64,7 +64,7 @@
 %% typical macros
 \newcommand{\email}[1]{$<$\href{mailto:#1}{#1}$>$}
 \newcommand{\note}[1]{\footnote{\ #1}}
-\renewcommand{\emph}[1]{\textcolor{blue}{\textbf{#1}}}
+\renewcommand{\emph}[1]{\textcolor{blue}{#1}}
 \newcommand{\cp}[1]{\note{\copyright\ #1}}
 \newcommand{\term}[1]{\textcolor{green}{\textit{#1}}}
 \newcommand{\termdef}[2]{\textcolor{red}{\textbf{\textit{#1}}}\index{#2}}
@@ -75,3 +75,22 @@
 \newcommand{\java}{$Java$}
 \newcommand{\py}{$Python$}
 \newcommand{\lisp}{$Lisp$}
+
+%% listings
+\usepackage{verbatim}
+\usepackage{listings}
+\lstset{
+basicstyle=\small,
+frame=single,
+numbers=left,numberstyle=\small,numbersep=2mm,
+xleftmargin=3mm,xrightmargin=2mm,
+tabsize=4,
+keywordstyle=\color{red},
+commentstyle=\color{blue},
+extendedchars=\true
+}
+\newcounter{lstcounter}
+\newcommand{\lst}[2]{\refstepcounter{lstcounter}
+	\noindent\\\begin{minipage}{\textwidth}
+	\lstinputlisting[#2]{#1}
+	\end{minipage}\\}
