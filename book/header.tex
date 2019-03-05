@@ -11,8 +11,23 @@
 \usepackage{titlesec}
 \titleformat{\chapter}{\Large\bfseries}{\thechapter.}{1em}{}
 \titleformat{\section}{\large\bfseries}{\thesection.}{1em}{}
+%% fix first blank page
+\usepackage{atbegshi}% http://ctan.org/pkg/atbegshi
+\AtBeginDocument{\AtBeginShipoutNext{\AtBeginShipoutDiscard}}
 % graphics
 \usepackage[pdftex]{graphicx}
+\newcommand{\fig}[2]{\noindent\includegraphics[#2]{#1}}
+
+%% bibliography
+%\usepackage{titlesec}
+\newcommand{\bibfig}[1]{\fig{#1}{height=.6\textheight}}
+
+% xcolor fixes
+\usepackage{xcolor}
+\definecolor{red}{rgb}{0.7,0,0}
+\definecolor{green}{rgb}{0,0.6,0}
+\definecolor{blue}{rgb}{0,0,0.7}
+\definecolor{magenta}{rgb}{0.7,0,0.7}
 
 % Cyrillization
 %% \usepackage[T1,T2A]{fontenc}
@@ -38,3 +53,15 @@
 \addcontentsline{toc}{section}{#1}
 }
 
+
+% misc
+%% [nosep] option in lists/enums
+\usepackage{enumitem}
+
+%% typical macros
+\newcommand{\email}[1]{$<$\href{mailto:#1}{#1}$>$}
+\newcommand{\note}[1]{\footnote{\ #1}}
+\renewcommand{\emph}[1]{\textcolor{blue}{\textbf{#1}}}
+\newcommand{\cp}[1]{\note{\copyright\ #1}}
+\newcommand{\term}[1]{\textcolor{green}{\textit{#1}}}
+\newcommand{\termdef}[2]{\textcolor{red}{\textbf{\textit{#1}}}\index{#2}}
