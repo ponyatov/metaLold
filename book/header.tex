@@ -1,0 +1,40 @@
+% e-book
+% Universal LaTeX headers for e-book publications
+\documentclass[oneside,10pt]{book}
+%% mobile phone optimized
+\usepackage[paperwidth=118.8mm,paperheight=68.2mm,margin=2mm]{geometry}
+%% font setup for screen reading
+\renewcommand{\familydefault}{\sfdefault}\normalfont
+%% hyperlinks pdf style
+\usepackage[unicode,colorlinks=true]{hyperref}
+%% fix heading styles for tiny paper
+\usepackage{titlesec}
+\titleformat{\chapter}{\Large\bfseries}{\thechapter.}{1em}{}
+\titleformat{\section}{\large\bfseries}{\thesection.}{1em}{}
+% graphics
+\usepackage[pdftex]{graphicx}
+
+% Cyrillization
+%% \usepackage[T1,T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+%% \usepackage[cp1251]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{indentfirst}
+
+% relative sectioning
+\usepackage{ifthen}
+\newcounter{secdepth}\setcounter{secdepth}{0}
+\newcommand{\secup}{\addtocounter{secdepth}{1}}
+\newcommand{\secdown}{\addtocounter{secdepth}{-1}}
+\newcommand{\secrel}[1]{
+\ifthenelse{\equal{\value{secdepth}}{0}}{\part{#1}}{}
+\ifthenelse{\equal{\value{secdepth}}{-1}}{\chapter{#1}}{}
+\ifthenelse{\equal{\value{secdepth}}{-2}}{\section{#1}}{}
+\ifthenelse{\equal{\value{secdepth}}{-3}}{\subsection{#1}}{}
+\ifthenelse{\equal{\value{secdepth}}{-4}}{\subsubsection{#1}}{}
+}
+\newcommand{\secly}[1]{
+\section*{#1}
+\addcontentsline{toc}{section}{#1}
+}
+
