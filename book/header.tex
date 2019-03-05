@@ -20,7 +20,7 @@
 
 %% bibliography
 %\usepackage{titlesec}
-\newcommand{\bibfig}[1]{\fig{#1}{height=.6\textheight}}
+\newcommand{\bibfig}[1]{\fig{#1}{height=.56\textheight}}
 
 % xcolor fixes
 \usepackage{xcolor}
@@ -52,7 +52,10 @@
 \section*{#1}
 \addcontentsline{toc}{section}{#1}
 }
-
+\newcommand{\subsecly}[1]{
+\subsection*{#1}
+\addcontentsline{toc}{subsection}{#1}
+}
 
 % misc
 %% [nosep] option in lists/enums
@@ -65,3 +68,10 @@
 \newcommand{\cp}[1]{\note{\copyright\ #1}}
 \newcommand{\term}[1]{\textcolor{green}{\textit{#1}}}
 \newcommand{\termdef}[2]{\textcolor{red}{\textbf{\textit{#1}}}\index{#2}}
+
+% comp
+\newcommand{\emc}{$C$}
+\newcommand{\cpp}{$C^{+_+}$}
+\newcommand{\java}{$Java$}
+\newcommand{\py}{$Python$}
+\newcommand{\lisp}{$Lisp$}
