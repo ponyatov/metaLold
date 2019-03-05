@@ -19,7 +19,9 @@ class Frame:
         for j in self.nest: S += j.dump(depth+1)
         return S
     def head(self,prefix=''):
-        return '%s<%s:%s> @%x' % (prefix, self.type, self.value, id(self))
+        return '%s<%s:%s> @%x' % (prefix, self.type, self.str(), id(self))
+    def str(self):
+        return self.value
     def pad(self,padding):
         return '\n'+'\t'*padding
     
@@ -38,6 +40,8 @@ class Frame:
     def pop(self): return self.nest.pop()
     def dropall(self): self.nest = []
     
+    def execute(self): S // self
+    
     def gen(self):
         S = ''
         for i in self.nest: S += i.gen() + '\n'
@@ -49,7 +53,14 @@ class Primitive(Frame):
 
 class Symbol(Primitive): pass
 
-class String(Primitive): pass
+class String(Primitive):
+    def str(self):
+        S = ''
+        for c in self.value:
+            if c == '\n': S += '\\n'
+            elif c == '\t': S += '\\t'
+            else: S += c
+        return S
     
 class Container(Frame): pass
 
@@ -80,11 +91,33 @@ class File(IO):
     def gen(self):
         return self.head() + '\n\n' + Frame.gen(self)
     
+
+import ply.lex as lex
+
+tokens = ['symbol']
+
+t_ignore = ' \t\r\n'
+
+def t_symbol(t):
+    r'[a-zA-Z0-9_.]+'
+    return Symbol(t.value)
+
+def t_error(t): return SyntaxError(t)
+
+lexer = lex.lex()
+
+S = Stack('DATA')
+W = Dict('WORDS') ; W['W'] = W
+
+def DROPALL(): S.dropall()
+W['.'] = DROPALL
+
 class Meta(Frame): pass
 
 class Project(Meta): pass
 
-hico = Project('hico')
+hico = W['META'] = Project('hico')
+
 readme = File('README.md') ; hico // readme 
 readme // '# hico' // '## homoiconic Python bootstrap' // '' // '(c) Dmitry Ponyatov <<dponyatov@gmail.com>> CC BY-NC-ND' // '' // 'github: https://github.com/ponyatov/hico'
 
@@ -110,26 +143,6 @@ e_project // '''<?xml version="1.0" encoding="UTF-8"?>
         <nature>org.python.pydev.pythonNature</nature>
     </natures>
 </projectDescription>'''
-
-import ply.lex as lex
-
-tokens = ['symbol']
-
-t_ignore = ' \t\r\n'
-
-def t_symbol(t):
-    r'[a-zA-Z0-9_.]+'
-    return Symbol(t.value)
-
-def t_error(t): return SyntaxError(t)
-
-lexer = lex.lex()
-
-S = Stack('DATA')
-W = Dict('WORDS') ; W['W'] = W
-
-def DROPALL(): S.dropall()
-W['.'] = DROPALL
 
 def WORD():
     token = lexer.token()
