@@ -1,0 +1,1 @@
+S = Stack('DATA')
