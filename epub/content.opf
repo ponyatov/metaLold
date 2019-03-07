@@ -5,10 +5,11 @@
    xmlns:dcterms="http://purl.org/dc/terms/"
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xmlns:opf="http://www.idpf.org/2007/opf"> 
-  <dc:title>Моя первая книга</dc:title>
-  <dc:creator>Me</dc:creator>
+  <dc:title>HICO: пишем язык программирования на Python</dc:title>
+  <dc:creator>Dmitry Ponyatov dponyatov@gmail.com</dc:creator>
   <dc:identifier id="BookId">mybook123</dc:identifier>
   <dc:date>2010-12-19</dc:date>
+  <dc:language>ru</dc:language>
   <meta name="cover" content="cover-image"/>
  </metadata>
  <manifest>

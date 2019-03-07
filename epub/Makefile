@@ -1,4 +1,5 @@
 # https://www.kv.by/archive/index2010503001.htm
+# https://github.com/w3c/epubcheck/releases/tag/v4.1.1
 
 SRC  = META-INF/container.xml
 SRC += content.html
