@@ -12,7 +12,7 @@ TEX += dyna/dyna.tex dyna/llvm.tex
 TEX += prolog/prolog.tex
 TEX += bib/bib.tex
 
-LST  = lst/frame.py
+LST  = lst/frame.py lst/prim.py lst/string.py lst/symbol.py lst/number.py
 
 LATEX = pdflatex -halt-on-error
 

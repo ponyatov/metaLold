@@ -1,0 +1,1 @@
+class Primitive(Frame): pass
