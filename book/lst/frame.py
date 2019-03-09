@@ -12,5 +12,4 @@ class Frame:
         self.nest  = []
  
 print Frame('hello')
-
 <frame:hello>
