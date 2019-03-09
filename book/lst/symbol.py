@@ -1,1 +1,0 @@
-class Symbol(Primitive): pass
