@@ -4,6 +4,8 @@ TEX += intro/brooks.tex intro/lop.tex intro/homoiconic.tex
 TEX += frames/frames.tex
 TEX += forth/forth.tex
 TEX += web/web.tex
+TEX += dyna/dyna.tex dyna/llvm.tex
+TEX += prolog/prolog.tex
 TEX += bib/bib.tex
 
 LST  = lst/frame.py
