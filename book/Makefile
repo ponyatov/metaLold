@@ -1,7 +1,11 @@
 TEX  = hico.tex header.tex
+
 TEX += intro/intro.tex intro/denial.tex intro/meta.tex 
 TEX += intro/brooks.tex intro/lop.tex intro/homoiconic.tex
-TEX += frames/frames.tex
+
+TEX += frames/frames.tex frames/frame.tex frames/dump.tex
+TEX += frames/prim.tex frames/string.tex frames/symbol.tex frames/number.tex
+
 TEX += forth/forth.tex
 TEX += web/web.tex
 TEX += dyna/dyna.tex dyna/llvm.tex
