@@ -16,7 +16,7 @@ TEX += bib/bib.tex
 LST  = frames/frame.py 
 LST += frames/prim.py frames/string.py frames/symbol.py frames/number.py
 LST += frames/stack.py frames/dict.py frames/container.py
-LST += forth/parser.py forth/lexer.py
+LST += forth/parser.py forth/lexer.py forth/inter.py forth/repl.py
 
 LATEX = pdflatex -halt-on-error
 

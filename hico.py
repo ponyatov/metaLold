@@ -62,9 +62,7 @@ class String(Primitive):
             else: S += c
         return S
     
-class Number(Primitive):
-    def __init__(self,N):
-        Primitive.__init__(self,float(N))
+class Number(Primitive): pass
     
 class Container(Frame): pass
 
@@ -104,7 +102,7 @@ t_ignore = ' \t\r\n'
 
 def t_number(t):
     r'[\+\-]?[0-9]+'
-    return Number(t.value)
+    return Number(int(t.value))
 
 def t_symbol(t):
     r'[a-zA-Z0-9_.]+'
@@ -152,18 +150,21 @@ e_project // '''<?xml version="1.0" encoding="UTF-8"?>
     </natures>
 </projectDescription>'''
 
+# ( -- token )
 def WORD():
     token = lexer.token()
     if not token: return False
     S // token ; return True
 W << WORD
     
+# ( token -- object|token )
 def FIND():
     T = S.pop()
-    try: S // W[T.value] ; return True
+    try: S // W[T.value]    ; return True
     except KeyError: S // T ; return False
 W << FIND
     
+# ( object -- ... )
 def EXECUTE():
     S.pop().execute()
 W << EXECUTE

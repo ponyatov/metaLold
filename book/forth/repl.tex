@@ -1,6 +1,42 @@
 \secrel{Интерпретатор}
 
-\lst{forth/word.py}{language=Python}
-\lst{forth/find.py}{language=Python}
-\lst{forth/execute.py}{language=Python}
 \lst{forth/repl.py}{language=Python}
+
+\noindent
+REPL реализуется в виде бесконечного цикла:
+\begin{itemize}[nosep]
+  \item вывод стека перез запросом команды
+  \item чтение команды, \emph{при нажатии Ctrl-D срабатывает исключение EOF}
+  \item запуск \verb|INTERPRET|
+\end{itemize}
+и запускается непосредственно из модуля исходного кода.
+
+\bigskip
+\lst{forth/inter.py}{language=Python}
+
+\noindent
+\verb|INTERPRET| получает строку из стека, загружая ее в лексер
+\verb|lexer.input()|
+
+\noindent
+После инициализации лексера запускается бесконечный цикл
+\begin{description}[nosep]
+\item[WORD] \verb|( -- token )| в \pyf\ \emph{отличается от классического \F}\\
+получает следующий токен от лексера,\\и не принимает на вход
+символ-разделитель, как это сделано в \F\\
+\verb|return| возвращает \verb|False| если лексер закончил разбор\\
+\lst{forth/word.py}{language=Python}
+\item[FIND] \verb$( token -- object|token )$\\
+поиск в словаре выполняется по имени любого объекта, возвращаемого методом
+\verb|str()|\\
+если объект в словаре не найден, на стеке возвращается оригинальный токен\\
+\verb|return| возвращает флаг успешности поиска, который используется в \py\
+коде\\
+\lst{forth/find.py}{language=Python}
+\item[EXECUTE] \verb|( object -- ... )|\\
+объект выполняется, примитивные типы вычисляются сами в себя, базовый
+\verb|Frame| вызывает выполенение вложенных элементов (рекурсивно)
+\end{description}
+
+\bigskip
+\lst{forth/execute.py}{language=Python}

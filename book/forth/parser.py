@@ -6,7 +6,7 @@ t_ignore = ' \t\r\n'
 
 def t_number(t):
     r'[\+\-]?[0-9]+'
-    return Number(t.value)
+    return Number(int(t.value))
 
 def t_symbol(t):
     r'[a-zA-Z0-9_.]+'
