@@ -62,7 +62,9 @@ class String(Primitive):
             else: S += c
         return S
     
-class Number(Primitive): pass
+class Number(Primitive):
+    def __init__(self,N):
+        Primitive.__init__(self,float(N))
     
 class Container(Frame): pass
 
@@ -96,9 +98,13 @@ class File(IO):
 
 import ply.lex as lex
 
-tokens = ['symbol']
+tokens = ['symbol','number']
 
 t_ignore = ' \t\r\n'
+
+def t_number(t):
+    r'[\+\-]?[0-9]+'
+    return Number(t.value)
 
 def t_symbol(t):
     r'[a-zA-Z0-9_.]+'
