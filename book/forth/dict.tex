@@ -1,0 +1,15 @@
+\secrel{Словарь}\label{fdict}
+
+\lst{forth/words.py}{language=Python}
+
+\noindent
+Для добавления в словарь элементов, определенных на \py\ нужно добавить пару
+методов, переопределяющих операторы:
+\begin{description}
+\item[{dict[slot]=function}] создает словарную статью с произвольным именем
+\item[dict << function] создает словарную статью используя имя функции
+\item[VM(function)] обертывает функцию во фрейм \ref{vm}
+\end{description}
+
+\medskip
+\lst{frames/dict.py}{language=Python}
