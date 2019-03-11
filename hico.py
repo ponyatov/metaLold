@@ -122,33 +122,33 @@ class Meta(Frame): pass
 
 class Project(Meta): pass
 
-hico = W['META'] = Project('hico')
-
-readme = File('README.md') ; hico // readme 
-readme // '# hico' // '## homoiconic Python bootstrap' // '' // '(c) Dmitry Ponyatov <<dponyatov@gmail.com>> CC BY-NC-ND' // '' // 'github: https://github.com/ponyatov/hico'
-
-gitignore = File('.gitignore') ; hico // gitignore
-gitignore // '*~' // '*.swp' // '*.pyc' // '*.log'
-
-eclipse = Group('Eclipse') ; hico // eclipse
-e_project = File('.project') ; eclipse // e_project
-e_project // '''<?xml version="1.0" encoding="UTF-8"?>
-<projectDescription>
-    <name>hico</name>
-    <comment></comment>
-    <projects>
-    </projects>
-    <buildSpec>
-        <buildCommand>
-            <name>org.python.pydev.PyDevBuilder</name>
-            <arguments>
-            </arguments>
-        </buildCommand>
-    </buildSpec>
-    <natures>
-        <nature>org.python.pydev.pythonNature</nature>
-    </natures>
-</projectDescription>'''
+# hico = W['META'] = Project('hico')
+# 
+# readme = File('README.md') ; hico // readme 
+# readme // '# hico' // '## homoiconic Python bootstrap' // '' // '(c) Dmitry Ponyatov <<dponyatov@gmail.com>> CC BY-NC-ND' // '' // 'github: https://github.com/ponyatov/hico'
+# 
+# gitignore = File('.gitignore') ; hico // gitignore
+# gitignore // '*~' // '*.swp' // '*.pyc' // '*.log'
+# 
+# eclipse = Group('Eclipse') ; hico // eclipse
+# e_project = File('.project') ; eclipse // e_project
+# e_project // '''<?xml version="1.0" encoding="UTF-8"?>
+# <projectDescription>
+#     <name>hico</name>
+#     <comment></comment>
+#     <projects>
+#     </projects>
+#     <buildSpec>
+#         <buildCommand>
+#             <name>org.python.pydev.PyDevBuilder</name>
+#             <arguments>
+#             </arguments>
+#         </buildCommand>
+#     </buildSpec>
+#     <natures>
+#         <nature>org.python.pydev.pythonNature</nature>
+#     </natures>
+# </projectDescription>'''
 
 # ( -- token )
 def WORD():
