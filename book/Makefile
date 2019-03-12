@@ -10,6 +10,7 @@ TEX += frames/prim.tex frames/string.tex frames/symbol.tex frames/number.tex
 TEX += frames/container.tex frames/stack.tex frames/dict.tex
 
 TEX += forth/forth.tex forth/dict.tex forth/ply.tex forth/repl.tex
+TEX += forth/cmdline.tex
 TEX += web/web.tex
 TEX += dyna/dyna.tex dyna/llvm.tex
 TEX += prolog/prolog.tex
@@ -19,6 +20,7 @@ LST  = frames/frame.py
 LST += frames/prim.py frames/string.py frames/symbol.py frames/number.py
 LST += frames/stack.py frames/dict.py frames/container.py
 LST += forth/parser.py forth/lexer.py forth/inter.py forth/repl.py
+LST += forth/cmdline.py
 
 LATEX = pdflatex -halt-on-error
 
