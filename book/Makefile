@@ -12,7 +12,7 @@ TEX += frames/container.tex frames/stack.tex frames/dict.tex
 TEX += forth/forth.tex forth/dict.tex forth/ply.tex forth/repl.tex
 TEX += forth/cmdline.tex
 TEX += web/web.tex
-TEX += dyna/dyna.tex dyna/llvm.tex
+TEX += dyna/dyna.tex dyna/llvm.tex dyna/managed.tex
 TEX += prolog/prolog.tex
 TEX += bib/bib.tex
 
