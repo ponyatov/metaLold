@@ -1,1 +1,24 @@
 \secrel{Установка}\label{install}
+
+\url{https://github.com/ponyatov/hico/releases/latest}
+
+\begin{verbatim}
+~$ git clone [-b master] https://github.com/ponyatov/hico.git
+~$ cd hico
+~/hico$ python ./hico,py
+\end{verbatim}
+
+Интерпретатор написан на диалекте \py 2, также в системе должны быть установлены
+библиотеки
+
+\begin{verbatim}
+~$ sudo pip install --upgrade pip
+~$ sudo pip install ply
+\end{verbatim}
+
+Для использования веб-интерфейса
+
+\begin{verbatim}
+~$ sudo pip install flask wtforms
+\end{verbatim}
+
