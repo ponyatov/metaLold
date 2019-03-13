@@ -14,6 +14,10 @@ TEX += forth/cmdline.tex
 TEX += web/web.tex
 TEX += dyna/dyna.tex dyna/llvm.tex dyna/managed.tex
 TEX += prolog/prolog.tex
+
+TEX += mcu/mcu.tex mcu/arduino.tex mcu/msp430.tex mcu/cortex.tex
+TEX += linux/linux.tex event/event.tex
+
 TEX += bib/bib.tex
 
 LST  = frames/frame.py 
