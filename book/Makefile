@@ -15,8 +15,10 @@ TEX += web/web.tex
 TEX += dyna/dyna.tex dyna/llvm.tex dyna/managed.tex
 TEX += prolog/prolog.tex
 
-TEX += mcu/mcu.tex mcu/arduino.tex mcu/msp430.tex mcu/cortex.tex
+TEX += mcu/mcu.tex mcu/ardu/ino.tex mcu/msp/msp.tex mcu/arm/cortex.tex
 TEX += linux/linux.tex event/event.tex
+
+FIG += mcu/ardu/micro.png mcu/ardu/uno.jpg mcu/ardu/nano.jpg
 
 TEX += bib/bib.tex
 
