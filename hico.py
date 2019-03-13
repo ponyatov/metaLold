@@ -100,6 +100,8 @@ tokens = ['symbol','number']
 
 t_ignore = ' \t\r\n'
 
+t_ignore_comment = r'[\#\\].*'
+
 def t_number(t):
     r'[\+\-]?[0-9]+'
     return Number(int(t.value))
@@ -119,6 +121,16 @@ def DROPALL(): S.dropall()
 W['.'] = DROPALL
 
 class Meta(Frame): pass
+
+class Class(Meta): pass
+
+def CLASS():
+    WORD() ; S // Class(S.pop().str()) ; W << S.top()
+W['class'] = CLASS
+
+def SUPER():
+    WORD() ; FIND() ; T = S.pop() ; S.top()['super'] = Class(T.str())
+W['super'] = SUPER
 
 class Project(Meta): pass
 
