@@ -125,12 +125,22 @@ class Meta(Frame): pass
 class Class(Meta): pass
 
 def CLASS():
-    WORD() ; S // Class(S.pop().str()) ; W << S.top()
-W['class'] = CLASS
+    # forward symbol lookup
+    WORD()
+    # push new class created from top symbol
+    S // Class(S.pop().str())
+    # copy created class to global vocabulary
+    W << S.top()
+W << CLASS
 
 def SUPER():
-    WORD() ; FIND() ; T = S.pop() ; S.top()['super'] = Class(T.str())
-W['super'] = SUPER
+    # copy superclass from stack
+    super = S.top()
+    # create new class on stack
+    CLASS()
+    # create superclass slot
+    S.top()['super'] = super 
+W << SUPER
 
 class Project(Meta): pass
 
@@ -172,8 +182,10 @@ W << WORD
 # ( token -- object|token )
 def FIND():
     T = S.pop()
-    try: S // W[T.value]    ; return True
-    except KeyError: S // T ; return False
+    try: S // W[T.str()]             ; return True
+    except KeyError:
+        try: S // W[T.str().upper()] ; return True
+        except KeyError: S // T      ; return False
 W << FIND
     
 # ( object -- ... )
