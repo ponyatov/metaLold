@@ -18,6 +18,8 @@ TEX += prolog/prolog.tex
 TEX += mcu/mcu.tex mcu/ardu/ino.tex mcu/msp/msp.tex mcu/arm/cortex.tex
 TEX += linux/linux.tex event/event.tex
 
+TEX += code/in.tex code/emcin.tex
+
 FIG += mcu/ardu/micro.png mcu/ardu/uno.jpg mcu/ardu/nano.jpg
 
 TEX += bib/bib.tex
