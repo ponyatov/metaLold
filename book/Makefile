@@ -18,7 +18,10 @@ TEX += prolog/prolog.tex
 TEX += mcu/mcu.tex mcu/ardu/ino.tex mcu/msp/msp.tex mcu/arm/cortex.tex
 TEX += linux/linux.tex event/event.tex
 
-TEX += code/in.tex code/emcin.tex os/os.tex
+TEX += code/in.tex code/emcin.tex
+
+TEX += os/os.tex os/boot.tex os/sched.tex os/files.tex
+TEX += os/net.tex os/user.tex os/gui.tex
 
 FIG += mcu/ardu/micro.png mcu/ardu/uno.jpg mcu/ardu/nano.jpg
 
