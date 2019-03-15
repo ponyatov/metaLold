@@ -284,22 +284,28 @@ W << DEF
 
 ########################################################################## math
 
-def ADD(): B = S.pop() ; A = S.pop() ; S // A.add(B)
+def ADD():
+	B = S.pop() ; A = S.pop() ; S // A.add(B)
 W['+'] = VM(ADD)
 
-def SUB(): B = S.pop() ; A = S.pop() ; S // A.sub(B)
+def SUB():
+	B = S.pop() ; A = S.pop() ; S // A.sub(B)
 W['-'] = VM(SUB)
 
-def MUL(): B = S.pop() ; A = S.pop() ; S // A.mul(B)
+def MUL():
+	B = S.pop() ; A = S.pop() ; S // A.mul(B)
 W['*'] = VM(MUL)
 
-def DIV(): B = S.pop() ; A = S.pop() ; S // A.div(B)
+def DIV():
+	B = S.pop() ; A = S.pop() ; S // A.div(B)
 W['/'] = VM(DIV)
 
-def MOD(): B = S.pop() ; A = S.pop() ; S // A.mod(B)
+def MOD():
+	B = S.pop() ; A = S.pop() ; S // A.mod(B)
 W['%'] = VM(MOD)
 
-def NEG(): B = S.pop() ; A = S.pop() ; S // A.neg()
+def NEG():
+	B = S.pop() ; A = S.pop() ; S // A.neg()
 W << NEG
 
 ############################################################### METAPROGRAMMING
