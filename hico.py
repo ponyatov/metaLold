@@ -71,6 +71,8 @@ class Frame:
         S = ''
         for i in self.nest: S += i.gen() + '\n'
         return S
+
+##################################################################### primitive
         
 class Primitive(Frame):
     def gen(self):
@@ -113,6 +115,8 @@ class Hex(Integer):
 
 class Bin(Integer):
 	def str(self): return bin(self.value)
+
+##################################################################### container
     
 class Container(Frame): pass
 
@@ -127,6 +131,8 @@ class Dict(Container):
     def __lshift__(self,obj):
         if callable(obj): self << VM(obj) ; return self
         else: return Container.__lshift__(self, obj)
+
+######################################################################## active
         
 class Active(Frame): pass
 
@@ -136,6 +142,8 @@ class VM(Active):
         self.fn = F
     def execute(self):
         self.fn()
+
+############################################################################ io
     
 class IO(Frame): pass
     
@@ -319,7 +327,7 @@ def CLASS():
     WORD()
     # push new class created from top symbol
     S // Class(S.pop().str())
-    # copy created class to global vocabulary
+    # register created class in global vocabulary
     W << S.top()
 W << CLASS
 
