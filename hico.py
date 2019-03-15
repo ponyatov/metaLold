@@ -105,6 +105,14 @@ class Number(Primitive):
 		else: raise TypeError(obj)
 	def neg(self):
 		return Number(-self.value)
+
+class Integer(Number): pass
+
+class Hex(Integer):
+	def str(self): return '0x%X' % self.value
+
+class Bin(Integer):
+	def str(self): return bin(self.value)
     
 class Container(Frame): pass
 
@@ -146,11 +154,19 @@ S = Stack('DATA') ; W['S'] = S
 
 import ply.lex as lex
 
-tokens = ['symbol','number']
+tokens = ['symbol','number','hex','bin']
 
 t_ignore = ' \t\r\n'
 
 t_ignore_comment = r'[\#\\].*'
+
+def t_hex(t):
+	r'0x[0-9a-fA-F]+'
+	return Hex(int(t.value[2:],0x10))
+
+def t_bin(t):
+	r'0b[01]+'
+	return Bin(int(t.value[2:],0x02))
 
 def t_number(t):
     r'[\+\-]?[0-9]+'
