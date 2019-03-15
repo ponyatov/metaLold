@@ -1,7 +1,7 @@
 def REPL():
     while True:
-        print W ; print S ; print
-        try: S // String(raw_input('hico> '))
-        except EOFError: sys.exit()
+        print S
+        try: S // String(raw_input('hico> ')) ; INTERPRET()
+        except EOFError: BYE()
         INTERPRET()
 REPL()

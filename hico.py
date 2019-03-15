@@ -59,6 +59,7 @@ class Frame:
     def push(self,obj): self.nest.append(obj) ; return self
     def dup(self): self.push(self.top()) ; return self
     def drop(self): self.pop() ; return self
+    def press(self): del self.nest[-2] ; return self
     def swap(self):
         B = self.pop() ; A = self.pop() ; self // B // A ; return self
         
@@ -113,10 +114,18 @@ class VM(Active):
     
 class IO(Frame): pass
     
+class Dir(IO): pass
 class File(IO):
     def gen(self):
         return self.head() + '\n\n' + Frame.gen(self)
-    
+
+######################################################################### FORTH
+
+W = Dict('FORTH') ; W['W'] = W
+
+S = Stack('DATA') ; W['S'] = S
+
+######################################################################### lexer
 
 import ply.lex as lex
 
@@ -131,18 +140,116 @@ def t_number(t):
     return Number(int(t.value))
 
 def t_symbol(t):
-    r'[a-zA-Z0-9_.]+'
+    r'`|[^ \t\r\n\#\\]+'
     return Symbol(t.value)
 
-def t_error(t): return SyntaxError(t)
+def t_error(t): raise SyntaxError(t)
 
 lexer = lex.lex()
 
-S = Stack('DATA')
-W = Dict('WORDS') ; W['W'] = W
+################################################################### interpreter
 
-def DROPALL(): S.dropall()
-W['.'] = DROPALL
+def QUOTE():
+    WORD()
+W['`'] = VM(QUOTE)
+
+def WORD():
+    token = lexer.token()
+    if not token: return False
+    S // token ; return True
+W << WORD
+    
+def FIND():
+    token = S.pop()
+    try: S // W[token.str()]             ; return True
+    except KeyError:
+        try: S // W[token.str().upper()] ; return True
+        except KeyError: S // token      ; return False
+W << FIND
+    
+def EXECUTE():
+    S.pop().execute()
+W << EXECUTE
+
+def INTERPRET():
+    lexer.input(S.pop().value)
+    while True:
+        if not WORD(): break;
+        if isinstance(S.top(),Symbol):
+            if FIND(): EXECUTE()
+            else: raise SyntaxError(S.pop())
+W << INTERPRET
+
+def REPL():
+    while True:
+        print S
+        try: S // String(raw_input('hico> ')) ; INTERPRET()
+        except EOFError: BYE()
+W << REPL
+        
+########################################################################## i/o
+        
+def FILE():
+    WORD() ; S // File(S.pop().value) ; W << S.top() 
+W << FILE
+
+def DIR():
+    WORD() ; S // Dir(S.pop().value) ; W << S.top() 
+W << DIR
+
+######################################################################### debug
+
+def BYE():
+    sys.exit(0)
+W << BYE    
+
+def Sdot():
+    print S
+W['?'] = VM(Sdot)
+
+def WORDS():
+    print W
+W << WORDS
+
+def DumpExit():
+    WORDS() ; Sdot() ; BYE()
+W['??'] = VM(DumpExit)
+
+################################################################### stack fluff
+
+def DUP(): S.dup()
+W << DUP
+
+def DROP(): S.drop()
+W << DROP
+
+def SWAP(): S.swap()
+W << SWAP
+
+def PRESS(): S.press()
+W << PRESS
+
+def DOT():
+    S.dropall()
+W['.'] = VM(DOT)
+
+################################################################# manipulations
+
+def PUSH():
+    B = S.pop() ; S.top() // B
+W['//'] = VM(PUSH)
+
+def RSHIFT():
+    WORD() ; FIND() ; B = S.pop() ; A = S.pop() ; A >> B
+W['>>'] = VM(RSHIFT)
+
+################################################################### definitions
+
+def DEF():
+    W << S.top()
+W << DEF
+
+############################################################### METAPROGRAMMING
 
 class Meta(Frame): pass
 
@@ -195,45 +302,9 @@ class Project(Meta): pass
 #         <nature>org.python.pydev.pythonNature</nature>
 #     </natures>
 # </projectDescription>'''
-
-# ( -- token )
-def WORD():
-    token = lexer.token()
-    if not token: return False
-    S // token ; return True
-W << WORD
-    
-# ( token -- object|token )
-def FIND():
-    T = S.pop()
-    try: S // W[T.str()]             ; return True
-    except KeyError:
-        try: S // W[T.str().upper()] ; return True
-        except KeyError: S // T      ; return False
-W << FIND
-    
-# ( object -- ... )
-def EXECUTE():
-    S.pop().execute()
-W << EXECUTE
-    
-def INTERPRET():
-    lexer.input(S.pop().value)
-    while True:
-        if not WORD(): break;
-        if isinstance(S.top(),Symbol):
-            if FIND(): EXECUTE()
-W << INTERPRET
-
-def REPL():
-    while True:
-        print W ; print S ; print
-        try: S // String(raw_input('hico> '))
-        except EOFError: sys.exit()
-        INTERPRET()
         
-############################## system init ##############################        
-        
+########################################################################## INIT
+
 if __name__ == '__main__':
     ini = sys.argv[0][:-3]+'.ini'
     for source in [ini] + sys.argv[1:]:
