@@ -3,16 +3,22 @@
 
 import sys
 
+######################################################################## FRAMES
+
 class Frame:
+    
     def __init__(self,V):
         self.type  = self.__class__.__name__.lower()
         self.value = V
         self.attr  = {}
         self.nest  = []
+        
+    ### dump
+                
     def __repr__(self):
         return self.dump()
     dumped = []
-    def dump(self,depth=0,prefix=''):
+    def dump(self, depth=0, prefix=''):
         S = self.pad(depth) + self.head(prefix)
         if not depth: Frame.dumped = []
         if self in Frame.dumped: return S + ' ...'
@@ -24,23 +30,39 @@ class Frame:
         return '%s<%s:%s> @%x' % (prefix, self.type, self.str(), id(self))
     def str(self):
         return self.value
-    def pad(self,padding):
-        return '\n'+'\t'*padding
+    def pad(self, N):
+        return '\n' + '\t' * N
+    
+    ### operators override
     
     def __floordiv__(self,obj):
         if isinstance(obj,str): self.nest.append(String(obj))
         else: self.nest.append(obj)
         return self
+    def __rshift__(self,obj):
+        obj << self ; return self
     def __lshift__(self,obj):
-        self.attr[obj.value] = obj ; return self
+        if callable(obj):
+            return self << VM(obj)
+        else:
+            self.attr[obj.value] = obj ; return self
     def __getitem__(self,slot):
         return self.attr[slot]
     def __setitem__(self,slot,obj):
         self.attr[slot] = obj ; return self
         
+    ## manipulations
+        
     def top(self): return self.nest[-1]
     def pop(self): return self.nest.pop()
     def dropall(self): self.nest = []
+    def push(self,obj): self.nest.append(obj) ; return self
+    def dup(self): self.push(self.top()) ; return self
+    def drop(self): self.pop() ; return self
+    def swap(self):
+        B = self.pop() ; A = self.pop() ; self // B // A ; return self
+        
+    ## processing
     
     def execute(self): S // self
     
