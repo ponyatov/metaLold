@@ -1,3 +1,5 @@
+## Python/FORTH metaprogramming language implementation
+## (c) Dmitry Ponyatov <dponyatov@gmail.com> CC BY-NC-ND
 
 import sys
 
