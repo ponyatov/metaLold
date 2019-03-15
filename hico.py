@@ -51,7 +51,7 @@ class Frame:
     def __setitem__(self,slot,obj):
         self.attr[slot] = obj ; return self
         
-    ## manipulations
+    ## stack manipulations
         
     def top(self): return self.nest[-1]
     def pop(self): return self.nest.pop()
@@ -87,7 +87,24 @@ class String(Primitive):
             else: S += c
         return S
     
-class Number(Primitive): pass
+class Number(Primitive):
+	def add(self,obj):
+		if isinstance(obj,Number): return Number(self.value + obj.value)
+		else: raise TypeError(obj)
+	def sub(self,obj):
+		if isinstance(obj,Number): return Number(self.value - obj.value)
+		else: raise TypeError(obj)
+	def mul(self,obj):
+		if isinstance(obj,Number): return Number(self.value * obj.value)
+		else: raise TypeError(obj)
+	def div(self,obj):
+		if isinstance(obj,Number): return Number(self.value / obj.value)
+		else: raise TypeError(obj)
+	def mod(self,obj):
+		if isinstance(obj,Number): return Number(self.value % obj.value)
+		else: raise TypeError(obj)
+	def neg(self):
+		return Number(-self.value)
     
 class Container(Frame): pass
 
@@ -248,6 +265,26 @@ W['>>'] = VM(RSHIFT)
 def DEF():
     W << S.top()
 W << DEF
+
+########################################################################## math
+
+def ADD(): B = S.pop() ; A = S.pop() ; S // A.add(B)
+W['+'] = VM(ADD)
+
+def SUB(): B = S.pop() ; A = S.pop() ; S // A.sub(B)
+W['-'] = VM(SUB)
+
+def MUL(): B = S.pop() ; A = S.pop() ; S // A.mul(B)
+W['*'] = VM(MUL)
+
+def DIV(): B = S.pop() ; A = S.pop() ; S // A.div(B)
+W['/'] = VM(DIV)
+
+def MOD(): B = S.pop() ; A = S.pop() ; S // A.mod(B)
+W['%'] = VM(MOD)
+
+def NEG(): B = S.pop() ; A = S.pop() ; S // A.neg()
+W << NEG
 
 ############################################################### METAPROGRAMMING
 
