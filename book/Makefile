@@ -15,6 +15,10 @@ TEX += web/web.tex
 TEX += dyna/dyna.tex dyna/llvm.tex dyna/managed.tex
 TEX += prolog/prolog.tex
 
+TEX += meta/circ.tex
+LST += meta/ebldfiles.ini meta/eclfiles.ini meta/files.ini
+LST += meta/header.ini meta/vimfiles.ini
+
 TEX += mcu/mcu.tex mcu/ardu/ino.tex mcu/msp/msp.tex mcu/arm/cortex.tex
 TEX += linux/linux.tex event/event.tex
 

@@ -99,7 +99,7 @@ commentstyle=\color{blue},
 extendedchars=\true
 }
 \newcounter{lstcounter}
-\newcommand{\lst}[2]{\refstepcounter{lstcounter}
+\newcommand{\lst}[2]{\noindent\refstepcounter{lstcounter}
 	\noindent\begin{minipage}{\textwidth}
 	\lstinputlisting[#2]{#1}
 	\end{minipage}\\}
