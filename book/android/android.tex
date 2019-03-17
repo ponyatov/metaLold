@@ -13,7 +13,7 @@
 
 \medskip\noindent
 На планшете есть несколько сред разработки для \emc, \py\ и \js, но на
-телефоне они абсолютно неюзабельны.
+телефоне они совершенно неюзабельны.
 
 \clearpage
 \begin{description}
@@ -75,11 +75,16 @@
 местоположению, и условию выполнения другой задачи, назначеная другому
 пользователю в вашей рабочей группе.
 
-\noindent
-\begin{tabular}{l p{8.5cm}}
+Если наборот в дизайне органайзера пойти от архитектуры, построенной на
+минимальном ядре, расширяемом пользователем через написание скриптов, мы снижаем
+начальный порог вхождения (за счет уменьшения необходимых усилий для освоения),
+одновременно предоставляя пользователю механизм персональной адаптации.
+
+\medskip\noindent
+\begin{tabular}{l p{8.7cm}}
 \tfig{android/basact.png}{height=.6\textheight} &
 Для создания проекта в Android Studio лучше всего подходит Basic Activity, так
-как из коробки в графическом интерфейсе приложения идет элемент добавления новой
+как из коробки в графическом интерфейсе приложения есть элемент добавления новой
 задачи.
 
 \medskip
@@ -93,5 +98,41 @@ Minimum API Level & API14\\
 \\
 \end{tabular}
 
+\bigskip\noindent
+\begin{tabular}{l p{9.5cm}}
+&\\
+\tfig{android/planning.png}{height=.2\textheight} &
+Для начала стоит заменить иконку приложения, также создав комплект round icon
+для совместимости со новыми версиями \A\ использующими ``пузырчатый'' интерфейс.
+\\
+\end{tabular}
+
+\bigskip\noindent
+Для подготовки иконок нужно иметь некоторые навыки для работы с графикой и
+каким-то из графических редакторов, типа \href{https://www.gimp.org}{GIMP}. Если
+у вас уже есть черновик иконки, можете воспользоваться визардом по адресу\\
+\url{http://jgilfelt.github.io/AndroidAssetStudio/icons-launcher.html}\\
+Загрузив в него черновик иконки, и включив эффект Shape:Bewel, вы сможете
+скачать \file{ic\_launcher.zip} содержащий готовый набор иконок для разных
+разрешений экрана. Копировать их в проект придется по одному файлу вручную, так
+как в новых версиях Android Studio изменилась схема именования каталогов с
+ресурсами: с \file{drawable\_}\ на \file{mipmap\_}.
+
+\bigskip
+\begin{lstlisting}
+~/hico$ find Android/ -type f \
+	-regex .+ic_launcher.png$ -exec file {} +
+	
+Android/app/src/main/res/mipmap-xhdpi/ic_launcher.png:   
+	PNG image data, 96 x 96, 8-bit/color RGBA, non-interl
+Android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png:  
+	PNG image data, 144 x 144, 8-bit/color RGBA, non-inte
+Android/app/src/main/res/mipmap-mdpi/ic_launcher.png:    
+	PNG image data, 48 x 48, 8-bit/color RGBA, non-interl
+Android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png: 
+	PNG image data, 192 x 192, 8-bit/color RGBA, non-inte
+Android/app/src/main/res/mipmap-hdpi/ic_launcher.png:    
+	PNG image data, 72 x 72, 8-bit/color RGBA, non-interl
+\end{lstlisting}
 
 \secup
