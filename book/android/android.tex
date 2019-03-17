@@ -135,4 +135,29 @@ Android/app/src/main/res/mipmap-hdpi/ic_launcher.png:
 	PNG image data, 72 x 72, 8-bit/color RGBA, non-interl
 \end{lstlisting}
 
+\clearpage
+
+\fig{android/firstrun.png}{height=.85\textheight}
+\fig{android/fixcolors.png}{height=.85\textheight}
+
+\noindent
+Цвета по умолчанию получаются слишком кислотные, стоит их приглушить поправив
+файлы, содержащие цвета и стили для проекта:
+
+\begin{lstlisting}[title=Android/app/src/main/res/values/colors.xml]
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrim">#008577</color>
+    <color name="colorPrimDark">#00473B</color>
+    <color name="colorAccent">#880022</color>
+</resources>
+\end{lstlisting}
+
+\begin{lstlisting}[title=Android/app/src/main/res/values/styles.xml]
+<resources>
+<style name="AppTheme" parent="Theme.AppCompat">
+<item name="colorPrimary">@color/colorPrimDark</item>
+<item name="colorPrimaryDark">@color/colorPrimDark</item>
+\end{lstlisting}
+
 \secup
