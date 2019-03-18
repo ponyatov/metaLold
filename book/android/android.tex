@@ -168,4 +168,22 @@ Android/app/src/main/res/mipmap-hdpi/ic_launcher.png:
 <item name="android:windowBackground">@color/colorBgr</item>
 \end{lstlisting}
 
+\secrel{Командная консоль}\label{anconsole}
+
+Наше приложение будет построено в виде нескольких слайдеров\note{помним про
+принцип ``интерфейса большого пальца''}, главным из которых является список
+текущих задач \ref{antasks}, но стоит начать с реализации Activity командного
+интерфейса, чтобы показать нечто работающее хотя бы в режиме постфиксного
+калькулятора. Ввод команд неудобен для часто выполняемых действий, но для
+нетиповых задач и универсальности великолепно подходят скрипты-однострочники на
+языке, близком к \F\ \ref{forth}.
+
+Так как пользователь может использовать команды в самых неблагоприятных
+условиях, очень важно выбрать размер шрифтов и цветовую схему, наиболее
+разборчивую на маленьких экранах дешевых телефонов:
+
+\lst{android/consdimens.xml}{title=Android/res/values/dimens.xml}
+\lst{android/constextview.xml}{title=Android/res/layout/content\_main.xml}
+\lst{android/conscolor.xml}{title=Android/res/values/colors.xml}
+
 \secup
