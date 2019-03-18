@@ -29,6 +29,10 @@ TEX += os/net.tex os/user.tex os/gui.tex
 
 FIG += mcu/ardu/micro.png mcu/ardu/uno.jpg mcu/ardu/nano.jpg
 
+TEX += android/android.tex
+
+TEX += docu/ment.tex
+
 TEX += bib/bib.tex
 
 LST  = frames/frame.py 
