@@ -1,0 +1,31 @@
+\secrel{\ems: старт на \cpp}\secdown
+
+\noindent
+\url{https://tproger.ru/translations/introduction-to-webassembly/}
+
+\bigskip
+Начинать проще с высокоуровневого тулчейна для \emc/\cpp\ --- для него проще
+найти tutorialы, и собрать необходимые библиотеки. 
+
+\secrel{Установка}
+
+\noindent
+SDK \ems\ предоставляет обширный набор инструментальных средств для разработки
+на \cpp\ для фронтенда. \ems\ не поставляется в виде готовых пакетов для Debian
+\linux, и использует собственную систему установки со встроенной поддержкой
+обновлений до новых версий SDK:
+\begin{lstlisting}
+$ cd ~
+$ git clone --depth 1 \
+	https://github.com/emscripten-core/emsdk.git
+$ sudo apt install git cmake nodejs python2.7
+$ cd emsdk
+
+~/emsdk$ git pull
+~/emsdk$ ./emsdk update
+~/emsdk$ ./emsdk install latest
+~/emsdk$ ./emsdk activate latest
+~/emsdk$ source ./emsdk_env.sh
+\end{lstlisting}
+
+\secup
