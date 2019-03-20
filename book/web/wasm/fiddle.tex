@@ -1,0 +1,21 @@
+\secrel{WasmFiddle}
+
+\noindent
+\url{https://wasdk.github.io/WasmFiddle/}\\
+\url{https://habr.com/ru/post/342180/}
+\bigskip
+
+Попробовать технологию без установки можно online.
+
+\bigskip
+\lst{web/wasm/none.c}{language=C}
+% \bigskip
+
+Слева вверху исходный код, слева внизу текстовое представление результата
+компиляции по кнопке Build, справа вверху \js\ код для запуска и справа
+внизу результат запуска по кнопке Run.
+
+WebAssembly это бинарный формат, для удобства и отладки существует механизм
+текстового представления один-в-один в виде текста в формате WAT.
+
+\lst{web/wasm/none.wat}{}
