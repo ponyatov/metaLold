@@ -79,4 +79,25 @@ wasm
 
 \end{description}
 
+\secrel{Локальный http-сервер для \wasm-приложения}
+
+\ems\ умеет создавать пакеты приложения с большими обертками html/js кода, если
+в выходном параметре указать
+\begin{verbatim}
+$ emcc -o html.html hello.c
+\end{verbatim}
+но для запуска такого пакета его необходимо отдавать с веб-сервера.
+
+Простейшим способом запуска пакета локально является сервер предоставляемый в
+поставке \py:
+\begin{verbatim}
+$ python -m SimpleHTTPServer 11111
+\end{verbatim}
+
+Сервер даст вам просмотр каталога, и возможность выбора загрузки любого файла:
+
+\bigskip
+\fig{web/wasm/pyhttp.png}{height=.5\textheight}
+\fig{web/wasm/hello.png}{height=.5\textheight}
+
 \secup
