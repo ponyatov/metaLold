@@ -104,10 +104,12 @@ xleftmargin=3mm,xrightmargin=2mm,
 tabsize=4,
 keywordstyle=\color{red},
 commentstyle=\color{blue},
-extendedchars=\true
+extendedchars=\true,
+%breaklines=false,breakatwhitespace=true
 }
 \newcounter{lstcounter}
-\newcommand{\lst}[2]{\noindent\refstepcounter{lstcounter}
-	\noindent\begin{minipage}{\textwidth}
-	\lstinputlisting[#2]{#1}
-	\end{minipage}\\}
+\newcommand{\lst}[2]{\lstinputlisting[#2]{#1}}
+% \noindent\refstepcounter{lstcounter}
+% \noindent\begin{minipage}{\textwidth}
+% \lstinputlisting[#2]{#1}
+% \end{minipage}\\}
