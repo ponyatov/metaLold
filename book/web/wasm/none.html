@@ -1,0 +1,14 @@
+<script>
+var wasmCode = new Uint8Array([0,97,115,109,1,0,0,0,1,
+	132,128,128,128,0,1,96,0,0,3,130,128,128,128,0,1,0,
+	4,132,128,128,128,0,1,112,0,0,5,131,128,128,128,0,
+	1,0,1,6,129,128,128,128,0,0,7,145,128,128,128,0,2,
+	6,109,101,109,111,114,121,2,0,4,110,111,110,101,0,
+	0,10,136,128,128,128,0,1,130,128,128,128,0,0,11]);
+
+var wasmImports = []
+var wasmModule = new WebAssembly.Module(wasmCode);
+var wasmInstance = new WebAssembly.Instance(
+								wasmModule, wasmImports);
+console.log(wasmInstance.exports.none());
+</script>
