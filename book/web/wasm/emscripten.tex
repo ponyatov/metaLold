@@ -84,7 +84,7 @@ wasm
 \ems\ умеет создавать пакеты приложения с большими обертками html/js кода, если
 в выходном параметре указать
 \begin{verbatim}
-$ emcc -o html.html hello.c
+$ emcc -s WASM=1 -o html.html hello.c
 \end{verbatim}
 но для запуска такого пакета его необходимо отдавать с веб-сервера.
 
