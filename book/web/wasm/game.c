@@ -1,3 +1,7 @@
 #include <emscripten.h>
+#include <stdio.h>
 
-int main(){}
+int main(){
+	printf("game\n");
+	emscripten_run_script("alert('hello')");
+}
