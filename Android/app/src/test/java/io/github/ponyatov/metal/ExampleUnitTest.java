@@ -1,4 +1,4 @@
-package io.github.ponyatov.hico;
+package io.github.ponyatov.metal;
 
 import org.junit.Test;
 
