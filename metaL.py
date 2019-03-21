@@ -241,7 +241,7 @@ W << INTERPRET
 def REPL():
     while True:
         print S
-        try: S // String(raw_input('hico> ')) ; INTERPRET()
+        try: S // String(raw_input('ok> ')) ; INTERPRET()
         except EOFError: BYE()
 W << REPL
         
@@ -359,34 +359,6 @@ W << SUPER
 
 class Project(Meta): pass
 
-# hico = W['META'] = Project('hico')
-# 
-# readme = File('README.md') ; hico // readme 
-# readme // '# hico' // '## homoiconic Python bootstrap' // '' // '(c) Dmitry Ponyatov <<dponyatov@gmail.com>> CC BY-NC-ND' // '' // 'github: https://github.com/ponyatov/hico'
-# 
-# gitignore = File('.gitignore') ; hico // gitignore
-# gitignore // '*~' // '*.swp' // '*.pyc' // '*.log'
-# 
-# eclipse = Group('Eclipse') ; hico // eclipse
-# e_project = File('.project') ; eclipse // e_project
-# e_project // '''<?xml version="1.0" encoding="UTF-8"?>
-# <projectDescription>
-#     <name>hico</name>
-#     <comment></comment>
-#     <projects>
-#     </projects>
-#     <buildSpec>
-#         <buildCommand>
-#             <name>org.python.pydev.PyDevBuilder</name>
-#             <arguments>
-#             </arguments>
-#         </buildCommand>
-#     </buildSpec>
-#     <natures>
-#         <nature>org.python.pydev.pythonNature</nature>
-#     </natures>
-# </projectDescription>'''
-        
 ########################################################################### WEB
 
 def WEB():

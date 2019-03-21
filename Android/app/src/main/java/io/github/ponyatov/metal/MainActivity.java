@@ -1,4 +1,4 @@
-package io.github.ponyatov.hico;
+package io.github.ponyatov.metal;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;

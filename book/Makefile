@@ -1,4 +1,4 @@
-TEX  = hico.tex header.tex
+TEX  = metaL.tex header.tex
 
 TEX += intro/intro.tex intro/denial.tex intro/meta.tex 
 TEX += intro/brooks.tex intro/lop.tex intro/homoiconic.tex
@@ -43,5 +43,5 @@ LST += forth/cmdline.py
 
 LATEX = pdflatex -halt-on-error
 
-book.pdf: $(TEX) $(LST) $(FIG)
+metaL.pdf: $(TEX) $(LST) $(FIG)
 	$(LATEX) $< && $(LATEX) $<

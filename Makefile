@@ -1,11 +1,11 @@
-
+MODULE = $(notdir $(CURDIR))
 TODAY = $(shell date +%d%m%y)
 
 all:
 	$(MAKE) -C book
 	
-pdf: hico_$(TODAY).pdf
-hico_$(TODAY).pdf: book/hico.pdf
+pdf: $(MODULE)_$(TODAY).pdf
+$(MODULE)_$(TODAY).pdf: book/$(MODULE).pdf
 	gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook \
 		-dNOPAUSE -dQUIET -dBATCH \
 		-sOutputFile=$@ $<
