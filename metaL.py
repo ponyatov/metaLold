@@ -351,12 +351,16 @@ class Project(Meta): pass
 ########################################################################### WEB
 
 def WEB():
-    from flask import Flask
+    from flask import Flask,render_template
     web = Flask(__name__)
     web.config['SECRET_KEY'] = os.urandom(32)
     
     @web.route('/')
-    def index(): return '<pre>' + W.dump()
+    def index():
+        return render_template('index.html',W=W)
+    
+    @web.route('/css/<path:path>')
+    def css(path): return web.send_static_file(path)
     
     web.run(host=W['WEB']['IP'].value,port=W['WEB']['PORT'].value,debug=True)
 W << WEB
