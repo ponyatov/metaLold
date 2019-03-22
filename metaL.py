@@ -109,7 +109,7 @@ class Number(Primitive):
 	def neg(self):
 		return Number(-self.value)
 
-class Integer(Number): pass
+class Integer(Number): pass 
 
 class Hex(Integer):
 	def str(self): return '0x%X' % self.value
@@ -169,7 +169,7 @@ S = Stack('DATA') ; W['S'] = S
 
 import ply.lex as lex
 
-tokens = ['symbol','number','hex','bin']
+tokens = ['symbol','number','integer','hex','bin']
 
 t_ignore = ' \t\r\n'
 
@@ -184,8 +184,12 @@ def t_bin(t):
 	return Bin(int(t.value[2:],0x02))
 
 def t_number(t):
+    r'[\+\-]?[0-9]+\.[0-9]*([eE][]?[0-9]+)?'
+    return Number(float(t.value))
+
+def t_integer(t):
     r'[\+\-]?[0-9]+'
-    return Number(int(t.value))
+    return Integer(int(t.value))
 
 def t_symbol(t):
     r'`|[^ \t\r\n\#\\]+'

@@ -5,8 +5,8 @@ tokens = ['symbol','number']
 t_ignore = ' \t\r\n'
 
 def t_number(t):
-    r'[\+\-]?[0-9]+'
-    return Number(int(t.value))
+    r'[\+\-]?[0-9]+\.[0-9]*([eE][]?[0-9]+)?'
+    return Number(float(t.value))
 
 def t_symbol(t):
     r'[a-zA-Z0-9_.]+'
