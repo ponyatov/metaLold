@@ -1,5 +1,17 @@
 <title>metaL</title>
 <link rel="stylesheet" type="text/css" href="/css/dark.css">
+
+<style>
+
+#viz { border: 1mm solid white; }
+
+.node {
+    fill: #ccc;
+    stroke: #fff;
+    stroke-width: 2px;
+}
+</style>
+
 <script src = "https://d3js.org/d3.v3.min.js"></script>
 <csv id=viz></csv>
 
@@ -18,14 +30,24 @@ var nodes = dat.map( function(i) { return {text:i,x:0,y:0} } )
 
 var force = d3.layout.force()
 	.size([W,H])
+	.linkDistance(W/10)
 	.nodes(nodes)
 	.links([])
 
-csv.selectAll('text')
+var node = csv.selectAll('circle')
 	.data(nodes)
-	.enter()
-	.append('text')
-	.text( x => x.text )
+	.enter().append('circle').attr('r',W/11)
+	.attr('class','node')
+//	.text( i => i.text )
+//	.attr('x', i => i.x ) .attr('y', i => i.y )
+
+force.on('end', function() {
+	node
+		.attr('cx',i => i.x)
+		.attr('cy',i => i.y)
+})
+
+force.start()
 
 </script>
 {% endautoescape %}
