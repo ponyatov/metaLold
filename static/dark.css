@@ -12,4 +12,7 @@ html,body {
 }
 
 #words	{ color: steelblue; }
-#cli	{ width:100%; position:absolute; bottom:0; color: darkcyan; }
+
+#cli	{ width:100%; position:absolute; bottom:0; }
+#pad	{ width:100%; color: darkcyan; }
+#go		{ width:100%; background: darkslategrey; }

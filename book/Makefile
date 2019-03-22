@@ -12,8 +12,11 @@ TEX += frames/container.tex frames/stack.tex frames/dict.tex
 TEX += forth/forth.tex forth/dict.tex forth/ply.tex forth/repl.tex
 TEX += forth/cmdline.tex
 
-TEX += web/web.tex web/templ.tex
+TEX += web/web.tex
+TEX += web/templ.tex 
 LST += web/templ.css web/templ.html web/templ.py
+TEX += web/form.tex
+LST += web/form.py web/form.css web/form.html
 
 TEX += dyna/dyna.tex dyna/llvm.tex dyna/managed.tex
 TEX += prolog/prolog.tex

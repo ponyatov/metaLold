@@ -6,4 +6,8 @@
 
 <pre id=stack>{{ W['S'].dump() }}</pre>
 
-<textarea id=cli rows=5 ># put your commands here</textarea>
+<form id=cli method=post>
+{{form.hidden_tag()}}
+{{form.pad()}}
+{{form.go()}}
+</form>
