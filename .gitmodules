@@ -1,0 +1,3 @@
+[submodule "mcu"]
+	path = mcu
+	url = git@github.com:ponyatov/mcu.git
