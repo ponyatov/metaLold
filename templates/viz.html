@@ -51,7 +51,9 @@ var node = svg.selectAll('text')
 	.text( i => i.text )
 //	.attr('x', i => i.x ) .attr('y', i => i.y )
 
-force.on('end', function() {
+// https://blockbuilder.org/sathomas/26648f33f3bc9725604a
+
+force.on('tick', function() {
 	node
 		.attr('x',i => i.x)
 		.attr('y',i => i.y)
