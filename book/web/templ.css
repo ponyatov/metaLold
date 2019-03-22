@@ -1,15 +1,12 @@
 * {
 	background: black; color: lightgreen;
-	font-family: monospace; font-size:4mm;
-}
+	font-family: monospace; font-size:4mm; }
 
 html,body {
-	margin:0; padding:0; border:0; overflow:hidden;
-}
+	margin:0; padding:0; border:0; overflow:hidden; }
 
 #words,#stack {
-	width:100%; height: 30%; overflow-y: scroll;
-}
+	width:100%; height: 30%; overflow-y: scroll; }
 
 #words	{ color: steelblue; }
 #cli	{ width:100%; position:absolute; bottom:0; 
