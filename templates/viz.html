@@ -1,0 +1,31 @@
+<title>metaL</title>
+<link rel="stylesheet" type="text/css" href="/css/dark.css">
+<script src = "https://d3js.org/d3.v3.min.js"></script>
+<csv id=viz></csv>
+
+{% autoescape false %}
+<script>
+
+W = window.innerWidth/2
+H = window.innerHeight/2
+
+csv = d3.select('#viz')
+	.attr('width',W)
+	.attr('height',H)
+	
+var dat   = [{{dump}}]
+var nodes = dat.map( function(i) { return {text:i,x:0,y:0} } )
+
+var force = d3.layout.force()
+	.size([W,H])
+	.nodes(nodes)
+	.links([])
+
+csv.selectAll('text')
+	.data(nodes)
+	.enter()
+	.append('text')
+	.text( x => x.text )
+
+</script>
+{% endautoescape %}

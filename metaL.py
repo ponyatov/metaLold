@@ -356,7 +356,7 @@ class Project(Meta): pass
 ########################################################################### WEB
 
 def WEB():
-    from flask     import Flask,render_template
+    from flask     import Flask,render_template,escape
     from flask_wtf import FlaskForm
     from wtforms   import TextAreaField,SubmitField
     
@@ -378,6 +378,16 @@ def WEB():
     
     @web.route('/css/<path:path>')
     def css(path): return web.send_static_file(path)
+    
+    @web.route('/dump/<path:frame>')
+    def dump(frame): return render_template('dump.html',dump=W[frame].dump())
+    
+    @web.route('/viz/<path:frame>')
+    def viz(frame):
+        S='"%s"' % frame
+        for i in W[frame].attr.keys():
+            S += ',"%s"'%i
+        return render_template('viz.html',dump=S)
     
     web.run(host=W['WEB']['IP'].value,port=W['WEB']['PORT'].value,debug=True)
 W << WEB

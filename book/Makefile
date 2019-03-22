@@ -17,6 +17,10 @@ TEX += web/templ.tex
 LST += web/templ.css web/templ.html web/templ.py
 TEX += web/form.tex
 LST += web/form.py web/form.css web/form.html
+TEX += web/dump.tex
+LST += web/dump.html web/dump.css web/dump.py
+TEX += web/viz.tex
+LST += web/viz.html web/viz.css web/viz.py
 
 TEX += dyna/dyna.tex dyna/llvm.tex dyna/managed.tex
 TEX += prolog/prolog.tex

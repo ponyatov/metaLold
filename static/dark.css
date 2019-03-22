@@ -16,3 +16,6 @@ html,body {
 #cli	{ width:100%; position:absolute; bottom:0; }
 #pad	{ width:100%; color: darkcyan; }
 #go		{ width:100%; background: darkslategrey; }
+
+#dump	{ width:100%; height: 100%; overflow-y: scroll; }
+#viz	{ width:100%; height: 100%; border: 2px solid darkblue; }
