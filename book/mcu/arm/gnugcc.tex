@@ -91,10 +91,48 @@ GMP_GZ			= $(GMP).tar.xz
 MPFR_GZ			= $(MPFR).tar.xz
 MPC_GZ			= $(MPC).tar.gz
 
+gz: $(GZ)/$(BINUTILS_GZ) \
+	$(GZ)/$(GMP_GZ) $(GZ)/$(MPFR_GZ) $(GZ)/$(MPC_GZ)
+	
 $(GZ)/$(GMP_GZ):
 	$(WGET) ftp://ftp.gmplib.org/pub/gmp/$(GMP_GZ)
 $(GZ)/$(MPFR_GZ):
 	$(WGET) https://www.mpfr.org/mpfr-current/$(MPFR_GZ)
 $(GZ)/$(MPC_GZ):
 	$(WGET) https://ftp.gnu.org/gnu/mpc/$(MPC_GZ)
+\end{lstlisting}
+
+\begin{lstlisting}[language=make]
+ISL_VER			= 0.18
+CLOOG_VER		= 0.18.1
+
+ISL				= isl-$(ISL_VER)
+CLOOG			= cloog-$(CLOOG_VER)
+
+ISL_GZ			= $(ISL).tar.bz2
+CLOOG_GZ		= $(CLOOG).tar.gz
+
+gz: $(GZ)/$(BINUTILS_GZ) \
+	$(GZ)/$(GMP_GZ) $(GZ)/$(MPFR_GZ) $(GZ)/$(MPC_GZ) \
+	$(GZ)/$(ISL_GZ) $(GZ)/$(CLOOG_GZ)
+
+$(GZ)/$(ISL_GZ):
+  $(WGET) \
+    ftp://gcc.gnu.org/pub/gcc/infrastructure/$(ISL_GZ)
+$(GZ)/$(CLOOG_GZ):
+  $(WGET) \
+    ftp://gcc.gnu.org/pub/gcc/infrastructure/$(CLOOG_GZ)
+\end{lstlisting}
+
+\clearpage
+\begin{lstlisting}[language=make]
+BINUTILS_VER	= 2.32
+GCC_VER			= 8.3.0
+
+gz: $(GZ)/$(BINUTILS_GZ) $(GZ)/$(GCC_GZ) \
+
+$(GZ)/$(BINUTILS_GZ):
+  $(WGET) http://ftp.gnu.org/gnu/binutils/$(BINUTILS_GZ)
+$(GZ)/$(GCC_GZ):
+  $(WGET) https://ftp.gnu.org/gnu/gcc/$(GCC)/$(GCC_GZ)
 \end{lstlisting}
