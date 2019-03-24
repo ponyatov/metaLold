@@ -32,7 +32,8 @@ LST += meta/header.ini meta/vimfiles.ini
 TEX += mcu/mcu.tex mcu/ardu/ino.tex mcu/msp/msp.tex
 TEX += mcu/arm/cortex.tex mcu/arm/setup.tex
 
-TEX += mcu/arm/cortex.tex mcu/arm/gnugcc.tex 
+TEX += mcu/arm/cortex.tex mcu/arm/gnugcc.tex
+FIG += /tmp/gnugcc.pdf
 
 TEX += linux/linux.tex event/event.tex
 
@@ -59,3 +60,6 @@ LATEX = pdflatex -halt-on-error
 
 metaL.pdf: $(TEX) $(LST) $(FIG)
 	$(LATEX) $< && $(LATEX) $<
+
+/tmp/gnugcc.pdf: mcu/gnugcc.dot
+	dot -T pdf -o /tmp/crop.pdf $< && pdfcrop /tmp/crop.pdf $@

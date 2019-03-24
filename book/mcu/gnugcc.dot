@@ -1,0 +1,6 @@
+digraph {
+rankdir=LR;
+gmp -> mpfr -> mpc -> gcc
+binutils -> gcc
+isl -> cloog -> gcc
+}

@@ -30,7 +30,7 @@ MODULE = $(notdir $(CURDIR))
 \file{.PHONY} задает список целей, не являющихся файлами: эти цели используются
 как имена при вызове различных частей \file{Makefile} заданных вручную
 \begin{lstlisting}[language=make]
-.PHONY: cross all clean dirs gz cclibs gcc
+.PHONY: cross all clean dirs gz cclibs binutils gcc
 \end{lstlisting}
 \emph{Сборка кросс-компилятора}
 \begin{lstlisting}[language=make]
@@ -38,20 +38,21 @@ cross: dirs gz cclibs binutils gcc
 \end{lstlisting}
 Создание временных каталогов
 \begin{lstlisting}[language=make]
-TMP ?= $(CWD)/tmp
-SRC ?= $(CWD)/src
-GZ  ?= $(HOME)/gz
+TMP   ?= $(CWD)/tmp
+SRC   ?= $(TMP)/src
+GZ    ?= $(HOME)/gz
+CROSS ?= $(CWD)/cross
 
 .PHONY: dirs
 dirs:
-	mkdir -p $(TMP) $(SRC) $(GZ)
+	mkdir -p $(TMP) $(SRC) $(GZ) $(CROSS)
 \end{lstlisting}
-\begin{description}
+\begin{description}[nosep]
 \item[\file{TMP}] каталог в котором будут собираться пакеты\\(out of
 tree build\ --- отдельно от исходного кода)
 \item[\file{SRC}] каталог для распаковки исходного кода пакетов
 \item[\file{GZ}] каталог для загрузки архивов пакетов\\
-поскольку я часто собирал из исходников, свалка находится в домашнем каталоге 
+поскольку я часто собираю из исходников, свалка находится в домашнем каталоге 
 \end{description}
 
 При запуске \file{make}\ любую конфигурационную переменную можно переопределить
@@ -119,6 +120,7 @@ gz: $(GZ)/$(BINUTILS_GZ) \
 $(GZ)/$(ISL_GZ):
   $(WGET) \
     ftp://gcc.gnu.org/pub/gcc/infrastructure/$(ISL_GZ)
+    
 $(GZ)/$(CLOOG_GZ):
   $(WGET) \
     ftp://gcc.gnu.org/pub/gcc/infrastructure/$(CLOOG_GZ)
@@ -135,4 +137,62 @@ $(GZ)/$(BINUTILS_GZ):
   $(WGET) http://ftp.gnu.org/gnu/binutils/$(BINUTILS_GZ)
 $(GZ)/$(GCC_GZ):
   $(WGET) https://ftp.gnu.org/gnu/gcc/$(GCC)/$(GCC_GZ)
+\end{lstlisting}
+
+\begin{lstlisting}[language=make]
+cclibs: gmp mpfr mpc isl cloog
+
+CFG = configure --prefix=$(CROSS)
+
+CORENUM = $(shell grep processor /proc/cpuinfo|wc -l)
+\end{lstlisting}
+
+\fig{/tmp/gnugcc.pdf}{height=.6\textheight}
+
+\begin{description}
+\item[CFG] команда \file{configure} с параметрами для всех пакетов
+\item[CORENUM] число процессорных ядер на рабочей станции\\ для параллельной
+сборки
+\item[--prefix] задает путь установки
+\end{description}
+
+\begin{lstlisting}[language=make]
+CFG_CCLIBS = --disable-shared
+
+CFG_GMP    = $(CFG_CCLIBS)
+
+gmp: $(CROSS)/lib/libgmp.a
+$(CROSS)/lib/libgmp.a: $(SRC)/$(GMP)/README
+	rm -rf $(TMP)/$(GMP) ; \
+	mkdir $(TMP)/$(GMP) ; cd $(TMP)/$(GMP) ; \
+	$(SRC)/$(GMP)/$(CFG) $(CFG_GMP) && \
+	make -j$(CORENUM) && make install
+\end{lstlisting}
+
+\begin{description}
+\item[CFG\_CCLIBS] общие опции \file{configure} для всех библиотек
+\item[CFG\_GMP] \verb|--disable-shared|\\ собирать только статические библиотеки
+\end{description}
+
+\noindent
+Для распаковки исходного кода из архивов применяется набор шаблонов:
+\begin{lstlisting}[language=make]
+$(SRC)/%/README: $(GZ)/%.tar.bz2
+	cd $(SRC) ; bzcat $< | tar x
+$(SRC)/%/README: $(GZ)/%.tar.xz
+	cd $(SRC) ; xzcat $< | tar x
+$(SRC)/%/README: $(GZ)/%.tar.gz
+	cd $(SRC) ;  zcat $< | tar x
+\end{lstlisting}
+
+\begin{lstlisting}[language=make]
+CFG_MPFR   = $(CFG_CCLIBS) --with-gmp=$(CROSS)
+
+mpfr: $(CROSS)/lib/libmpfr.a
+$(CROSS)/lib/libmpfr.a: $(SRC)/$(MPFR)/README
+	$(CFG) $(CFG_MPFR) && make && make install
+\end{lstlisting}
+
+\begin{lstlisting}[language=make]
+CFG_MPC    = $(CFG_CCLIBS) --with-gmp=$(CROSS)
 \end{lstlisting}
