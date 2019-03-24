@@ -214,3 +214,21 @@ $(CROSS)/lib/libcloog-isl.a: $(SRC)/$(CLOOG)/README
 	mkdir $(TMP)/$(CLOOG) ; cd $(TMP)/$(CLOOG) ; \ 
 	$(CFG) $(CFG_CLOOG) && make && make install
 \end{lstlisting}
+
+\clearpage
+\begin{lstlisting}[language=make]
+TARGET ?= arm-none-eabi
+
+CFG_WITHCCLIBS = --with-gmp=$(CROSS) \
+			--with-mpfr=$(CROSS) --with-mpc=$(CROSS)
+
+CFG_BINUTILS = --disable-nls --prefix=$(CROSS) \
+			--target=$(TARGET) \
+			--with-sysroot=$(SYSROOT) \
+			--with-native-system-header-dir=/include \
+			$(CFG_WITHCCLIBS)
+ 
+binutils: $(CROSS)/bin/$(TARGET)-ld
+$(CROSS)/bin/$(TARGET)-ld: $(SRC)/$(BINUTILS)/README
+	$(CFG) $(CFG_BINUTILS) && make && make install
+\end{lstlisting}
