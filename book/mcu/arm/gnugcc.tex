@@ -178,11 +178,11 @@ $(CROSS)/lib/libgmp.a: $(SRC)/$(GMP)/README
 Для распаковки исходного кода из архивов применяется набор шаблонов:
 \begin{lstlisting}[language=make]
 $(SRC)/%/README: $(GZ)/%.tar.bz2
-	cd $(SRC) ; bzcat $< | tar x
+	cd $(SRC) ; bzcat $< | tar x && touch $@
 $(SRC)/%/README: $(GZ)/%.tar.xz
-	cd $(SRC) ; xzcat $< | tar x
+	cd $(SRC) ; xzcat $< | tar x && touch $@
 $(SRC)/%/README: $(GZ)/%.tar.gz
-	cd $(SRC) ;  zcat $< | tar x
+	cd $(SRC) ;  zcat $< | tar x && touch $@
 \end{lstlisting}
 
 \begin{lstlisting}[language=make]
@@ -195,4 +195,22 @@ $(CROSS)/lib/libmpfr.a: $(SRC)/$(MPFR)/README
 
 \begin{lstlisting}[language=make]
 CFG_MPC    = $(CFG_CCLIBS) --with-gmp=$(CROSS)
+\end{lstlisting}
+
+Для сборки компилятора GCC с набором оптимизаций циклов Graphite:
+
+\begin{lstlisting}[language=make]
+CFG_ISL		= $(CFG_CCLIBS) --with-gmp-prefix=$(CROSS)
+
+isl: $(CROSS)/lib/libisl.a
+$(CROSS)/lib/libisl.a: $(SRC)/$(ISL)/README
+	mkdir $(TMP)/$(ISL) ; cd $(TMP)/$(ISL) ; \ 
+	$(CFG) $(CFG_ISL) && make && make install
+
+CFG_CLOOG	= $(CFG_CCLIBS) --with-gmp-prefix=$(CROSS)
+
+cloog: $(CROSS)/lib/libcloog-isl.a
+$(CROSS)/lib/libcloog-isl.a: $(SRC)/$(CLOOG)/README
+	mkdir $(TMP)/$(CLOOG) ; cd $(TMP)/$(CLOOG) ; \ 
+	$(CFG) $(CFG_CLOOG) && make && make install
 \end{lstlisting}
