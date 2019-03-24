@@ -1,0 +1,100 @@
+\secrel{Сборка кросс-компилятора GNU Toolchain}
+
+\begin{verbatim}
+$ cd ~/metaL/mcu
+$ make cross
+\end{verbatim}
+
+Для разработки принято использовать готовый инструментарий: обычно начиная
+осваивать новый микроконтроллер, идут на официальный сайт, и устанавливают
+рекомендованное ПО.
+
+Здесь в качестве иллюстрации применена пошаговая сборка кросс-компилятора
+\emph{GNU Toolchain} из исходного кода. Не стоит использовать этот метод для
+сборки \linux-систем, но хотелось показать вариант ручной сборки на тот случай,
+если вам понадобится какая-то очень специфичая конфигурация.
+
+Если вы работаете под \linux, у вас большая часть этого ПО уже доступна в виде
+пакетов дистрибутива. Чтобы их установить в систему, нужны привелегии
+администратора, а это не всегда доступно. 
+
+\clearpage\noindent
+Текущий каталог (полный путь)
+\begin{lstlisting}[language=make]
+CWD    = $(CURDIR)
+\end{lstlisting}
+Иногда нужно название модуля, взятое как называние текущего каталога
+\begin{lstlisting}[language=make]
+MODULE = $(notdir $(CURDIR))
+\end{lstlisting}
+\file{.PHONY} задает список целей, не являющихся файлами: эти цели используются
+как имена при вызове различных частей \file{Makefile} заданных вручную
+\begin{lstlisting}[language=make]
+.PHONY: cross all clean dirs gz cclibs gcc
+\end{lstlisting}
+\emph{Сборка кросс-компилятора}
+\begin{lstlisting}[language=make]
+cross: dirs gz cclibs binutils gcc
+\end{lstlisting}
+Создание временных каталогов
+\begin{lstlisting}[language=make]
+TMP ?= $(CWD)/tmp
+SRC ?= $(CWD)/src
+GZ  ?= $(HOME)/gz
+
+.PHONY: dirs
+dirs:
+	mkdir -p $(TMP) $(SRC) $(GZ)
+\end{lstlisting}
+\begin{description}
+\item[\file{TMP}] каталог в котором будут собираться пакеты\\(out of
+tree build\ --- отдельно от исходного кода)
+\item[\file{SRC}] каталог для распаковки исходного кода пакетов
+\item[\file{GZ}] каталог для загрузки архивов пакетов\\
+поскольку я часто собирал из исходников, свалка находится в домашнем каталоге 
+\end{description}
+
+При запуске \file{make}\ любую конфигурационную переменную можно переопределить
+из командной строки, например;
+\begin{lstlisting}
+$ make TMP=/tmp cross
+\end{lstlisting}
+
+\begin{lstlisting}[language=make]
+BINUTILS_VER	= 2.32
+BINUTILS		= binutils-$(BINUTILS_VER)
+BINUTILS_GZ		= $(BINUTILS).tar.xz
+
+gz: $(GZ)/$(BINUTILS_GZ)
+
+WGET = wget -P $(GZ) -c
+
+$(GZ)/$(BINUTILS_GZ):
+  $(WGET) http://ftp.gnu.org/gnu/binutils/$(BINUTILS_GZ)
+\end{lstlisting}
+
+В сборочном \file{Makefile}\ иногда меняются версии ПО, поэтому задание
+переменных версий лучше перенести в самое начало файла.
+
+Для сборки компилятора GNU GCC необходимо несколько библиотек\note{арифметика
+произвольной точности, и полигональная оптимизация}.
+\begin{lstlisting}[language=make]
+GMP_VER			= 6.1.2
+MPFR_VER		= 4.0.2
+MPC_VER			= 1.1.0
+
+GMP				= gmp-$(GMP_VER)
+MPFR			= mpfr-$(MPFR_VER)
+MPC				= mpc-$(MPC_VER)
+
+GMP_GZ			= $(GMP).tar.xz
+MPFR_GZ			= $(MPFR).tar.xz
+MPC_GZ			= $(MPC).tar.gz
+
+$(GZ)/$(GMP_GZ):
+	$(WGET) ftp://ftp.gmplib.org/pub/gmp/$(GMP_GZ)
+$(GZ)/$(MPFR_GZ):
+	$(WGET) https://www.mpfr.org/mpfr-current/$(MPFR_GZ)
+$(GZ)/$(MPC_GZ):
+	$(WGET) https://ftp.gnu.org/gnu/mpc/$(MPC_GZ)
+\end{lstlisting}

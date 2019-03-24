@@ -41,46 +41,6 @@ $ git pull
 $ git submodule update --init --remote --recursive -- mcu
 \end{verbatim}
 
-\secrel{Сборка кросс-компилятора GNU Toolchain}
-
-\begin{verbatim}
-$ cd ~/metaL/mcu
-$ make cross
-\end{verbatim}
-
-Для разработки принято использовать готовый инструментарий: обычно начиная
-осваивать новый микроконтроллер, идут на официальный сайт, и устанавливают
-рекомендованное ПО.
-
-Здесь в качестве иллюстрации применена пошаговая сборка кросс-компилятора
-\emph{GNU Toolchain} из исходного кода. Не стоит использовать этот метод для
-сборки \linux-систем, но хотелось показать вариант ручной сборки на тот случай,
-если вам понадобится какая-то очень специфичая конфигурация.
-
-Если вы работаете под \linux, у вас большая часть этого ПО уже доступна в виде
-пакетов дистрибутива. Чтобы их установить в систему, нужны привелегии
-администратора, а это не всегда доступно. 
-
-\clearpage\noindent
-Текущий каталог (полный путь)
-\begin{lstlisting}[language=make]
-CWD = $(CURDIR)
-\end{lstlisting}
-Иногда нужно название модуля, взятое как называние текущего каталога
-\begin{lstlisting}[language=make]
-MODULE = $(notdir $(CURDIR))
-\end{lstlisting}
-\file{.PHONY} задает список целей, не являющихся файлами: эти цели используются
-как имена при вызове различных частей \file{Makefile} заданных вручную
-\begin{lstlisting}[language=make]
-.PHONY: cross all clean
-\end{lstlisting}
-\emph{Сборка кросс-компилятора}
-\begin{lstlisting}[language=make]
-cross: dirs gz cclibs binutils gcc
-\end{lstlisting}
-
-
 \secrel{CubeMX}
 
 \url{https://www.st.com/b/en/development-tools/stm32cubemx.html}
