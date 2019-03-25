@@ -5,8 +5,9 @@
 \href{https://www.aliexpress.com/item/FREE-SHIPPING-ST-Link-V2-stlink-mini-STM8STM32-STLINK-simulator-download-programming-With-Cover/1814606455.html}{\fig{mcu/arm/cnstlink.jpg}{height=.65\textheight}}
 \href{https://www.aliexpress.com/item/48-MHz-STM32F030F4P6-Small-Systems-Development-Board-CORTEX-M0-Core-32bit-Mini-System-Development-Panels/32831635311.html}{\fig{mcu/arm/stm32f040.png}{height=.65\textheight}}
 
-Минимальный комплект\ --- китайский клон программатора ST-Link v2 и отладочная
-плата на базе самого мелкого и дешевого микроконтроллера STM32F030F4P6 (55р в
+\noindent
+Минимальный комплект\ --- китайский клон программатора ST-Link v2-1 и отладочная
+плата на базе самого мелкого и дешевого микроконтроллера STM32F030F4P6 (70р в
 розницу в самом жлобском магазине).
 
 \bigskip
@@ -40,9 +41,37 @@ $ git pull
 \begin{verbatim}
 $ git submodule update --init --remote --recursive -- mcu
 \end{verbatim}
+установите кросс-компилятор GNU GCC из бинарного дистрибутива или пакета для
+вашей ОС, или соберите его из исходных текстов
+\ref{cross}
 
 \secrel{CubeMX}
 
+\begin{itemize}
+  \item 
 \url{https://www.st.com/b/en/development-tools/stm32cubemx.html}
+  \item
+Get Software
+\item
+unzip \verb|en.SetupSTM32CubeMX-5.1.0-RC6.zip -> tmp|
+\item
+run installer \verb|./SetupSTM32CubeMX-5.1.0.linux|
+\item 
+Java required !
+\item
+\verb|next > accept > next > I have read Policy > next|
+\item 
+\verb|/home/dpon/metaL/mcu/STM32CubeMX|
+\item 
+\verb|next > Done|
+\item 
+\verb|~/metaL/mcu$ ./STM32CubeMX/STM32CubeMX &|
+\end{itemize}
+
+\fig{mcu/arm/cubeinst.png}{height=.2\textheight}
+
+\fig{mcu/arm/stm32l0.png}{width=\textwidth}
+
+\fig{mcu/arm/f0install.png}{height=.35\textheight} Install Now
 
 \secup

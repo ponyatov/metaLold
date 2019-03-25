@@ -1,4 +1,5 @@
-\secrel{Сборка кросс-компилятора GNU Toolchain}
+\clearpage
+\secrel{Сборка кросс-компилятора GNU Toolchain}\label{cross}
 
 \begin{verbatim}
 $ cd ~/metaL/mcu
@@ -34,18 +35,18 @@ MODULE = $(notdir $(CURDIR))
 \end{lstlisting}
 \emph{Сборка кросс-компилятора}
 \begin{lstlisting}[language=make]
-cross: dirs gz cclibs binutils gcc
+cross: dirs gz cclibs binutils gcc0 newlib gcc
 \end{lstlisting}
 Создание временных каталогов
 \begin{lstlisting}[language=make]
-TMP   ?= $(CWD)/tmp
-SRC   ?= $(TMP)/src
-GZ    ?= $(HOME)/gz
-CROSS ?= $(CWD)/cross
+TMP		?= $(CWD)/tmp
+SRC		?= $(TMP)/src
+GZ		?= $(HOME)/gz
+CROSS	?= $(CWD)/$(TARGET)
+SYSROOT	?= $(CROSS)/sysroot
 
-.PHONY: dirs
 dirs:
-	mkdir -p $(TMP) $(SRC) $(GZ) $(CROSS)
+	mkdir -p $(TMP) $(SRC) $(GZ) $(CROSS) $(SYSROOT)
 \end{lstlisting}
 \begin{description}[nosep]
 \item[\file{TMP}] каталог в котором будут собираться пакеты\\(out of
@@ -104,7 +105,7 @@ $(GZ)/$(MPC_GZ):
 \end{lstlisting}
 
 \begin{lstlisting}[language=make]
-ISL_VER			= 0.18
+ISL_VER			= 0.16.1
 CLOOG_VER		= 0.18.1
 
 ISL				= isl-$(ISL_VER)
@@ -140,7 +141,7 @@ $(GZ)/$(GCC_GZ):
 \end{lstlisting}
 
 \begin{lstlisting}[language=make]
-cclibs: gmp mpfr mpc isl cloog
+cclibs: gmp mpfr mpc cloog isl
 
 CFG = configure --prefix=$(CROSS)
 
@@ -200,19 +201,84 @@ CFG_MPC    = $(CFG_CCLIBS) --with-gmp=$(CROSS)
 Для сборки компилятора GCC с набором оптимизаций циклов Graphite:
 
 \begin{lstlisting}[language=make]
-CFG_ISL		= $(CFG_CCLIBS) --with-gmp-prefix=$(CROSS)
-
-isl: $(CROSS)/lib/libisl.a
-$(CROSS)/lib/libisl.a: $(SRC)/$(ISL)/README
-	mkdir $(TMP)/$(ISL) ; cd $(TMP)/$(ISL) ; \ 
-	$(CFG) $(CFG_ISL) && make && make install
-
 CFG_CLOOG	= $(CFG_CCLIBS) --with-gmp-prefix=$(CROSS)
 
 cloog: $(CROSS)/lib/libcloog-isl.a
 $(CROSS)/lib/libcloog-isl.a: $(SRC)/$(CLOOG)/README
 	mkdir $(TMP)/$(CLOOG) ; cd $(TMP)/$(CLOOG) ; \ 
 	$(CFG) $(CFG_CLOOG) && make && make install
+
+CFG_ISL		= $(CFG_CCLIBS) --with-gmp-prefix=$(CROSS)
+
+isl: $(CROSS)/lib/libisl.a
+$(CROSS)/lib/libisl.a: $(SRC)/$(ISL)/README
+	mkdir $(TMP)/$(ISL) ; cd $(TMP)/$(ISL) ; \ 
+	$(CFG) $(CFG_ISL) && make && make install
+\end{lstlisting}
+
+\clearpage
+\begin{lstlisting}[language=make]
+TARGET ?= arm-none-eabi
+
+CFG_WITHCCLIBS = --with-gmp=$(CROSS) \
+				--with-mpfr=$(CROSS) --with-mpc=$(CROSS)
+
+CFG_BINUTILS = --disable-nls --prefix=$(CROSS) \
+			--target=$(TARGET) \
+			--with-sysroot=$(SYSROOT) \
+			--with-native-system-header-dir=/include \
+			--enable-lto --disable-multilib \
+			$(CFG_WITHCCLIBS)
+
+binutils: $(CROSS)/bin/$(TARGET)-ld
+$(CROSS)/bin/$(TARGET)-ld: $(SRC)/$(BINUTILS)/README
+	$(CFG) $(CFG_BINUTILS) && make && make install
+\end{lstlisting}
+
+GCC собирается в два этапа: сначала \file{gcc0}, потом стандартная библиотека
+\file{newlib} (libc), и в конце \file{gcc}:
+
+\begin{lstlisting}[language=make]
+CFG_GCC = $(CFG_BINUTILS) --with-newlib \
+							--enable-languages="c"
+
+gcc0: $(SRC)/$(GCC)/README
+	cd $(TMP)/$(GCC) ; $(SRC)/$(GCC)/$(CFG) $(CFG_GCC)
+	cd $(TMP)/$(GCC) ; \
+		$(MAKE) -j2 all-host ; $(MAKE) install-host
+
+gcc: $(CROSS)/$(TARGET)/lib/libc.a
+	cd $(TMP)/$(GCC) ; \
+		$(MAKE) -j2 all-target ; $(MAKE) install-target
+\end{lstlisting}
+
+\clearpage
+\begin{lstlisting}[language=make]
+NEWLIB_VER	= nano-2.1
+NEWLIB		= newlib-$(NEWLIB_VER)
+
+CFG_NEWLIB = $(CFG_BINUTILS) --prefix=$(SYSROOT) \
+				--disable-newlib-supplied-syscalls \
+				--infodir=$(CROSS)/share/info
+
+newlib: $(SYSROOT)/lib/libc.a
+$(SYSROOT)/lib/libc.a: $(SRC)/$(NEWLIB)/README
+	rm -rf $(TMP)/$(NEWLIB) ; mkdir $(TMP)/$(NEWLIB) ; \
+		cd $(TMP)/$(NEWLIB) ; \
+	$(XPATH) $(SRC)/$(NEWLIB)/$(CFG) $(CFG_NEWLIB) && \
+		$(MAKEJ) && $(MAKE) install
+	mv $(SYSROOT)/$(TARGET)/* $(SYSROOT)/ ; \
+		rmdir $(SYSROOT)/$(TARGET)
+\end{lstlisting}
+\clearpage
+Исходный код \file{newlib} загружается с сервера контроля версий, в отличие от
+остальных пакетов, использующих архивы:
+\begin{lstlisting}[language=make]
+$(SRC)/$(NEWLIB)/README:
+	cd $(SRC) ; git clone --depth=1 \
+		https://github.com/iperry/$(NEWLIB).git
+#	cd $(SRC) ; git clone \
+#		https://keithp.com/cgit/newlib.git
 \end{lstlisting}
 
 \clearpage

@@ -14,3 +14,6 @@ $(MODULE)_$(TODAY).pdf: book/$(MODULE).pdf
 release:
 	$(MAKE) all && $(MAKE) pdf
 	git tag $(TODAY) && git push --tags
+
+update:
+	git submodule update --init --recursive
