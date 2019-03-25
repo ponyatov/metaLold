@@ -32,7 +32,7 @@ LST += meta/header.ini meta/vimfiles.ini
 TEX += mcu/mcu.tex mcu/ardu/ino.tex mcu/msp/msp.tex
 TEX += mcu/arm/cortex.tex mcu/arm/setup.tex
 
-TEX += mcu/arm/cortex.tex mcu/arm/gnugcc.tex
+TEX += mcu/arm/cortex.tex mcu/gnu/gcc.tex
 FIG += /tmp/gnugcc.pdf
 
 TEX += linux/linux.tex event/event.tex
