@@ -1,0 +1,38 @@
+\secrel{STM32F030F4P6 blue pill}\label{f030}\secdown
+
+\begin{itemize}
+  \item File / New Project
+  \item MCU Selector / STM32F030F4Px TSSOP20 Flash:16K RAM:4K
+  \item Start Project
+\end{itemize}
+
+File / Save Project as / \verb|/home/dpon/metaL/mcu/test/cubeF030|
+
+\fig{mcu/arm/pinout.png}{height=\textheight}
+
+\fig{mcu/arm/f030pins.jpg}{height=\textheight}
+
+\fig{mcu/arm/f030sch.png}{width=\textwidth}
+
+\fig{mcu/arm/f030top.png}{height=\textheight}
+
+На плате установлен внешний кварц на 8 МГЦ, будем использовать его в качестве
+источника \emph{внешней тактовой частоты} \term{HSE}:
+
+\medskip
+\fig{mcu/arm/HSE.png}{width=\textwidth}
+
+\clearpage
+8 МГц для тактирования, и /8=1 МГц для периферии вполне достаточно, чтобы
+сравнить производительность/потребление с одуриной
+
+\bigskip
+\fig{mcu/arm/HPclock.png}{width=\textwidth}
+
+\clearpage\noindent
+и при этом иметь рабочий интерфейс по последовательному порту UART 9600 8N1
+
+\bigskip
+\fig{mcu/arm/uartclk.png}{height=.5\textheight}
+
+\secup
