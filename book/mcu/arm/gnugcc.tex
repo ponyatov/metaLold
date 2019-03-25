@@ -41,7 +41,7 @@ cross: dirs gz cclibs binutils gcc
 TMP   ?= $(CWD)/tmp
 SRC   ?= $(TMP)/src
 GZ    ?= $(HOME)/gz
-CROSS ?= $(CWD)/cross
+CROSS ?= $(CWD)/$(TARGET)
 
 .PHONY: dirs
 dirs:
