@@ -254,6 +254,9 @@ gcc: $(CROSS)/$(TARGET)/lib/libc.a
 
 \clearpage
 \begin{lstlisting}[language=make]
+NEWLIB_VER	= nano-2.1
+NEWLIB		= newlib-$(NEWLIB_VER)
+
 CFG_NEWLIB = $(CFG_BINUTILS) --prefix=$(SYSROOT) \
 				--disable-newlib-supplied-syscalls \
 				--infodir=$(CROSS)/share/info

@@ -46,6 +46,39 @@ $ git submodule update --init --remote --recursive -- mcu
 
 \secrel{CubeMX}
 
+\begin{itemize}
+  \item 
 \url{https://www.st.com/b/en/development-tools/stm32cubemx.html}
+  \item
+Get Software
+\item
+unzip \verb|en.SetupSTM32CubeMX-5.1.0-RC6.zip -> tmp|
+\item
+run installer \verb|./SetupSTM32CubeMX-5.1.0.linux|
+\item 
+Java required !
+\item
+\verb|next > accept > next > I have read Policy > next|
+\item 
+\verb|/home/dpon/metaL/mcu/STM32CubeMX|
+\item 
+\verb|next > Done|
+\item 
+\verb|~/metaL/mcu$ ./STM32CubeMX/STM32CubeMX &|
+\end{itemize}
+
+\fig{mcu/arm/cubeinst.png}{height=.2\textheight}
+
+\fig{mcu/arm/stm32l0.png}{width=\textwidth}
+
+\fig{mcu/arm/f0install.png}{height=.35\textheight} Install Now
+
+\begin{itemize}
+  \item File / New Project
+  \item MCU Selector / STM32F030F4Px TSSOP20 Flash:16K RAM:4K
+  \item Start Project
+\end{itemize}
+
+\fig{mcu/arm/pinout.png}{height=.5\textheight}
 
 \secup
