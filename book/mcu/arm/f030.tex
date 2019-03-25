@@ -29,10 +29,34 @@ File / Save Project as / \verb|/home/dpon/metaL/mcu/test/cubeF030|
 \bigskip
 \fig{mcu/arm/HPclock.png}{width=\textwidth}
 
-\clearpage\noindent
+\noindent
 и при этом иметь рабочий интерфейс по последовательному порту UART 9600 8N1
 
 \bigskip
 \fig{mcu/arm/uartclk.png}{height=.5\textheight}
+
+\bigskip
+\cm{0}\ имеет две шины, и три тактовых частоты:
+\begin{description}
+\item[SYSCLK] системная тактовая частота, тактируется \emph{ядро процессора}
+\item[AHB] \term{Advanced Host Bus}: тактирование \emph{Flash/RAM} и \emph{DMA}
+\item[APB] \term{Advanced Peripherial Bus}: тактирование \emph{периферии}
+(ввода/вывода)
+\end{description} 
+
+
+\begin{itemize}
+  \item 
+Project Manager
+\item Project
+\item Toolchain Folder Location \verb|/home/dpon/metaL/mcu/test/cubeF030/|
+\item Toolchain/IDE \verb|Makefile|
+\item Code Generator
+\item Add nessesary library files as reference
+\item Generate peripherial init as spearate .c/.h files
+\item Keep User Code
+\item Advanced Settings
+\item Set all LL (replace from HAL)
+\end{itemize}
 
 \secup
