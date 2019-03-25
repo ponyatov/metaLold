@@ -104,7 +104,7 @@ $(GZ)/$(MPC_GZ):
 \end{lstlisting}
 
 \begin{lstlisting}[language=make]
-ISL_VER			= 0.18
+ISL_VER			= 0.16.1
 CLOOG_VER		= 0.18.1
 
 ISL				= isl-$(ISL_VER)
@@ -140,7 +140,7 @@ $(GZ)/$(GCC_GZ):
 \end{lstlisting}
 
 \begin{lstlisting}[language=make]
-cclibs: gmp mpfr mpc isl cloog
+cclibs: gmp mpfr mpc cloog isl
 
 CFG = configure --prefix=$(CROSS)
 
@@ -200,17 +200,36 @@ CFG_MPC    = $(CFG_CCLIBS) --with-gmp=$(CROSS)
 Для сборки компилятора GCC с набором оптимизаций циклов Graphite:
 
 \begin{lstlisting}[language=make]
-CFG_ISL		= $(CFG_CCLIBS) --with-gmp-prefix=$(CROSS)
-
-isl: $(CROSS)/lib/libisl.a
-$(CROSS)/lib/libisl.a: $(SRC)/$(ISL)/README
-	mkdir $(TMP)/$(ISL) ; cd $(TMP)/$(ISL) ; \ 
-	$(CFG) $(CFG_ISL) && make && make install
-
 CFG_CLOOG	= $(CFG_CCLIBS) --with-gmp-prefix=$(CROSS)
 
 cloog: $(CROSS)/lib/libcloog-isl.a
 $(CROSS)/lib/libcloog-isl.a: $(SRC)/$(CLOOG)/README
 	mkdir $(TMP)/$(CLOOG) ; cd $(TMP)/$(CLOOG) ; \ 
 	$(CFG) $(CFG_CLOOG) && make && make install
+
+CFG_ISL		= $(CFG_CCLIBS) --with-gmp-prefix=$(CROSS)
+
+isl: $(CROSS)/lib/libisl.a
+$(CROSS)/lib/libisl.a: $(SRC)/$(ISL)/README
+	mkdir $(TMP)/$(ISL) ; cd $(TMP)/$(ISL) ; \ 
+	$(CFG) $(CFG_ISL) && make && make install
+\end{lstlisting}
+
+\clearpage
+\begin{lstlisting}[language=make]
+TARGET ?= arm-none-eabi
+
+CFG_WITHCCLIBS = --with-gmp=$(CROSS) \
+				--with-mpfr=$(CROSS) --with-mpc=$(CROSS)
+
+CFG_BINUTILS = --disable-nls --prefix=$(CROSS) \
+				--target=$(TARGET) \
+				--with-sysroot=$(SYSROOT) \
+				--with-native-system-header-dir=/include \
+				--enable-lto --disable-multilib \
+				$(CFG_WITHCCLIBS)
+
+binutils: $(CROSS)/bin/$(TARGET)-ld
+$(CROSS)/bin/$(TARGET)-ld: $(SRC)/$(BINUTILS)/README
+	$(CFG) $(CFG_BINUTILS) && make && make install
 \end{lstlisting}
