@@ -7,9 +7,17 @@ class Source:
 		self.value = t.value
 		self.line  = t.lineno
 		self.pos   = t.lexpos
+		self.nest  = []
 	def __repr__(self):
-		return '<%s:%s>' % ( self.type, self.value )
-		return '<%s:%s> @ %s:%s' % ( self.type , self.value , self.file , self.line )
+		return self.dump()
+	def dump(self,depth=0):
+		S = self.pad(depth) + self.head()
+		for j in self.nest: S += i.dump(depth+1)
+		return S
+	def head(self):
+		return '<%s:%s>' % (self.type, self.value)
+	def pad(self,N):
+		return '\n' + '\t'*N
 
 import ply.lex  as lex
 import ply.yacc as yacc
