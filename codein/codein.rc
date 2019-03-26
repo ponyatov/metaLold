@@ -1,2 +1,2 @@
 #!/bin/sh
-gvim -p codein.py main.c Makefile
+gvim -p codein.py main.c Makefile sample.c

@@ -18,6 +18,8 @@ class Source:
 		return '<%s:%s>' % (self.type, self.value)
 	def pad(self,N):
 		return '\n' + '\t'*N
+	def __div__(self,obj):
+		self.nest.append(obj) ; return self
 
 import ply.lex  as lex
 import ply.yacc as yacc
@@ -42,7 +44,7 @@ def t_comment(t):
 class ppInclude(Source): pass
 def t_ppinclude(t):
 	r'\#include'
-	return ppInclude(t)
+	t.value = ppInclude(t) ; return t
 
 class ppIfdef(Source): pass
 def t_ppifdef(t):
@@ -67,7 +69,7 @@ def t_ppendif(t):
 class String(Source): pass
 def t_string(t):
 	r'\".*?\"'
-	return String(t)
+	t.value = String(t) ; return t
 
 class Number(Source): pass
 def t_number(t):
@@ -165,20 +167,34 @@ def t_rb(t):
 	return Rq(t)
 
 def t_error(t): raise SyntaxError(t)
+def p_error(p): raise SyntaxError(p)
+
+def p_repl_none(p): ' repl : '
+def p_repl_recur(p):
+	' repl : repl expression '
+	print p[2], p[2].__class__
+
+def p_ex_include(p):
+	' expression : ppinclude string '
+	print p[1],p[1].__class__
+	print p[2],p[2].__class__
+	p[0] = p[1].nest.append(p[2])
 
 lexer = lex.lex()
-lexer.linepos = 0
+
+parser = yacc.yacc(debug=False, write_tables=False)
 
 #parser = yacc.yacc()
 
 def LOAD(FILE,SRC):
-	lexer.input(SRC)
 	lexer.file = FILE
-#	parser.parse('')
-	while True:
-		token = lexer.token()
-		if not token: break
-		print token
+	lexer.linepos = -1
+	lexer.input(SRC)
+	parser.parse(lexer=lexer)
+#	while True:
+#		token = lexer.token()
+#		if not token: break
+#		print token
 
 for i in sys.argv[1:]:
 	with open(i) as F : LOAD(i,F.read()) ; F.close()
