@@ -90,6 +90,8 @@ Java required !
 \item
 \href{https://istarik.ru/blog/arduino/105.html}{таймеры и ШИМ Arduino STM32}
 \item
+\href{https://istarik.ru/blog/stm32/107.html}{Перешивка BluePill в ST-Link}
+\item
 \href{https://istarik.ru/blog/stm32/106.html}{создание проекта в CubeMX и программирование через USB Serial}
 \end{itemize}
 
@@ -97,6 +99,29 @@ Java required !
 $ cd /tmp/ ; tar zx < ~/Загрузки/Atollic_TrueSTUDIO_for_STM32_linux_x86_64_v9.3.0_20190212-0734.tar.gz
 $ cd Atollic_TrueSTUDIO_for_STM32_9.3.0_installer/
 $ sudo ./install.sh
+
+Do you want to install to '/opt/Atollic_TrueSTUDIO_for_STM32_x86_64_9.3.0/'?
+3) Change
+
+/home/ponyatov/metaL/mcu/Atollic
+
+~/metaL/mcu$ ./Atollic/ide/TrueSTUDIO
+
+Workspace: /home/ponyatov/metaL/mcu/test
+[v] use as default
+
+File > New > General Project > cubeF030
+
+File > New > Convert to C/C++ Project
+
+C Project > Executable/Atollic ARM Tools
+
+project > \rms > Properties > 
+	Resourse > UTF-8/Unix > Apply
+	C/C++ Build
+		> Settings > [x] GNU Elf parser
+		> Toolchain Editor > Current builder > GNU Make builder
+
 \end{lstlisting}
 
 \secup
