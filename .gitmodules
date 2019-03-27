@@ -1,0 +1,4 @@
+[submodule "mcu"]
+	path = mcu
+	url = git@bitbucket.org:ponyatov/mcu.git
+	branch = ponyatov
