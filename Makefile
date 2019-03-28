@@ -17,3 +17,6 @@ release:
 
 update:
 	git submodule update --init --recursive
+	git pull -v
+	cd mcu ; git pull -v
+	cd mcu/LoRaMac-node ; git pull -v
