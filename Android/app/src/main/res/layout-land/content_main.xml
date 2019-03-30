@@ -8,10 +8,17 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/activity_main">
 
+    <LinearLayout
+        android:id="@+id/console"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
     <TextView
         android:id="@+id/tasklist"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="88dp"
         android:text="@string/hello"
         android:textColor="@color/colorConsole"
         android:textSize="@dimen/szConsole"
@@ -23,7 +30,7 @@
     <LinearLayout
         android:id="@+id/cli"
         android:layout_width="match_parent"
-        android:layout_height="256dp"
+        android:layout_height="192dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_editor_absoluteX="8dp"
@@ -33,7 +40,7 @@
             android:id="@+id/pad"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:ems="11"
+            android:ems="21"
             android:textSize="@dimen/szConsole"
             android:inputType="textMultiLine"
             tools:layout_editor_absoluteX="8dp"
@@ -48,6 +55,8 @@
             app:layout_constraintRight_toRightOf="parent"
             tools:layout_editor_absoluteX="329dp"
             tools:layout_editor_absoluteY="486dp" />
+
+    </LinearLayout>
 
     </LinearLayout>
 
