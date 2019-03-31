@@ -17,6 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/biglogo"
+        android:layout_marginTop="11dp"
         android:text="@string/author_name" />
 
     <TextView
@@ -26,6 +27,8 @@
         android:layout_alignBottom="@+id/editText1"
         android:layout_toRightOf="@+id/editText1"
         android:layout_weight="1"
+        android:layout_marginLeft="11dp"
+        android:layout_marginRight="11dp"
         android:text="@string/author_email" />
 
     <TextView
@@ -41,6 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/editText3"
+        android:layout_marginTop="11dp"
         android:text="@string/author_github" />
 
 </RelativeLayout>
