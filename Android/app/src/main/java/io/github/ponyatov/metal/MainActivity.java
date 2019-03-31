@@ -8,9 +8,22 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
+
+    /// task list text panel
+    TextView tasklist;
+
+    /// command entry field
+    TextView pad;
+
+    /// run command button
+    Button go;
+
+    /// add new task floating button
+    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,9 +32,18 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final TextView pad = findViewById(R.id.pad);
+        tasklist = findViewById(R.id.tasklist);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        pad = findViewById(R.id.pad);
+
+        go  = findViewById(R.id.go);
+        go.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                tasklist.setText(pad.getText());
+            }
+        });
+
+        fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
