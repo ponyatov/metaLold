@@ -40,7 +40,8 @@ public class MainActivity extends AppCompatActivity {
         go  = findViewById(R.id.go);
         go.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                tasklist.setText(pad.getText());
+                Task t = new Task(pad.getText().toString());
+                tasklist.setText(t.head());
             }
         });
 
