@@ -23,6 +23,9 @@ TEX += web/viz.tex
 LST += web/viz.html web/viz.css web/viz.py
 
 TEX += dyna/dyna.tex dyna/llvm.tex dyna/managed.tex
+
+TEX += cpp/cpp.tex cpp/gc.tex
+
 TEX += prolog/prolog.tex
 
 TEX += meta/circ.tex
