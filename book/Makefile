@@ -49,6 +49,8 @@ TEX += code/in.tex code/emcin.tex
 TEX += os/os.tex os/boot.tex os/sched.tex os/files.tex
 TEX += os/net.tex os/user.tex os/gui.tex
 
+TEX += game/dev.tex
+
 FIG += mcu/ardu/micro.png mcu/ardu/uno.jpg mcu/ardu/nano.jpg
 
 TEX += android/android.tex
