@@ -1,0 +1,34 @@
+\clearpage
+\secrel{Google Cloud Platform}\label{gcp}
+
+\href{https://cloud.google.com/appengine/docs/standard/python/getting-started/python-standard-env}{Getting
+Started with Flask on App Engine Standard Environment}
+
+\begin{itemize}[nosep]
+
+  \item 
+Перейдите в \href{https://console.cloud.google.com}{консоль Google Cloud}
+
+  \item 
+\url{https://cloud.google.com/sdk/docs/}
+
+\end{itemize}
+
+\medskip\noindent
+структура проекта:
+\medskip
+
+\begin{description}[nosep]
+\item[app.yaml]: конфигурация приложения Google App Engine
+\item[metaL.py]: ваше приложение
+\item[static/]: каталог для хранения статических файлов
+\begin{description}[nosep]
+\item[dark.css]: темная тема приложения
+\end{description}
+\item[template/] шаблоны HTML страниц
+\begin{description}[nosep]
+\item[index.html]: главная страница: лог и форма командной строки 
+\item[dump.html]: дамп объекта из словаря
+\item[viz.html]: визуализация через D3js
+\end{description}
+\end{description}

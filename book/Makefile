@@ -21,6 +21,8 @@ TEX += web/dump.tex
 LST += web/dump.html web/dump.css web/dump.py
 TEX += web/viz.tex
 LST += web/viz.html web/viz.css web/viz.py
+TEX += web/google.tex
+TEX += web/wasm/wasm.tex
 
 TEX += dyna/dyna.tex dyna/llvm.tex dyna/managed.tex
 
