@@ -1,5 +1,5 @@
 \clearpage
-\secrel{Google Cloud Platform}\label{gcp}
+\secrel{Google Cloud Platform}\label{gcp}\secdown
 
 \href{https://cloud.google.com/appengine/docs/standard/python/getting-started/python-standard-env}{Getting
 Started with Flask on App Engine Standard Environment}
@@ -32,3 +32,22 @@ Started with Flask on App Engine Standard Environment}
 \item[viz.html]: визуализация через D3js
 \end{description}
 \end{description}
+
+\clearpage
+При развертывании приложения мы можете указать в этом файле настройки Python
+Application Engine, в том числе сторонние библиотеки, установленные в каталог
+\file{lib/}:
+\lst{../appengine_config.py}{title=appengine\_config.py,language=Python}
+
+Файл указывает какие библиотеки требуются приложению:
+\lst{../requirements.txt}{title=requirements.txt,language=Python}
+
+\clearpage\noindent
+Для разработки под Google Cloud необходимо использование \file{virtualenv}
+
+\begin{verbatim}
+$ sudo pip install --upgrade pip virtualenv
+~/metaL$ virtualenv --python python2 env
+\end{verbatim}
+
+\secup
