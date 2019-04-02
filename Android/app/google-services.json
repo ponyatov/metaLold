@@ -13,7 +13,16 @@
           "package_name": "io.github.ponyatov.metal"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "890654100792-p86jetl5tf1jdqkanbjrhjh5mhg53rnq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.github.ponyatov.metal",
+            "certificate_hash": "fc19bc25cd480f36c043d309b731c8383989aa15"
+          }
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBJ5Ylrpn6oRkjM-K8b1yONBckexTYoS00"
