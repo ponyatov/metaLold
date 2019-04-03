@@ -31,7 +31,7 @@ TEX += cpp/cpp.tex cpp/gc.tex
 
 TEX += prolog/prolog.tex
 
-TEX += syntax/syntax.tex syntax/ragel.tex syntax/ragel/java.tex
+TEX += syntax/syntax.tex syntax/ragel/ragel.tex syntax/ragel/java.tex
 
 TEX += meta/circ.tex
 LST += meta/ebldfiles.ini meta/eclfiles.ini meta/files.ini
