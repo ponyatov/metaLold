@@ -51,6 +51,8 @@ TEX += linux/linux.tex event/event.tex
 
 TEX += code/in.tex code/emcin.tex code/cpp.tex code/ide.tex code/literate.tex
 
+TEX += gui/wx.tex
+
 TEX += os/os.tex os/boot.tex os/sched.tex os/files.tex
 TEX += os/net.tex os/user.tex os/gui.tex
 
