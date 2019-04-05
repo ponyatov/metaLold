@@ -1,10 +1,34 @@
 \secrel{Универсальная IDE на wxPython}\label{wx}\secdown
 
+\noindent
 Использование приложений с нативным GUI стало немодно: веб-интер\-фейс
-обеспечивает б\'{о}льшую гибкость, мультиплатформенность, и возможность
-интеграции с внешними сетевыми сервисами (GitHub, Google Drive,..).
+обеспечивает б\'{о}льшую гибкость, и возможность
+интеграции с внешними сетевыми сервисами (GitHub, Google). Если рассматривать
+требования браузера по памяти по отрисовке GUI, и быстродействия интерфейса,
+вопрос о применении \term{нативного GUI} остается открытым.
+
+\secrel{Установка под \win}
+
+\begin{verbatim}
+$ python-2.7.16.msi
+$ pip install --upgrade pip
+$ pip install --upgrade ply
+$ wxPython3.0-win32-3.0.2.0-py27.exe
+\end{verbatim}
+
+\noindent
+Поддержка версии 2.7 закрыта, поэтому часть пакетов придется ставить не через
+\file{pip}, а индивидуальными инсталляторами.
+
+\secrel{Базовый мультиоконный GUI}
 
 \clearpage
 \lst{gui/wx00.py}{language=Python,title=gui/wxide.py}
+
+\begin{description}
+\item[ide]
+\item[ideWindow]
+\item[ideConsole]
+\end{description}
 
 \secup
