@@ -1,0 +1,45 @@
+\secrel{Бинарный парсинг}\label{binparse}
+
+Большой практической проблемой является анализ бинарных потоков данных. До сих
+пор не создано общепринятого инструмента для декларативного описания
+произвольного бинарного формата, и тем более средств синтеза кода для анализа
+(бесконечных) потоков.
+
+В качестве примера можно привести создание \term{диссекторов} для анализаторов
+сетевых протоколов (Wireshark), и чтение любых файловых систем и бинарных
+форматов файлов.
+ 
+Бинарные файлы склонны иметь контекстно-чувствительную грамматику, и их разбор
+требует средств, способных работать с первым типом по классификации Хомского
+\cite{serlex}:
+
+\medskip
+\noindent
+\href{http://ru.wikipedia.org/wiki/%D0%98%D0%B5%D1%80%D0%B0%D1%80%D1%85%D0%B8%D1%8F_%D0%A5%D0%BE%D0%BC%D1%81%D0%BA%D0%BE%D0%B3%D0%BE}{Иерархия
+Хомского} 
+
+\noindent
+\href{https://ru.wikipedia.org/wiki/%D0%9A%D0%BE%D0%BD%D1%82%D0%B5%D0%BA%D1%81%D1%82%D0%BD%D0%BE-%D0%B7%D0%B0%D0%B2%D0%B8%D1%81%D0%B8%D0%BC%D0%B0%D1%8F_%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D0%B0%D1%82%D0%B8%D0%BA%D0%B0}{Контекстно-зависимая
+грамматика}
+
+\clearpage
+Необходима полная поддержка структур \emph{с бинарными полями произвольной
+длины}, (тегированных) объединений, и хранение бинарных данных в форматах
+little/bigendian:
+
+\noindent
+\url{http://en.wikipedia.org/wiki/Struct_(C_programming_language)}
+
+\noindent
+\url{http://en.wikipedia.org/wiki/Tagged_union}
+
+\bigskip
+Разбор бинарных потоков требует обязательной поддержки восстановления из
+ошибок при получении ``битых'' пакетов, также желательна возможность
+их частичного разбора.
+
+\bigskip
+\href{https://qspace.library.queensu.ca/bitstream/handle/1974/22040/ElShakankiry_Ali_201708_MSC.pdf}{
+Context Sensitive and Secure Parser Generation for
+Deep Packet Inspection of Binary Protocols}
+\copyright\ Ali ElShakankiry

@@ -21,9 +21,17 @@ TEX += web/dump.tex
 LST += web/dump.html web/dump.css web/dump.py
 TEX += web/viz.tex
 LST += web/viz.html web/viz.css web/viz.py
+TEX += web/google.tex
+LST += ../appengine_config.py ../requirements.txt
+TEX += web/wasm/wasm.tex
 
 TEX += dyna/dyna.tex dyna/llvm.tex dyna/managed.tex
+
+TEX += cpp/cpp.tex cpp/gc.tex
+
 TEX += prolog/prolog.tex
+
+TEX += syntax/syntax.tex syntax/ragel/ragel.tex syntax/ragel/java.tex
 
 TEX += meta/circ.tex
 LST += meta/ebldfiles.ini meta/eclfiles.ini meta/files.ini
@@ -32,6 +40,8 @@ LST += meta/header.ini meta/vimfiles.ini
 TEX += mcu/mcu.tex mcu/ardu/ino.tex mcu/msp/msp.tex
 TEX += mcu/arm/cortex.tex mcu/arm/setup.tex
 
+TEX += mcu/parse/ragel.tex mcu/parse/bin.tex
+
 TEX += mcu/arm/cortex.tex mcu/gnu/gcc.tex 
 FIG += /tmp/gnugcc.pdf
 TEX += mcu/arm/f030.tex
@@ -39,10 +49,16 @@ FIG += mcu/arm/pinout.png mcu/arm/HSE.png mcu/arm/HPclock.png
 
 TEX += linux/linux.tex event/event.tex
 
-TEX += code/in.tex code/emcin.tex
+TEX += code/in.tex code/emcin.tex code/cpp.tex code/ide.tex code/literate.tex
+
+TEX += concept/concept.tex
+
+TEX += gui/wx.tex
 
 TEX += os/os.tex os/boot.tex os/sched.tex os/files.tex
 TEX += os/net.tex os/user.tex os/gui.tex
+
+TEX += game/dev.tex
 
 FIG += mcu/ardu/micro.png mcu/ardu/uno.jpg mcu/ardu/nano.jpg
 
