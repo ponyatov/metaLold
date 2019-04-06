@@ -13,7 +13,7 @@ $(MODULE)_$(TODAY).pdf: book/$(MODULE).pdf
 
 release:
 	$(MAKE) all && $(MAKE) pdf
-	git tag $(TODAY) && git push --tags
+	git tag $(TODAY) && git push --tags gh master
 
 update:
 	git submodule update --init --recursive
