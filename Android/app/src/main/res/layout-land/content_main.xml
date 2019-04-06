@@ -11,11 +11,11 @@
     <TextView
         android:id="@+id/tasklist"
         android:layout_width="match_parent"
-        android:layout_height="414dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="133dp"
+        android:layout_marginBottom="69dp"
         android:text="@string/hello"
         android:textColor="@color/colorConsole"
         android:textSize="@dimen/szConsole"
@@ -29,16 +29,17 @@
     <LinearLayout
         android:id="@+id/cli"
         android:layout_width="match_parent"
-        android:layout_height="256dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="8dp">
+        tools:layout_editor_absoluteX="0dp">
 
         <EditText
             android:id="@+id/pad"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:ems="11"
+            android:layout_height="192dp"
+            android:ems="19"
             android:inputType="textMultiLine"
             android:textSize="@dimen/szConsole"
             tools:layout_editor_absoluteX="8dp"
@@ -48,9 +49,10 @@
             android:id="@+id/go"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="top|right"
             android:text="Butt\non"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/cli"
             tools:layout_editor_absoluteX="329dp"
             tools:layout_editor_absoluteY="486dp" />
 

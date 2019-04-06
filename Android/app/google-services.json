@@ -1,0 +1,44 @@
+{
+  "project_info": {
+    "project_number": "890654100792",
+    "firebase_url": "https://metal-236405.firebaseio.com",
+    "project_id": "metal-236405",
+    "storage_bucket": "metal-236405.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:890654100792:android:809e59e342cfe2ed",
+        "android_client_info": {
+          "package_name": "io.github.ponyatov.metal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "890654100792-p86jetl5tf1jdqkanbjrhjh5mhg53rnq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.github.ponyatov.metal",
+            "certificate_hash": "fc19bc25cd480f36c043d309b731c8383989aa15"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJ5Ylrpn6oRkjM-K8b1yONBckexTYoS00"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "890654100792-ke5729bj7a1om53uf83dnd1rapkvk2l6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
