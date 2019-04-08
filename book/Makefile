@@ -8,6 +8,7 @@ TEX += first/steps.tex first/eds.tex first/whitebox.tex first/install.tex
 TEX += frames/frames.tex frames/frame.tex frames/dump.tex
 TEX += frames/prim.tex frames/string.tex frames/symbol.tex frames/number.tex
 TEX += frames/container.tex frames/stack.tex frames/dict.tex
+TEX += frames/active.tex
 
 TEX += forth/forth.tex forth/dict.tex forth/ply.tex forth/repl.tex
 TEX += forth/cmdline.tex
