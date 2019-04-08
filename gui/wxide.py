@@ -1,5 +1,8 @@
 import sys,wx,wx.stc
 
+sys.path += ['..']
+from metaL import *
+
 ide = wx.App()
 
 class ideWindow(wx.Frame):
