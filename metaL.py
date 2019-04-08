@@ -146,6 +146,8 @@ class CMD(Active):
         
 class VM(Active): pass
 class FVM(VM): pass
+
+class Context(Active): pass
         
 ########################################################################## meta
 
