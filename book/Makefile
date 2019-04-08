@@ -54,6 +54,8 @@ TEX += code/in.tex code/emcin.tex code/cpp.tex code/ide.tex code/literate.tex
 TEX += concept/concept.tex
 
 TEX += gui/wx.tex
+LST += gui/wx00.py gui/wx01.py gui/wx02.py
+FIG += gui/wx00.png gui/wx01.png gui/wx02.png
 
 TEX += os/os.tex os/boot.tex os/sched.tex os/files.tex
 TEX += os/net.tex os/user.tex os/gui.tex
