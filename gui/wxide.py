@@ -1,4 +1,5 @@
-import sys,wx,wx.stc
+import sys,re
+import wx,wx.stc
 
 sys.path += ['..']
 from metaL import *
@@ -50,7 +51,7 @@ class ideWindow(wx.Frame):
 try:
     autoloadFile = sys.argv[1]
 except:
-    autoloadFile = 'wxide.src'
+    autoloadFile = re.sub(r'\.py$',r'.src',sys.argv[0])
     
 ideConsole = ideWindow(autoloadFile) ; ideConsole.Show()
 
