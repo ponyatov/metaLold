@@ -68,6 +68,9 @@ FIG += mcu/ardu/micro.png mcu/ardu/uno.jpg mcu/ardu/nano.jpg
 
 TEX += android/android.tex
 
+TEX += py/py.tex
+LST += py/hello*.py
+
 TEX += docu/ment.tex
 
 TEX += bib/bib.tex
