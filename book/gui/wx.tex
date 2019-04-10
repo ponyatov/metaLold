@@ -25,10 +25,35 @@ $ wxPython3.0-win32-3.0.2.0-py27.exe
 \clearpage
 \lst{gui/wx00.py}{language=Python,title=gui/wxide.py}
 
-\begin{description}
-\item[ide]
-\item[ideWindow]
-\item[ideConsole]
+\begin{description}[nosep]
+\item[ide] приложение wxWidgets, объект отслеживает логику GUI
+\item[ideWindow] класс окна, формирует типовое окно IDE (редактор + меню)
+\item[ideConsole] главное окно\ --- командная консоль
 \end{description}
+
+\fig{gui/wx00.png}{height=.5\textheight}
+
+\lst{gui/wx01.py}{language=Python}
+\fig{gui/wx01.png}{height=.3\textheight}
+
+\clearpage
+\lst{gui/wx02.py}{language=Python}
+\fig{gui/wx02.png}{height=.5\textheight}
+
+\clearpage
+При запуске будем открывать файл командного скрипта по умолчанию, и хранить
+привязку окна IDE к текстовому файлу:
+\lst{gui/wx03.py}{language=Python}
+\lst{gui/wx04.py}{language=Python}
+\lst{gui/wx05.py}{language=Python}
+Пока ограничимся привязкой каждого окна редактора к текстовому файлу: этот
+функционал в любом случае необходим для чтения уже существующего кода, и
+обеспечения совместимости с системами версионирования.
+\clearpage
+\lst{gui/wx06.py}{language=Python}
+\fig{gui/wx06.png}{height=.5\textheight}
+
+\clearpage
+Для интерактивной работы в IDE необходим импорт \F-машины из \metal:
 
 \secup

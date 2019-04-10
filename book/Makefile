@@ -8,6 +8,7 @@ TEX += first/steps.tex first/eds.tex first/whitebox.tex first/install.tex
 TEX += frames/frames.tex frames/frame.tex frames/dump.tex
 TEX += frames/prim.tex frames/string.tex frames/symbol.tex frames/number.tex
 TEX += frames/container.tex frames/stack.tex frames/dict.tex
+TEX += frames/active.tex
 
 TEX += forth/forth.tex forth/dict.tex forth/ply.tex forth/repl.tex
 TEX += forth/cmdline.tex
@@ -54,6 +55,9 @@ TEX += code/in.tex code/emcin.tex code/cpp.tex code/ide.tex code/literate.tex
 TEX += concept/concept.tex
 
 TEX += gui/wx.tex
+LST += gui/wx00.py gui/wx01.py gui/wx02.py
+LST += gui/wx03.py gui/wx04.py gui/wx05.py gui/wx06.py
+FIG += gui/wx00.png gui/wx01.png gui/wx02.png
 
 TEX += os/os.tex os/boot.tex os/sched.tex os/files.tex
 TEX += os/net.tex os/user.tex os/gui.tex
@@ -63,6 +67,9 @@ TEX += game/dev.tex
 FIG += mcu/ardu/micro.png mcu/ardu/uno.jpg mcu/ardu/nano.jpg
 
 TEX += android/android.tex
+
+TEX += py/py.tex
+LST += py/hello*.py
 
 TEX += docu/ment.tex
 
