@@ -1,5 +1,6 @@
 import sys,re
 import wx,wx.stc
+import pydot
 
 sys.path += ['..']
 from metaL import *
@@ -49,6 +50,8 @@ class ideWindow(wx.Frame):
         self.Bind(wx.EVT_MENU,self.onStack,self.stack)
         self.words = self.debug.Append(wx.ID_ANY,'&Words\tF10')
         self.Bind(wx.EVT_MENU,self.onWords,self.words)
+        self.plot  = self.debug.Append(wx.ID_ANY,'&Plot\tCtrl+P')
+        self.Bind(wx.EVT_MENU,self.onPlot,self.plot)
         
         self.help = wx.Menu() ; self.menu.Append(self.help,'&Help')
         self.about = self.help.Append(wx.ID_ABOUT,'&About\tF1')
@@ -57,6 +60,7 @@ class ideWindow(wx.Frame):
     def onQuit(self,event):
         ideConsole.onSave()
         ideConsole.Close() ; ideStack.Close() ; ideWords.Close()
+        ideGraph.Close()
         
     def onAbout(self,event):
         info = wx.AboutDialogInfo()
@@ -81,6 +85,13 @@ class ideWindow(wx.Frame):
             ideStack.editor.SetValue(S.dump())
         if ideWords.IsShown():
             ideWords.editor.SetValue(W.dump())
+            
+    def onPlot(self,event):
+        ideGraph.Show()
+        
+        
+class idePlot(ideWindow):        
+    def initEditor(self): pass
 
 try:
     autoloadFile = sys.argv[1]
@@ -91,5 +102,6 @@ ideConsole = ideWindow(autoloadFile) ; ideConsole.Show()
 
 ideStack   = ideWindow(autoloadFile + '.stack')
 ideWords   = ideWindow(autoloadFile + '.words')
+ideGraph   = idePlot(autoloadFile + '.dot')
 
 ide.MainLoop()
