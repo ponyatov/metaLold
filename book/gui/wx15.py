@@ -10,4 +10,4 @@ class ideWindow(wx.Frame):
 class idePlot(ideWindow):        
     def initEditor(self): pass
 
-ideGraph   = idePlot(autoloadFile + '.dot')
+ideGraph   = idePlot(autoloadFile + '.plot')
