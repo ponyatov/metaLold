@@ -57,6 +57,7 @@ TEX += concept/concept.tex
 TEX += gui/wx.tex
 LST += gui/wx00.py gui/wx01.py gui/wx02.py
 LST += gui/wx03.py gui/wx04.py gui/wx05.py gui/wx06.py
+LST += gui/wx07.py gui/wx08.py gui/wx09.py
 FIG += gui/wx00.png gui/wx01.png gui/wx02.png
 
 TEX += os/os.tex os/boot.tex os/sched.tex os/files.tex
