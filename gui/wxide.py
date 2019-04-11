@@ -48,10 +48,21 @@ class ideWindow(wx.Frame):
         
         self.help = wx.Menu() ; self.menu.Append(self.help,'&Help')
         self.about = self.help.Append(wx.ID_ABOUT,'&About\tF1')
+        self.Bind(wx.EVT_MENU,self.onAbout,self.about)
         
     def onQuit(self,event):
         ideConsole.onSave()
         ideConsole.Close() ; ideStack.Close() ; ideWords.Close()
+        
+    def onAbout(self,event):
+        info = wx.AboutDialogInfo()
+        info.Icon       = wx.Icon('logo.png')
+        info.Name       = 'metaL/wx'
+        info.License    = 'CC BY-NC-ND'
+        info.WebSite    = 'https://github.com/ponyatov/metaL/releases'
+        info.Developers = ['Dmitry Ponyatov <dponyatov@gmail.com>']
+        info.Description = 'homoiconic metaprogramming language'
+        wx.AboutBox(info)
         
     def onStack(self,event):
         if ideStack.IsShown(): ideStack.Hide()
