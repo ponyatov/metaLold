@@ -72,8 +72,9 @@ try:
 except:
     autoloadFile = re.sub(r'\.py$',r'.src',sys.argv[0])
     
-ideConsole = ideWindow(autoloadFile)          ; ideConsole.Show()
-ideStack   = ideWindow(autoloadFile+'.stack')
-ideWords   = ideWindow(autoloadFile+'.words')
+ideConsole = ideWindow(autoloadFile) ; ideConsole.Show()
+
+ideStack   = ideWindow(autoloadFile + '.stack')
+ideWords   = ideWindow(autoloadFile + '.words')
 
 ide.MainLoop()

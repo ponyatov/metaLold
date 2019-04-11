@@ -2,7 +2,6 @@
 ## (c) Dmitry Ponyatov <dponyatov@gmail.com> CC BY-NC-ND
 
 import os,sys
-from wtforms.fields.simple import SubmitField
 
 ######################################################################## FRAMES
 

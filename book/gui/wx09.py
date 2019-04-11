@@ -3,7 +3,7 @@ class ideWindow(wx.Frame):
         ideConsole.onSave() ; ideConsole.Close()
         ideStack.Close() ; ideWords.Close()
 
-ideStack = ideWindow(autoloadFile+'.stack')
+ideStack = ideWindow(autoloadFile + '.stack')
 ideStack.Show()
-ideWords = ideWindow(autoloadFile+'.words')
+ideWords = ideWindow(autoloadFile + '.words')
 ideWords.Show()
