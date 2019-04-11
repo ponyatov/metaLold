@@ -40,6 +40,11 @@ class ideWindow(wx.Frame):
         
         self.debug = wx.Menu() ; self.menu.Append(self.debug,'&Debug')
         self.update = self.debug.Append(wx.ID_REFRESH,'&Update\tF12')
+        self.Bind(wx.EVT_MENU,self.onUpdate,self.update)
+        self.stack = self.debug.Append(wx.ID_ANY,'&Stack\tF11')
+        self.Bind(wx.EVT_MENU,self.onStack,self.stack)
+        self.words = self.debug.Append(wx.ID_ANY,'&Words\tF10')
+        self.Bind(wx.EVT_MENU,self.onWords,self.words)
         
         self.help = wx.Menu() ; self.menu.Append(self.help,'&Help')
         self.about = self.help.Append(wx.ID_ABOUT,'&About\tF1')
@@ -47,6 +52,20 @@ class ideWindow(wx.Frame):
     def onQuit(self,event):
         ideConsole.onSave()
         ideConsole.Close() ; ideStack.Close() ; ideWords.Close()
+        
+    def onStack(self,event):
+        if ideStack.IsShown(): ideStack.Hide()
+        else:                  ideStack.Show() ; self.onUpdate(event)
+        
+    def onWords(self,event):
+        if ideWords.IsShown(): ideWords.Hide()
+        else:                  ideWords.Show() ; self.onUpdate(event)
+        
+    def onUpdate(self,event):
+        if ideStack.IsShown():
+            ideStack.editor.SetValue(S.dump())
+        if ideWords.IsShown():
+            ideWords.editor.SetValue(W.dump())
 
 try:
     autoloadFile = sys.argv[1]
@@ -54,7 +73,7 @@ except:
     autoloadFile = re.sub(r'\.py$',r'.src',sys.argv[0])
     
 ideConsole = ideWindow(autoloadFile)          ; ideConsole.Show()
-ideStack   = ideWindow(autoloadFile+'.stack') ; ideStack.Show()
-ideWords   = ideWindow(autoloadFile+'.words') ; ideWords.Show()
+ideStack   = ideWindow(autoloadFile+'.stack')
+ideWords   = ideWindow(autoloadFile+'.words')
 
 ide.MainLoop()
