@@ -46,13 +46,15 @@ class ideWindow(wx.Frame):
         
     def onQuit(self,event):
         ideConsole.onSave()
-        ideConsole.Close()
+        ideConsole.Close() ; ideStack.Close() ; ideWords.Close()
 
 try:
     autoloadFile = sys.argv[1]
 except:
     autoloadFile = re.sub(r'\.py$',r'.src',sys.argv[0])
     
-ideConsole = ideWindow(autoloadFile) ; ideConsole.Show()
+ideConsole = ideWindow(autoloadFile)          ; ideConsole.Show()
+ideStack   = ideWindow(autoloadFile+'.stack') ; ideStack.Show()
+ideWords   = ideWindow(autoloadFile+'.words') ; ideWords.Show()
 
 ide.MainLoop()

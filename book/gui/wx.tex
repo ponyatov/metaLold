@@ -53,7 +53,22 @@ $ wxPython3.0-win32-3.0.2.0-py27.exe
 \lst{gui/wx06.py}{language=Python}
 \fig{gui/wx06.png}{height=.5\textheight}
 
-\clearpage
-Для интерактивной работы в IDE необходим импорт \F-машины из \metal:
+\clearpage\noindent
+Для интерактивной работы в IDE необходим импорт \F-машины из \metal.  
+Пока не будем явно выделять инстансы \class{FVM} \ref{FVM}, и используем
+глобальную машину:
+\lst{gui/wx07.py}{language=Python}
+\lst{gui/wx08.py}{language=Python}
+\begin{verbatim}
+<stack:DATA> @7fc8029e45f0
+<dict:FORTH> @7fc8029e45a8
+    EXECUTE = <cmd:EXECUTE> @7fc8029b30e0
+    * = <cmd:MUL> @7fc8029b3878
+    >> = <cmd:RSHIFT> @7fc8029b3830 ...
+\end{verbatim}
+
+Для просмотра содержимого стека и словаря нужно еще два окна, обновряемых после
+выполнения команд:
+\lst{gui/wx09.py}{language=Python}
 
 \secup
