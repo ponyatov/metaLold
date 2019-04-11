@@ -7,11 +7,15 @@ from metaL import *
 ide = wx.App()
 
 class ideWindow(wx.Frame):
+    
+    icon = wx.Icon('logo.png')
+    
     def __init__(self,FileName):
         wx.Frame.__init__(self,parent=None,title=FileName)
         self.filename = FileName
         self.initMenu()
         self.initEditor()
+        self.SetIcon(self.icon)
         
     def initEditor(self):
         self.editor = wx.stc.StyledTextCtrl(self)
@@ -56,7 +60,7 @@ class ideWindow(wx.Frame):
         
     def onAbout(self,event):
         info = wx.AboutDialogInfo()
-        info.Icon       = wx.Icon('logo.png')
+        info.Icon       = self.icon
         info.Name       = 'metaL/wx'
         info.License    = 'CC BY-NC-ND'
         info.WebSite    = 'https://github.com/ponyatov/metaL/releases'
