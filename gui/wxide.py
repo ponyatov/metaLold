@@ -1,5 +1,5 @@
 import sys,re
-import wx,wx.stc
+import wx,wx.stc,wx.lib.scrolledpanel
 import pydot
 
 sys.path += ['..']
@@ -100,8 +100,11 @@ class idePlot(ideWindow):
         plot.write_png(self.filename)
         # file to GUI widget
         image = wx.Image(self.filename, wx.BITMAP_TYPE_ANY)
+        self.panel = wx.lib.scrolledpanel.ScrolledPanel(self)
+        self.panel.SetAutoLayout(True)
+        self.panel.SetupScrolling()  
         self.editor = wx.StaticBitmap(
-            self,wx.ID_ANY,wx.BitmapFromImage(image))
+            self.panel,wx.ID_ANY,wx.BitmapFromImage(image))
 
 try:
     autoloadFile = sys.argv[1]
