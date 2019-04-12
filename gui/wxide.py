@@ -1,6 +1,11 @@
 import sys,re
 import wx,wx.stc,wx.lib.scrolledpanel
-import pydot
+
+from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg as FigureCanvas
+from matplotlib.figure import Figure
+# import matplotlib.pyplot as plt
+
+import networkx as nx
 
 sys.path += ['..']
 from metaL import *
@@ -91,7 +96,7 @@ class ideWindow(wx.Frame):
         else:                  ideGraph.Show()
         
         
-class idePlot(ideWindow):        
+class idePlot(ideWindow):
     def __init__(self,V):
         ideWindow.__init__(self,V)
         self.Bind(wx.EVT_SET_FOCUS, self.onFocus)
@@ -99,18 +104,18 @@ class idePlot(ideWindow):
         ideConsole.SetFocus()
         
     def initEditor(self):
-        # plot to file
-        plot = pydot.Dot(graph_type='digraph') 
-        for i in W.attr.keys():
-            plot.add_edge(pydot.Edge(W.value,W.attr[i].value))
-#         plot.write_png(self.filename)
-        # file to GUI widget
-        image = wx.Image(self.filename, wx.BITMAP_TYPE_ANY)
-        self.panel = wx.lib.scrolledpanel.ScrolledPanel(self)
-        self.panel.SetAutoLayout(True)
-        self.panel.SetupScrolling()  
-        self.editor = wx.StaticBitmap(
-            self.panel,wx.ID_ANY,wx.BitmapFromImage(image))
+        self.figure = Figure()
+        self.canvas = FigureCanvas(self, -1, self.figure)
+        self.axes = self.figure.add_subplot(111)
+        self.sizer = wx.BoxSizer(wx.VERTICAL)
+        self.sizer.Add(self.canvas, 1, wx.LEFT | wx.TOP | wx.GROW)
+        self.SetSizer(self.sizer)
+        
+    def onUpdate(self,event):
+        graph = nx.DiGraph()
+        for i in W.keys(): graph.add_edge(W, W[i])
+        nx.draw(graph,ax=self.axes)
+        self.Fit()
 
 try:
     autoloadFile = sys.argv[1]
