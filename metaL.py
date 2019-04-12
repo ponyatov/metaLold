@@ -50,6 +50,8 @@ class Frame:
         return self.attr[slot]
     def __setitem__(self,slot,obj):
         self.attr[slot] = obj ; return self
+    def keys(self):
+        return self.attr.keys()
         
     ## stack manipulations
         
