@@ -79,43 +79,43 @@ class ideWindow(wx.Frame):
         
     def onStack(self,event):
         if ideStack.IsShown(): ideStack.Hide()
-        else:                  ideStack.Show() ; self.onUpdate(event)
+        else:                  ideStack.Show() ; ideStack.onUpdate(event)
         
     def onWords(self,event):
         if ideWords.IsShown(): ideWords.Hide()
-        else:                  ideWords.Show() ; self.onUpdate(event)
+        else:                  ideWords.Show() ; ideWords.onUpdate(event)
+        
+    def onPlot(self,event):
+        if ideGraph.IsShown(): ideGraph.Hide()
+        else:                  ideGraph.Show() ; ideGraph.onUpdate(event)
         
     def onUpdate(self,event):
         if ideStack.IsShown():
             ideStack.editor.SetValue(S.dump())
         if ideWords.IsShown():
             ideWords.editor.SetValue(W.dump())
-            
-    def onPlot(self,event):
-        if ideGraph.IsShown(): ideGraph.Hide()
-        else:                  ideGraph.Show()
-        
         
 class idePlot(ideWindow):
-    def __init__(self,V):
-        ideWindow.__init__(self,V)
-        self.Bind(wx.EVT_SET_FOCUS, self.onFocus)
-    def onFocus(self,event):
-        ideConsole.SetFocus()
+#     def __init__(self,V):
+#         ideWindow.__init__(self,V)
+#         self.Bind(wx.EVT_SET_FOCUS, self.onFocus)
+#     def onFocus(self,event):
+#         ideConsole.SetFocus()
         
     def initEditor(self):
         self.figure = Figure()
         self.canvas = FigureCanvas(self, -1, self.figure)
-        self.axes = self.figure.add_subplot(111)
         self.sizer = wx.BoxSizer(wx.VERTICAL)
         self.sizer.Add(self.canvas, 1, wx.LEFT | wx.TOP | wx.GROW)
         self.SetSizer(self.sizer)
         
     def onUpdate(self,event):
-        graph = nx.DiGraph()
-        for i in W.keys(): graph.add_edge(W, W[i])
-        nx.draw(graph,ax=self.axes)
-        self.Fit()
+        if self.IsShown():
+            self.figure.clf() ; self.axes = self.figure.add_subplot(111)
+            graph = nx.DiGraph()
+            for i in W.keys(): graph.add_edge(W, W[i])
+            nx.draw(graph,ax=self.axes)
+            self.Fit()
 
 try:
     autoloadFile = sys.argv[1]
