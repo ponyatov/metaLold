@@ -1,0 +1,18 @@
+package io.github.ponyatov.metal;
+
+%%{
+	machine lexer;
+
+	main := any;
+}%%
+
+public class FORTH {
+
+	%% write data;
+	
+	public static void parse(String cmd) throws ParseException {
+	
+		%% write exec;
+		
+	}
+}

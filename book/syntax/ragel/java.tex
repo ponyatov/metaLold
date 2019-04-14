@@ -1,12 +1,12 @@
 \secrel{Использование \file{ragel} для лексера на Java}\label{rageljava}\secdown
 
-Ragel\ --- компилятор конечных автоматов, производящий исходный код на C, C++,
-C\#, Objective-C, D, Java \ref{rageljava}, OCaml, Go и Ruby.
-
-\url{http://thingsaaronmade.com/blog/a-simple-intro-to-writing-a-lexer-with-ragel.html}
-
-\url{http://www.colm.net/open-source/ragel/}
+Для реализации командного интерфейса на диалекте \F\ для \A-реализации \metal\
+\ref{anconsole}\ используется \file{ragel}. Эта утилита умеет гененировать
+исходный код на множестве языков программирования, в том числе и \java.
 
 
+\lst{syntax/ragel/java00.Makefile}{title=/Android/Makefile,language=make}
+\clearpage
+\lst{syntax/ragel/java00.ragel}{title=/Android/FORTH.ragel,language=Java}
 
 \secup
