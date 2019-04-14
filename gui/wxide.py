@@ -113,8 +113,12 @@ class idePlot(ideWindow):
         if self.IsShown():
             self.figure.clf() ; self.axes = self.figure.add_subplot(111)
             graph = nx.DiGraph()
-            for i in W.keys(): graph.add_edge(W, W[i])
-            nx.draw(graph,ax=self.axes)
+            W.graph(graph)
+#             for i in W.keys(): graph.add_edge(W.value, W[i].value)
+            pos = nx.spring_layout(graph)
+            nx.draw_networkx_edges(graph,pos=pos,ax=self.axes,alpha=.2)
+            nx.draw_networkx_nodes(graph,pos=pos,ax=self.axes,alpha=.1)
+            nx.draw_networkx_labels(graph,pos=pos,ax=self.axes)
             self.Fit()
 
 try:

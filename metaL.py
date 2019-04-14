@@ -65,6 +65,17 @@ class Frame:
     def swap(self):
         B = self.pop() ; A = self.pop() ; self // B // A ; return self
         
+    ## plotting
+    
+    graphed = []
+    def graph(self,kxgraph,depth=0):
+        if not depth: Frame.graphed = []
+        if self not in Frame.graphed:
+            Frame.graphed.append(self)
+            for i in self.attr:
+                kxgraph.add_edge(self.value,i)
+                self.attr[i].graph(kxgraph,depth+1)
+        
     ## processing
     
     def execute(self): S // self
