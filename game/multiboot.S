@@ -1,3 +1,7 @@
+/* Multiboot1 spec */
+
+/* http://www.gnu.org/software/grub/manual/multiboot/multiboot.html */
+
 #define  ASM
 #include <multiboot.h>
 

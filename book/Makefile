@@ -66,8 +66,8 @@ FIG += gui/wx00.png gui/wx01.png gui/wx02.png
 TEX += os/os.tex os/boot.tex os/sched.tex os/files.tex
 TEX += os/net.tex os/user.tex os/gui.tex
 
-TEX += game/dev.tex game/boot.tex game/video.tex
-LST += game/boot00.mk game/boot00.objdump
+TEX += game/dev.tex game/cross.tex game/boot.tex game/video.tex
+LST += game/cross0.mk game/boot00.mk game/boot00.objdump
 
 FIG += mcu/ardu/micro.png mcu/ardu/uno.jpg mcu/ardu/nano.jpg
 

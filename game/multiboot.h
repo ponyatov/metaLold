@@ -1,3 +1,7 @@
+/* Multiboot1 spec */
+
+/* http://www.gnu.org/software/grub/manual/multiboot/multiboot.html */
+
 #ifndef _H_MULTIBOOT
 #define _H_MULTIBOOT
 

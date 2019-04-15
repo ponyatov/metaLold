@@ -3,3 +3,6 @@
 *.kernel
 *.objdump
 
+tmp/
+i?86-elf/
+
