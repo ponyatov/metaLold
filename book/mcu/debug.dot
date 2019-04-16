@@ -1,0 +1,24 @@
+digraph {
+rankdir=LR;
+STM32 [shape=Msquare,label="STM32\nMCU"];
+STlink [shape=Mdiamond,label="STLink\nv.2-1"];
+STM32 -> STlink [label=SWD];
+STlink-> texane -> OpenOCD -> gdb -> ddd;
+texane [label="texane\nstlink"];
+gdb -> Eclipse;
+simulator -> gdb [label=TCP];
+MSP430 [shape=Msquare];
+MSP430 -> stub [label="firmware\npart"];
+stub -> gdb [label="serial\nUART"];
+{ rank=same; MSP430; STM32; ARM; }
+{ rank=same; STlink; stub; Segger; }
+Segger [shape=Mdiamond,label="Segger\nJ-LINK"];
+{ rank=same; texane; simulator; }
+ARM -> Segger [label=JTAG];
+Segger -> OpenOCD [label=USB];
+ARM [shape=parallelogram];
+ARM [label="ARM\nboard"];
+{ rank=same; gdb; ddd; Eclipse; }
+ddd [shape=box];
+Eclipse [shape=box];
+}

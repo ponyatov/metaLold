@@ -70,7 +70,7 @@ TEX += game/dev.tex game/cross.tex game/boot.tex game/video.tex
 LST += game/cross0.mk game/boot00.mk game/boot00.objdump
 TEX += game/debug.tex
 LST += game/debug0.mk game/debug1.mk
-FIG += game/debug1A.png game/debug1B.png game/debug1C.png
+FIG += game/debug1A.png game/debug1B.png game/debug1C.png /tmp/debug.pdf
 
 FIG += mcu/ardu/micro.png mcu/ardu/uno.jpg mcu/ardu/nano.jpg
 
@@ -94,5 +94,5 @@ LATEX = pdflatex -halt-on-error
 metaL.pdf: $(TEX) $(LST) $(FIG)
 	$(LATEX) $< && $(LATEX) $<
 
-/tmp/gnugcc.pdf: mcu/gnugcc.dot
+/tmp/%.pdf: mcu/%.dot
 	dot -T pdf -o /tmp/crop.pdf $< && pdfcrop /tmp/crop.pdf $@
