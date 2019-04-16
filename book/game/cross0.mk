@@ -1,6 +1,6 @@
 CPU     = i386
 TARGET  = $(CPU)-elf
-CFG_CPU = --with-cpu=$(CPU) --with-float=soft
+CFG_CPU = --with-cpu=$(CPU)
 CROSS   = $(CURDIR)/$(TARGET)/bin
 
 cross: ../mcu/Makefile

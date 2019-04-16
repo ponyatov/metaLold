@@ -6,7 +6,7 @@ CROSS   = $(CURDIR)/$(TARGET)/bin
 
 QEMU	= qemu-system-i386
 GDB		= $(CROSS)/$(TARGET)-gdb
-CFLAGS += -g2
+CFLAGS += -g2 -O0
 
 DDD		= "$(GDB) -x $<.gdb $< ; killall $(QEMU)"
 
@@ -16,8 +16,9 @@ go: game.elf
 	ddd --debugger $(DDD)
 
 cross: ../mcu/Makefile
-	make -f $< TARGET=$(TARGET) CFG_CPU="$(CFG_CPU)" gdb
-#	cross0
+	make -f $< TARGET=$(TARGET) CFG_CPU="$(CFG_CPU)" cross0
+clean: ../mcu/Makefile
+	make -f $< TARGET=$(TARGET) clean
 
 C = multiboot.S
 H = multiboot.h
