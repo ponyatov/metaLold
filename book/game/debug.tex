@@ -1,17 +1,18 @@
-\secrel{Отладка под эмулятором}\label{qemudebug}
+\secrel{Отладка под эмулятором}\label{qemudebug}\secdown
 
 QEMU обеспечивает не только запуск \term{bare metal} программ в эмулиремой
 виртуальной машине, но и полноценный отладочный интерфейс для GNU \file{gdb}.
 
 \lst{game/debug0.mk}{title=\file{/game/Makefile},language=make}
 
+\clearpage
 PHONY-цель \file{go}\ идет в \file{Makefile} самой первой, и является главной
 целью при запуске \verb|make [go]|. \file{game.elf}\ будет автоматически
 перекомпилирован если вы меняли или удаляли какие-то зависимые файлы (с
 исходным кодом), затем будет запущен QEMU в режиме \term{отладочного сервера}.
 Режимы работы задаются с помощью опций командной строки:
 
-\begin{description}
+\begin{description}[nosep]
 \item[-kernel game.elf] QEMU умеет загружать напрямую ядра операционных систем и
 bare metal программы, в которых есть загрузочный заголовок Multiboot
 \ref{multiboot}. Для запуска игр скомпилированных в ELF файлы вам не нужны
@@ -23,6 +24,7 @@ bare metal программы, в которых есть загрузочный
 \item[-S] ожидать подключения отладчика до запуска программы
 \end{description}
 
+\clearpage
 \begin{framed}\noindent
 Умение пользоваться \term{отладчиком}\ --- \emph{критический навык} для
 любого разработчика встраиваемых систем. 
@@ -45,4 +47,38 @@ bare metal программы, в которых есть загрузочный
 тестирования, и ведения проектной документации.
 }
 
+% \clearpage
+\url{http://www.linuxcenter.ru/lib/books/linuxdev/linuxdev9.phtml}
+
+\url{https://eax.me/gdb/}
+
+\medskip\noindent
+Запуск отладчика состоит из двух частей:
+\begin{description}[nosep]
+\item[qemu] запускается в фоновом процессе, ожидая подключения на порту TCP
+\file{127.0.0.1:1234} как \term{gdb-сервер}
+\item[gdb] \emph{отладчик является (сетевым) \term{gdb-клиентом}}
+опция \verb|-x game.elf.gdb| указывает скрипт с командами инициализации
+отладочной сессии:
+\end{description}
 \lst{game/gdb0.gdb}{title=\file{/game/game.elf.gdb}}
+
+\clearpage
+\secrel{Запуск отладчика с графической оболочкой}
+
+В \linux\ доступна интересная \term{отладочная оболочка} \file{ddd}, которая
+обеспечивает не только работу любого gdb-клиента в графическом режиме, но и
+\emph{отображение структур данных отлаживаемой программы в виде диаграмм}.
+
+\lst{game/debug1.mk}{title=\file{/game/Makefile},language=make}
+
+\clearpage
+\fig{game/debug1A.png}{width=\textwidth}
+\clearpage
+\fig{game/debug1B.png}{width=\textwidth}
+\clearpage
+\fig{game/debug1C.png}{width=\textwidth}
+
+\secrel{Отладка прошивки на микроконтроллере}
+
+\secup

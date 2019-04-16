@@ -6,11 +6,14 @@ CROSS   = $(CURDIR)/$(TARGET)/bin
 
 QEMU	= qemu-system-i386
 GDB		= $(CROSS)/$(TARGET)-gdb
+CFLAGS += -g2
+
+DDD		= "$(GDB) -x $<.gdb $< ; killall $(QEMU)"
 
 go: game.elf
-	echo Ctrl-A C
+	# exit from QEMU: [Ctrl-A] [X]
 	$(QEMU) -kernel $< -nographic -s -S &
-	$(GDB) -x $<.gdb $<
+	ddd --debugger $(DDD)
 
 cross: ../mcu/Makefile
 	make -f $< TARGET=$(TARGET) CFG_CPU="$(CFG_CPU)" gdb
@@ -20,7 +23,7 @@ C = multiboot.S
 H = multiboot.h
 
 GCC = $(CROSS)/$(TARGET)-gcc
-CFLAGS = -march=$(CPU) -mtune=$(CPU) -m32 -I$(CURDIR)
+CFLAGS += -march=$(CPU) -mtune=$(CPU) -m32 -I$(CURDIR)
 
 LD = $(CROSS)/$(TARGET)-ld
 LDFLAGS = -m elf_i386 -T multiboot.ld
