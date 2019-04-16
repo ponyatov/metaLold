@@ -2,7 +2,6 @@ CPU     = i386
 TARGET  = $(CPU)-elf
 CFG_CPU = --with-cpu=$(CPU) --with-float=soft
 CROSS   = $(CURDIR)/$(TARGET)/bin
-QEMU	= qemu-system-i386
 
 cross: ../mcu/Makefile
 	make -f $< \

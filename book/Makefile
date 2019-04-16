@@ -68,6 +68,8 @@ TEX += os/net.tex os/user.tex os/gui.tex
 
 TEX += game/dev.tex game/cross.tex game/boot.tex game/video.tex
 LST += game/cross0.mk game/boot00.mk game/boot00.objdump
+TEX += game/debug.tex
+LST += game/debug0.mk
 
 FIG += mcu/ardu/micro.png mcu/ardu/uno.jpg mcu/ardu/nano.jpg
 
