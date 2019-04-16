@@ -1,5 +1,6 @@
 QEMU	= qemu-system-i386
+GDB		= $(CROSS)/$(TARGET)-gdb
 
 go: game.elf
-	echo Ctrl-A C
-	$(QEMU) -kernel $< -nographic -s -S
+	$(QEMU) -kernel $< -nographic -s -S &
+	$(GDB) -x $<.gdb $<

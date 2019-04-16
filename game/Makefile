@@ -3,14 +3,18 @@ CPU     = i386
 TARGET  = $(CPU)-elf
 CFG_CPU = --with-cpu=$(CPU)
 CROSS   = $(CURDIR)/$(TARGET)/bin
+
 QEMU	= qemu-system-i386
+GDB		= $(CROSS)/$(TARGET)-gdb
 
 go: game.elf
 	echo Ctrl-A C
-	$(QEMU) -kernel $< -nographic -s -S
+	$(QEMU) -kernel $< -nographic -s -S &
+	$(GDB) -x $<.gdb $<
 
 cross: ../mcu/Makefile
-	make -f $< TARGET=$(TARGET) CFG_CPU="$(CFG_CPU)" cross0
+	make -f $< TARGET=$(TARGET) CFG_CPU="$(CFG_CPU)" gdb
+#	cross0
 
 C = multiboot.S
 H = multiboot.h
