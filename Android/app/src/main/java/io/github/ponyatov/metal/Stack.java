@@ -1,9 +1,6 @@
 package io.github.ponyatov.metal;
 
 public class Stack extends Container {
-
-    public Stack(String V) {
-        super(V);
-        type = "stack";
-    }
+    final static String type = "stack";
+    public Stack(String V) { super(V); }
 }
