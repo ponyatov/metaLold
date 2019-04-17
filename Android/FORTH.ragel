@@ -1,20 +1,35 @@
 package io.github.ponyatov.metal;
 
+//import java.text.ParseException;
+
 %%{
 	machine lexer;
 
-	main := any;
+	comment = ( "#" [^\n]* ) >{ts=p;} @{EMIT(new Comment(new String(data,ts,p)));} ;
+
+	main := (
+	    comment
+#	  | any         @{EMIT(new Symbol(String.valueOf(data[p])));}
+	)*;
 }%%
 
-/*
 public class FORTH {
 
+    static void EMIT(Frame c) { MainActivity.tasklist.append(c.dump()); }
+
+////////////////////////////////////////////////////////////////////////////////// .ragel generated
+
 	%% write data;
-	
-	public static void parse(String cmd) throws ParseException {
-	
+
+	public static void parse(String cmd) /* throws ParseException */ {
+
+        char[] data = cmd.toCharArray();// parser requires sequence storage
+        int cs = lexer_start;           // state machine current state
+	    int p  = 0;                     // current parsing position
+	    int pe = data.length;           // end of source text marker
+	    int ts = 0;                     // Token Start pointer
+
 		%% write exec;
-		
 	}
+
 }
-*/

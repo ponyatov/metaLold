@@ -17,18 +17,21 @@ public class Frame {
     public String head(String prefix) {
         return prefix + "<" + type + ":" + value + ">";
     }
+    public String head() { return head(""); }
 
     public String dump(int depth, String prefix) {
         String S = pad(depth) + head(prefix);
         return S;
     }
-
     public String dump(int depth)   { return dump(depth,"");    }
     public String dump()            { return dump(0,""); }
 
     String pad(int N) {
         final String cr  = "\n";
         final String tab = "\t";
-        return cr + tab.repeat(N); }
+        String S = cr;
+        for (int i=0;i<N;i++) S += tab;
+        return S;
+    }
 
 }

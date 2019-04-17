@@ -15,10 +15,10 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
 
     /// task list text panel
-    TextView tasklist;
+    public static TextView tasklist;
 
     /// command entry field
-    TextView pad;
+    public static TextView pad;
 
     /// run command button
     Button go;
@@ -60,6 +60,9 @@ public class MainActivity extends AppCompatActivity {
                 pad.setText("'newTask' Task\n"+pad.getText());
             }
         });
+
+        FORTH.parse("# put your commands here \n"
+                         +" 1 2.3 4e-5 0xDeadBeef 0b1101");
     }
 
     @Override
