@@ -4,6 +4,7 @@ TEX += intro/intro.tex intro/denial.tex intro/meta.tex
 TEX += intro/brooks.tex intro/lop.tex intro/homoiconic.tex
 
 TEX += first/steps.tex first/eds.tex first/whitebox.tex first/install.tex
+TEX += first/run.tex
 
 TEX += frames/frames.tex frames/frame.tex frames/dump.tex
 TEX += frames/prim.tex frames/string.tex frames/symbol.tex frames/number.tex
@@ -41,8 +42,9 @@ TEX += meta/circ.tex
 LST += meta/ebldfiles.ini meta/eclfiles.ini meta/files.ini
 LST += meta/header.ini meta/vimfiles.ini
 
-TEX += meta/ouro/boros.tex meta/ouro/files.tex
+TEX += meta/ouro/boros.tex meta/ouro/files.tex meta/ouro/info.tex
 FIG += meta/ouro/boros.png
+LST += meta/ouro/info.ml
 
 TEX += mcu/mcu.tex mcu/ardu/ino.tex mcu/msp/msp.tex
 TEX += mcu/arm/cortex.tex mcu/arm/setup.tex
