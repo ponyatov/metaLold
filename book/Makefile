@@ -41,6 +41,9 @@ TEX += meta/circ.tex
 LST += meta/ebldfiles.ini meta/eclfiles.ini meta/files.ini
 LST += meta/header.ini meta/vimfiles.ini
 
+TEX += meta/ouro/boros.tex meta/ouro/files.tex
+FIG += meta/ouro/boros.png
+
 TEX += mcu/mcu.tex mcu/ardu/ino.tex mcu/msp/msp.tex
 TEX += mcu/arm/cortex.tex mcu/arm/setup.tex
 
