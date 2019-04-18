@@ -34,6 +34,8 @@ TEX += prolog/prolog.tex
 
 TEX += syntax/syntax.tex syntax/ragel/ragel.tex syntax/ragel/java.tex
 LST += syntax/ragel/java??.*
+TEX += syntax/ply/ply.tex
+LST += syntax/ply/lex.py syntax/ply/yacc.py
 
 TEX += meta/circ.tex
 LST += meta/ebldfiles.ini meta/eclfiles.ini meta/files.ini
