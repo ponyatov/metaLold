@@ -1,10 +1,11 @@
-# extended frame model [Marvin Minsky]
+# расширенная фреймовая модель [Marvin Minsky]
 class Frame:
-    # construct frame with given name
+    # конструктор фрейма с заданным именем
     def __init__(self,V):
-        # class/type tag (string for simplicity)
+        # метка класса/типа (для упрощения использована строка)
         self.type  = self.__class__.__name__.lower()
-        # atomic value (Python primitive type)
+        # атомарное значение фрейма (примитивный тип Python)
+        # хранит имя фрейма, или строку, число,..
         self.value = V
         # slots/attributes /associative array/
         self.attr  = {}
