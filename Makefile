@@ -18,7 +18,7 @@ release:
 	git tag $(TODAY) && git push --tags
 
 update:
-	git submodule update --init --recursive
+#	git submodule update --init --recursive
 	git pull -v
 	cd Ouroboros ; git pull -v
 	cd mcu ; git pull -v

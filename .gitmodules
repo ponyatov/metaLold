@@ -2,6 +2,3 @@
 	path = mcu
 	url = git@bitbucket.org:ponyatov/mcu.git
 	branch = ponyatov
-[submodule "Ouroboros"]
-	path = Ouroboros
-	url = git@github.com:ponyatov/Ouroboros.git
