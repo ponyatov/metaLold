@@ -20,15 +20,103 @@ $ wxPython3.0-win32-3.0.2.0-py27.exe
 Поддержка версии 2.7 закрыта, поэтому часть пакетов придется ставить не через
 \file{pip}, а индивидуальными инсталляторами.
 
-\secrel{Базовый мультиоконный GUI}
+\secrel{Базовый мультиоконный GUI}\secdown
+
+\url{https://python-scripts.com/wxpython}
 
 \clearpage
 \lst{gui/wx00.py}{language=Python,title=gui/wxide.py}
 
-\begin{description}
-\item[ide]
-\item[ideWindow]
-\item[ideConsole]
+\begin{description}[nosep]
+\item[ide] приложение wxWidgets, объект отслеживает логику GUI
+\item[ideWindow] класс окна, формирует типовое окно IDE (редактор + меню)
+\item[ideConsole] главное окно\ --- командная консоль
 \end{description}
+
+\fig{gui/wx00.png}{height=.5\textheight}
+
+\lst{gui/wx01.py}{language=Python}
+\fig{gui/wx01.png}{height=.3\textheight}
+
+\clearpage
+\lst{gui/wx02.py}{language=Python}
+\fig{gui/wx02.png}{height=.5\textheight}
+
+\clearpage
+При запуске будем открывать файл командного скрипта по умолчанию, и хранить
+привязку окна IDE к текстовому файлу:
+\lst{gui/wx03.py}{language=Python}
+\lst{gui/wx04.py}{language=Python}
+\lst{gui/wx05.py}{language=Python}
+Пока ограничимся привязкой каждого окна редактора к текстовому файлу: этот
+функционал в любом случае необходим для чтения уже существующего кода, и
+обеспечения совместимости с системами версионирования.
+\clearpage
+\lst{gui/wx06.py}{language=Python}
+\fig{gui/wx06.png}{height=.5\textheight}
+
+\clearpage\noindent
+Для интерактивной работы в IDE необходим импорт \F-машины из \metal.  
+Пока не будем явно выделять инстансы \class{FVM} \ref{FVM}, и используем
+глобальную машину:
+\lst{gui/wx07.py}{language=Python}
+\noindent
+Для интерактивной консоли необходим просмотр стека, и иногда словаря. Это
+делается в отдельных окнах, обновляемых после выполнения команд:
+\lst{gui/wx08.py}{language=Python}
+\begin{verbatim}
+<stack:DATA> @7fc8029e45f0
+<dict:FORTH> @7fc8029e45a8
+    EXECUTE = <cmd:EXECUTE> @7fc8029b30e0
+    * = <cmd:MUL> @7fc8029b3878
+    >> = <cmd:RSHIFT> @7fc8029b3830 ...
+\end{verbatim}
+
+\lst{gui/wx09.py}{language=Python}
+Но эти окна не всегда нужны, поэтому желательно сделать их скрываемыми по
+хоткею:
+\lst{gui/wx10.py}{language=Python}
+
+\noindent
+На кнопки F10/F11 назначим закрытие/открытие окон стека и словаря:
+\lst{gui/wx11.py}{language=Python}
+\lst{gui/wx12.py}{language=Python}
+\lst{gui/wx13.py}{language=Python}
+\lst{gui/wx14.py}{language=Python}
+
+\secrel{Обработка клавиш}
+
+\clearpage
+\secrel{Визуализация фреймов}
+
+Для работы с развесистыми фреймовыми представлениями знаний\note{frame-based
+\term{KRR}: Knowledge Representation and Reasoning}\ \emph{визуализация является
+критическим функционалом}. Если взять даже простую программу на \emc\ размером
+всего в 2-3 экрана, результат ее разбора уже будет содержать сотни
+синтаксических узлов. Если пойти дальше, пытась объединять несколько программ,
+выявлять общие шаблонные части, поддерживать варианты целевых систем и настроек,
+или реализовать часть компилятора, сеть фреймов превращается в нечитаемую кашу
+из сотен тысяч узлов.
+
+\begin{verbatim}
+$ sudo pip install pydot networkx matplotlib
+\end{verbatim}
+
+Для отрисовки графиков используется другой класс окон, в котором переназначен
+метод инициализации редактора: вместо виджета текстового редатора Scintilla
+используется канвас визуализатора:
+
+% \clearpage
+\lst{gui/wx15.py}{language=Python}
+\lst{gui/wx16.py}{language=Python}
+\fig{gui/wx16.png}{height=.5\textheight}
+
+Более богатые возможности визуализации у библиотеки \file{networkx}.
+\lst{gui/wx17.py}{language=Python}
+\lst{gui/wx18.py}{language=Python}
+\fig{gui/wx19.png}{width=\textwidth}
+
+
+\secup
 
 \secup

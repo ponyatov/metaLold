@@ -1,0 +1,1 @@
+class Context(Active): pass

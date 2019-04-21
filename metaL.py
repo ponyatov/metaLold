@@ -2,7 +2,6 @@
 ## (c) Dmitry Ponyatov <dponyatov@gmail.com> CC BY-NC-ND
 
 import os,sys
-from wtforms.fields.simple import SubmitField
 
 ######################################################################## FRAMES
 
@@ -51,6 +50,8 @@ class Frame:
         return self.attr[slot]
     def __setitem__(self,slot,obj):
         self.attr[slot] = obj ; return self
+    def keys(self):
+        return self.attr.keys()
         
     ## stack manipulations
         
@@ -63,6 +64,17 @@ class Frame:
     def press(self): del self.nest[-2] ; return self
     def swap(self):
         B = self.pop() ; A = self.pop() ; self // B // A ; return self
+        
+    ## plotting
+    
+    graphed = []
+    def graph(self,kxgraph,depth=0):
+        if not depth: Frame.graphed = []
+        if self not in Frame.graphed:
+            Frame.graphed.append(self)
+            for i in self.attr:
+                kxgraph.add_edge(self.value,i)
+                self.attr[i].graph(kxgraph,depth+1)
         
     ## processing
     
@@ -130,19 +142,24 @@ class Dict(Container):
         if callable(obj): self[slot] = VM(obj) ; return self
         else: return Container.__setitem__(self, slot, obj)
     def __lshift__(self,obj):
-        if callable(obj): self << VM(obj) ; return self
+        if callable(obj): self << CMD(obj) ; return self
         else: return Container.__lshift__(self, obj)
 
 ######################################################################## active
         
 class Active(Frame): pass
 
-class VM(Active):
+class CMD(Active):
     def __init__(self,F):
         Active.__init__(self,F.__name__)
         self.fn = F
     def execute(self):
         self.fn()
+        
+class VM(Active): pass
+class FVM(VM): pass
+
+class Context(Active): pass
         
 ########################################################################## meta
 
@@ -203,7 +220,7 @@ lexer = lex.lex()
 
 def QUOTE():
     WORD()
-W['`'] = VM(QUOTE)
+W['`'] = CMD(QUOTE)
 
 def WORD():
     token = lexer.token()
@@ -257,7 +274,7 @@ W << BYE
 
 def Sdot():
     print S
-W['?'] = VM(Sdot)
+W['?'] = CMD(Sdot)
 
 def WORDS():
     print W
@@ -265,7 +282,7 @@ W << WORDS
 
 def DumpExit():
     WORDS() ; Sdot() ; BYE()
-W['??'] = VM(DumpExit)
+W['??'] = CMD(DumpExit)
 
 ################################################################### stack fluff
 
@@ -283,17 +300,17 @@ W << PRESS
 
 def DOT():
     S.dropall()
-W['.'] = VM(DOT)
+W['.'] = CMD(DOT)
 
 ################################################################# manipulations
 
 def PUSH():
     B = S.pop() ; S.top() // B
-W['//'] = VM(PUSH)
+W['//'] = CMD(PUSH)
 
 def RSHIFT():
     WORD() ; FIND() ; B = S.pop() ; A = S.pop() ; A >> B
-W['>>'] = VM(RSHIFT)
+W['>>'] = CMD(RSHIFT)
 
 ################################################################### definitions
 
@@ -305,23 +322,23 @@ W << DEF
 
 def ADD():
 	B = S.pop() ; A = S.pop() ; S // A.add(B)
-W['+'] = VM(ADD)
+W['+'] = CMD(ADD)
 
 def SUB():
 	B = S.pop() ; A = S.pop() ; S // A.sub(B)
-W['-'] = VM(SUB)
+W['-'] = CMD(SUB)
 
 def MUL():
 	B = S.pop() ; A = S.pop() ; S // A.mul(B)
-W['*'] = VM(MUL)
+W['*'] = CMD(MUL)
 
 def DIV():
 	B = S.pop() ; A = S.pop() ; S // A.div(B)
-W['/'] = VM(DIV)
+W['/'] = CMD(DIV)
 
 def MOD():
 	B = S.pop() ; A = S.pop() ; S // A.mod(B)
-W['%'] = VM(MOD)
+W['%'] = CMD(MOD)
 
 def NEG():
 	B = S.pop() ; A = S.pop() ; S // A.neg()

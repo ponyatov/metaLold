@@ -12,18 +12,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
 public class MainActivity extends AppCompatActivity {
 
     /// task list text panel
-    TextView tasklist;
+    public static TextView tasklist;
 
     /// command entry field
-    TextView pad;
+    public static TextView pad;
 
     /// run command button
     Button go;
@@ -37,10 +32,6 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog alert = builder.create();
         alert.show();
     }
-
-    /// Firebase interfacing
-    private FirebaseAuth fbAuth;
-    private FirebaseAuth.AuthStateListener fbAuthListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,27 +61,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /// Firebase connection
-        fbAuth = FirebaseAuth.getInstance();
-        fbAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null)
-                    msg("login:" + user.getUid());
-                else
-                    msg("logout");
-            }
-        };
-
-        fbAuth.signInAnonymously().addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull com.google.android.gms.tasks.Task<AuthResult> task) {
-                if (task.isSuccessful()) msg("ok");
-                if (task.isComplete()) msg("complete");
-            }
-        });
-
+        FORTH.parse("# put your commands here \n"
+                         +" 1 2.3 4e-5 0xDeadBeef 0b1101");
     }
 
     @Override

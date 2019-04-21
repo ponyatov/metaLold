@@ -74,13 +74,19 @@
 \newcommand{\cp}[1]{\note{\copyright\ #1}}
 \newcommand{\term}[1]{\textcolor{green}{\textit{#1}}}
 \newcommand{\termdef}[2]{\textcolor{red}{\textbf{\textit{#1}}}\index{#2}}
+
 \newcommand{\file}[1]{\texttt{#1}}
+\newcommand{\class}[1]{\texttt{#1}}
+\newcommand{\var}[1]{\texttt{#1}}
+\newcommand{\fn}[1]{\texttt{#1}}
 
 % comp
 \newcommand{\emc}{$C$}
 \newcommand{\cpp}{$C^{+_+}$}
 \newcommand{\java}{$Java$}
 \newcommand{\py}{\texttt{\textbf{Python}}}
+\newcommand{\rpy}{\texttt{\textbf{RPython}}}
+\newcommand{\pp}{\texttt{\textbf{PyPy}}}
 \newcommand{\lisp}{$Lisp$}
 \newcommand{\F}{\texttt{\textbf{Форт}}}
 \newcommand{\js}{$JS$}
@@ -91,6 +97,7 @@
 \newcommand{\self}{$Self$}
 \newcommand{\A}{Android}
 \newcommand{\eclipse}{Eclipse}
+\newcommand{\vim}{(g)Vim}
 \newcommand{\linux}{Linux}
 \newcommand{\win}{Windows}
 \newcommand{\wasm}{WASM}
@@ -110,6 +117,8 @@ tabsize=4,
 keywordstyle=\color{red},
 commentstyle=\color{blue},
 extendedchars=\true,
+% fix russian comments: https://dxdy.ru/post509540.html
+keepspaces = true,
 %breaklines=false,breakatwhitespace=true
 }
 \newcounter{lstcounter}

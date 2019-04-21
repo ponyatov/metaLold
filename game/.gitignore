@@ -1,0 +1,8 @@
+*.o
+*.elf
+*.kernel
+*.objdump
+
+tmp/
+i?86-elf/
+

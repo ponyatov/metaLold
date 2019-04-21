@@ -1,5 +1,5 @@
 # metaL
-## homoiconic programming language bootstrap in Python
+## homoiconic metaprogramming language bootstrap in Python
 
 (c) Dmitry Ponyatov <<dponyatov@gmail.com>> CC BY-NC-ND
 

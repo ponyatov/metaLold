@@ -1,0 +1,62 @@
+\secrel{Реализация ядра \metal\ на \pp}\label{pypy}\secdown
+
+\noindent
+\pp\ был задуман как реализация \py, написанная на \py, но благодаря наличию
+фреймворка для реализации динамических языков программирования он является также
+средством разработки новых языков программирования.
+\pp\ состоит из стандартного интерпретатора и транслятора:
+\begin{description}
+\item[Интерпретатор] полностью реализует язык \py. Сам интерпретатор написан
+на ограниченном подмножестве этого же языка, называемом \rpy\ (Restricted
+Python). В отличие от стандартного \py, \rpy\ является статически
+типизированным для более эффективной компиляции.
+\item[Транслятор] является набором инструментов, который анализирует код \rpy\ и
+переводит его в языки более низкого уровня, такие как \emc, байт-код \java\ или
+CIL. Он также поддерживает подключаемые сборщики мусора и позволяет опционально
+включать Stackless.
+\item[JIT-компилятор] также \pp\ включает опциональный модуль встроенного
+компилятора для трансляции кода в машинные инструкции во время исполнения
+программы.
+\end{description}
+
+% \clearpage
+\subsecly{Установка}
+
+\begin{verbatim}
+$ sudo apt update
+$ sudo apt install pypy
+$ sudo pip install -U rpython
+\end{verbatim}
+
+\pp\ может быть запущен как обычный интерпретатор:
+
+\begin{verbatim}
+$ pypy py/hello.py
+
+hello
+\end{verbatim}
+
+\clearpage
+Для получения быстрого исполняемого файла запускаем транслятор \rpy:
+\begin{verbatim}
+$ rpython hello.py
+\end{verbatim}
+
+% \bigskip
+% \href{https://buildmedia.readthedocs.org/media/pdf/building-an-interpreter-with-rpython/latest/building-an-interpreter-with-rpython.pdf}{Tutorial
+% on CyCy (интерпретатор Си)}
+
+\begin{itemize}
+  \item 
+\href{https://morepypy.blogspot.com/2011/04/tutorial-writing-interpreter-with-pypy.html}{Andrew
+Brown tutorial part 1}
+\end{itemize}
+
+\clearpage
+Транслируемый модуль должен определять функцию \fn{target()} которая возвращает
+точку входа. Транслятор работает с использованием метода \term{трассирующей
+компиляции}, вызывая импортированный модуль через точку входа.
+
+\lst{py/hello00.py}{language=Python}
+
+\secup
