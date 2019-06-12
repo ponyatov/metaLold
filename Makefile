@@ -20,7 +20,7 @@ $(MODULE)_$(TODAY).pdf: book/$(MODULE).pdf
 merge:
 	$(MAKE) pdf
 	git checkout master
-	git checkout ponyatov -- Makefile
+	git checkout ponyatov -- Makefile book/ metaL.py metaL.ml
 	
 release:
 	$(MAKE) pdf

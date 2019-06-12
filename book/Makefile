@@ -14,6 +14,10 @@ TEX += frames/active.tex
 TEX += forth/forth.tex forth/dict.tex forth/ply.tex forth/repl.tex
 TEX += forth/cmdline.tex
 
+TEX += gui/gui.tex
+LST += gui/gui00.py gui/gui01.py gui/gui02.py gui/gui03.py
+LST += gui/gui05.py gui/gui04.py
+
 TEX += web/web.tex
 TEX += web/templ.tex 
 LST += web/templ.css web/templ.html web/templ.py
