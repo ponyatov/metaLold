@@ -1,6 +1,10 @@
 MODULE = $(notdir $(CURDIR))
 TODAY = $(shell date +%d%m%y)
 
+meta: metaL.log
+metaL.log: metaL.py metaL.ml
+	python $^ > $@ && tail $(TAIL) $@
+
 all:
 	$(MAKE) -C book
 	$(MAKE) -C Android
@@ -13,9 +17,14 @@ $(MODULE)_$(TODAY).pdf: book/$(MODULE).pdf
 		-sOutputFile=$@ $<
 # /screen /ebook /prepress
 
+merge:
+	$(MAKE) pdf
+	git checkout master
+	git checkout ponyatov -- Makefile
+	
 release:
-	$(MAKE) all && $(MAKE) pdf
-	git tag $(TODAY) && git push --tags gh master
+	$(MAKE) pdf
+	git tag $(TODAY) && git push --tags
 
 update:
 	git submodule update --init --recursive

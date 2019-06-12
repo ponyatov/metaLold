@@ -5,3 +5,5 @@
 *.pdf
 *.epub
 env/
+metaL.ml.stack
+metaL.ml.words
