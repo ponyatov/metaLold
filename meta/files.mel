@@ -1,0 +1,11 @@
+\ project file structure
+
+`meta				dir		`META	=
+`metaL.py			file	`PY		/=
+`metaL.ini			file	`INI	/=
+`README.md			file	`README	/=
+`Makefile			file	`MK		/=
+`.gitignore			file	`GITI	/=
+`requirements.txt	file	`REQS	/=
+
+.

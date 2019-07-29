@@ -1,0 +1,21 @@
+\ metainformation
+
+META
+	`INFO
+
+`metaL												`MODULE		/=
+'homoiconic metaprogramming system'					`TITLE		/=
+'
+	* homoiconic metaprogramming system
+	* self-transformational knowledge base engine
+	* mobile/embedded/IoT development platform
+	* distributed/web application engine
+'													`ABOUT		/=
+'Dmitry Ponyatov'											
+'dponyatov@gmail.com'						email				//
+													`AUTHOR		/=
+'CC BY-NC-ND'										`LICENSE	/=
+`https://github.com/ponyatov/metaL					`GITHUB		/=
+
+	// 
+.

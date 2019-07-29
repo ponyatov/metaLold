@@ -1,0 +1,6 @@
+* {
+	background: {{web['back'].val}};
+	color:		{{web['color'].val}};
+	font:		{{web['font'].val}};
+	font-size:	{{web['font']['size'].val}};
+}

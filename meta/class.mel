@@ -1,0 +1,35 @@
+\ class tree
+
+`Frame class 
+	`Primitive				class	Frame		super
+		`String				class	Primitive	super
+		`Symbol				class	Primitive	super
+		`Number				class	Primitive	super
+			`Complex 		class	Number		super
+			`Integer		class	Number		super
+			`Hex			class	Integer		super
+			`Bin			class	Integer		super
+	`Container				class	Frame		super
+	`Active					class	Frame		super
+		`Cmd				class	Active		super
+		`VM					class	Active		super
+	`IO						class	Frame		super
+		`Dir				class	IO			super
+		`File				class	IO			super
+		`Net				class	IO			super
+			`Protocol		class	Net			super
+				`IP			class	Protocol	super
+					`TCP	class	IP			super
+					`UDP	class	IP			super
+			`Port			class	Net			super
+			`Email			class	Net			super
+			`Url			class	Net			super
+			`Web			class	Net			super
+	`Doc					class	Frame		super
+		`Color				class	Doc			super
+		`Font				class	Doc			super
+		`Size				class	Doc			super
+	`Meta					class	Frame		super
+		`Module				class	Meta		super
+		`Python				class	Meta		super
+			`Import			class	Python		super

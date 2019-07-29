@@ -1,0 +1,5 @@
+\ metacircular implementation
+
+.inc meta/files.mel
+.inc meta/info.mel
+.inc meta/class.mel

@@ -1,7 +1,10 @@
 MODULE = $(notdir $(CURDIR))
 TODAY = $(shell date +%d%m%y)
 
-all:
+.PHONY: all
+all: book
+
+book:
 	$(MAKE) -C book
 	
 pdf: $(MODULE)_$(TODAY).pdf
@@ -18,5 +21,6 @@ release:
 update:
 	git submodule update --init --recursive
 
-distill:
-	git checkout distill -- test_metaL.py
+test:
+	py.test --cov=metaL test_metaL.py
+	coverage html

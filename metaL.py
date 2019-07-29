@@ -1,141 +1,200 @@
-## Python/FORTH metaprogramming language implementation
+## metaL/py : homoiconic metaprogramming system
 ## (c) Dmitry Ponyatov <dponyatov@gmail.com> CC BY-NC-ND
+## wiki: https://github.com/ponyatov/metaL/wiki
 
 import os,sys
-from wtforms.fields.simple import SubmitField
 
-######################################################################## FRAMES
+############################################ extended Marvin Minsky frame model
 
 class Frame:
     
     def __init__(self,V):
         self.type  = self.__class__.__name__.lower()
-        self.value = V
-        self.attr  = {}
+        self.val   = V
+        self.slot  = {}
         self.nest  = []
+        self.immed = False
         
-    ### dump
-                
+    ################################ dump
+        
     def __repr__(self):
         return self.dump()
-    dumped = []
-    def dump(self, depth=0, prefix=''):
-        S = self.pad(depth) + self.head(prefix)
-        if not depth: Frame.dumped = []
-        if self in Frame.dumped: return S + ' ...'
-        else: Frame.dumped.append(self)
-        for i in self.attr: S += self.attr[i].dump(depth+1,prefix='%s = '%i)
-        for j in self.nest: S += j.dump(depth+1)
-        return S
-    def head(self,prefix=''):
-        return '%s<%s:%s> @%x' % (prefix, self.type, self.str(), id(self))
-    def str(self):
-        return self.value
-    def pad(self, N):
-        return '\n' + '\t' * N
+    def dump(self, depth=0, prefix='', voc=True):
+        tree = self._pad(depth) + self.head(prefix)
+        if not depth: Frame._dumped = []
+        if self in Frame._dumped: return tree + ' _/'
+        else: Frame._dumped.append(self)
+        if voc:
+            for i in self.slot:
+                tree += self.slot[i].dump(depth + 1, prefix= i + ' = ')
+        for j in self.nest:
+            tree += j.dump(depth + 1)
+        return tree
+    def head(self, prefix=''):
+        return '%s<%s:%s> @%x' % (prefix, self.type, self._val(), id(self))
+    def _pad(self, depth):
+        return '\n' + ' '*4 * depth
+    def _val(self):
+        return str(self.val)
     
-    ### operators override
-    
-    def __floordiv__(self,obj):
-        if isinstance(obj,str): self.nest.append(String(obj))
-        else: self.nest.append(obj)
-        return self
-    def __rshift__(self,obj):
-        obj << self ; return self
-    def __lshift__(self,obj):
-        if callable(obj):
-            return self << VM(obj)
-        else:
-            self.attr[obj.value] = obj ; return self
-    def __getitem__(self,slot):
-        return self.attr[slot]
-    def __setitem__(self,slot,obj):
-        self.attr[slot] = obj ; return self
-        
-    ## stack manipulations
-        
-    def top(self): return self.nest[-1]
-    def pop(self): return self.nest.pop()
-    def dropall(self): self.nest = []
-    def push(self,obj): self.nest.append(obj) ; return self
-    def dup(self): self.push(self.top()) ; return self
-    def drop(self): self.pop() ; return self
-    def press(self): del self.nest[-2] ; return self
-    def swap(self):
-        B = self.pop() ; A = self.pop() ; self // B // A ; return self
-        
-    ## processing
-    
-    def execute(self): S // self
-    
-    def gen(self):
-        S = ''
-        for i in self.nest: S += i.gen() + '\n'
-        return S
+    ################################ operator
 
-##################################################################### primitive
+    ## ` that = this[key] `
+    def __getitem__(self,key):
+        return self.slot[key]
+    ## ` this[key] = that ` 
+    def __setitem__(self,key,that):
+        self.slot[key] = that ; return self
+    ## ` this << that `
+    def __lshift__(self,that):
+        self[that.val] = that ; return self
+    ## ` this.has(key) `
+    def has(self,key):
+        return key in self.slot
+    ## ` this // that `
+    def __floordiv__(self,that):
+        return self.push(that)
         
+    ################################ stack
+    
+    ## ` ( ... -- ) ` clear
+    def dropall(self):
+        self.nest = [] ; return self
+    ## ` ( -- a ) `
+    def push(self,that):
+        self.nest.append(that) ; return self
+    ## ` ( a b -- a ) `
+    def pop(self):
+        return self.nest.pop(-1) # b
+    ## ` ( a b -- b ) `
+    def pip(self):
+        return self.nest.pop(-2) # a
+    ## ` ( a b -- a b ) `
+    def top(self):
+        return self.nest[-1] # b
+    ## ` ( a b -- a b ) `
+    def tip(self):
+        return self.nest[-2] # a
+
+    ## ` ( a - a a ) `
+    def dup(self):
+        return self // self.top()
+    ## ` ( a b -- a ) `
+    def drop(self):
+        self.pop() ; return self
+    ## ` ( a b -- b a ) `
+    def swap(self):
+        return self // self.pip()
+    ## ` ( a b -- a b a ) `
+    def over(self):
+        return self // self.tip()
+    ## ` ( a b -- b ) `
+    def press(self):
+        self.pip() ; return self
+    
+    ################################ execute & codegen
+    
+    def eval(self,ctx):
+        return ctx // self
+    
+    ## in Python source code
+    def py(self,parent):
+        src = r"%s('%s')" % (self.__class__.__name__, self._val())
+        for j in self.nest: src += r" // %s" % j.py(self)
+        return src
+
+    ################################ special dump form for tests
+    
+    def test(self,depth=0,prefix=''):
+        tree = '\t' * depth + '%s<%s:%s>' % (prefix, self.type, self._val())
+        if not depth: Frame._dumped = []
+        if self in Frame._dumped: return tree + ' _/'
+        else: Frame._dumped.append(self)
+        for i in self.slot: tree += self.slot[i].test(depth+1,prefix=i+' ')
+        for j in self.nest: tree += j.test(depth+1)
+        return tree
+    
+##################################################################### primitive
+
 class Primitive(Frame):
-    def gen(self):
-        return self.value
+    def py(self,parent):
+        return self._val()
+
+class String(Primitive):
+    def _val(self):
+        s = ''
+        for c in self.val:
+            if   c == '\r': s += '\\r'
+            elif c == '\n': s += '\\n'
+            elif c == '\t': s += '\\t'
+            else:           s += c
+        return s
+    def py(self,parent):
+        return "'%s'" % self._val()
 
 class Symbol(Primitive): pass
 
-class String(Primitive):
-    def str(self):
-        S = ''
-        for c in self.value:
-            if    c == '\n': S += '\\n'
-            elif  c == '\t': S += '\\t'
-            else: S += c
-        return S
-    
 class Number(Primitive):
-	def add(self,obj):
-		if isinstance(obj,Number): return Number(self.value + obj.value)
-		else: raise TypeError(obj)
-	def sub(self,obj):
-		if isinstance(obj,Number): return Number(self.value - obj.value)
-		else: raise TypeError(obj)
-	def mul(self,obj):
-		if isinstance(obj,Number): return Number(self.value * obj.value)
-		else: raise TypeError(obj)
-	def div(self,obj):
-		if isinstance(obj,Number): return Number(self.value / obj.value)
-		else: raise TypeError(obj)
-	def mod(self,obj):
-		if isinstance(obj,Number): return Number(self.value % obj.value)
-		else: raise TypeError(obj)
-	def neg(self):
-		return Number(-self.value)
+    def __init__(self,V):
+        Primitive.__init__(self, float(V))
+    def add(self,obj):
+        if isinstance(obj,Number): return Number(self.value + obj.value)
+        else: raise TypeError(obj)
+    def sub(self,obj):
+        if isinstance(obj,Number): return Number(self.value - obj.value)
+        else: raise TypeError(obj)
+    def mul(self,obj):
+        if isinstance(obj,Number): return Number(self.value * obj.value)
+        else: raise TypeError(obj)
+    def div(self,obj):
+        if isinstance(obj,Number): return Number(self.value / obj.value)
+        else: raise TypeError(obj)
+    def mod(self,obj):
+        if isinstance(obj,Number): return Number(self.value % obj.value)
+        else: raise TypeError(obj)
+    def neg(self):
+        return Number(-self.value)
 
-class Integer(Number): pass 
+class Integer(Number):
+    def __init__(self,V):
+        Primitive.__init__(self, int(V))
 
 class Hex(Integer):
-	def str(self): return '0x%X' % self.value
+    def __init__(self,V):
+        Integer.__init__(self, int(V[2:],0x10))
+    def _val(self):
+        return '0x{0:X}'.format(self.val)
+    def toint(self):
+        return Integer(self.val)
 
 class Bin(Integer):
-	def str(self): return bin(self.value)
+    def __init__(self,V):
+        Integer.__init__(self, int(V[2:],0x02))
+    def _val(self):
+        return '0b{0:b}'.format(self.val)
+    def toint(self):
+        return Integer(self.val)
 
 ##################################################################### container
-    
+
 class Container(Frame): pass
 
-class Group(Container): pass
-
+class Vector(Container): pass
 class Stack(Container): pass
-
-class Dict(Container):
-    def __setitem__(self,slot,obj):
-        if callable(obj): self[slot] = VM(obj) ; return self
-        else: return Container.__setitem__(self, slot, obj)
-    def __lshift__(self,obj):
-        if callable(obj): self << VM(obj) ; return self
-        else: return Container.__lshift__(self, obj)
+class Dict(Container): pass
+class Queue(Container): pass
 
 ######################################################################## active
-        
+
 class Active(Frame): pass
+
+class Cmd(Active):
+    def __init__(self,F,I=False):
+        Active.__init__(self, F.__name__)
+        self.fn = F
+        self.immed = I
+    def eval(self,ctx):
+        self.fn(ctx)
 
 class VM(Active):
     def __init__(self,F):
@@ -144,13 +203,7 @@ class VM(Active):
     def execute(self):
         self.fn()
         
-########################################################################## meta
-
-class Meta(Frame): pass
-
-class Var(Meta): pass
-
-############################################################################ io
+################################################################## input/output
     
 class IO(Frame): pass
     
@@ -223,18 +276,18 @@ def EXECUTE():
     S.pop().execute()
 W << EXECUTE
 
-def INTERPRET():
-    lexer.input(S.pop().value)
+def INTERPRET(ctx):
+    lexer.input(ctx.pop().value)
     while True:
         if not WORD(): break;
-        if isinstance(S.top(),Symbol):
+        if isinstance(ctx.top(),Symbol):
             if FIND(): EXECUTE()
-            else: raise SyntaxError(S.pop())
+            else: raise SyntaxError(ctx.pop())
 W << INTERPRET
 
 def REPL():
     while True:
-        print S
+        print(S)
         try: S // String(raw_input('ok> ')) ; INTERPRET()
         except EOFError: BYE()
 W << REPL
@@ -256,11 +309,11 @@ def BYE():
 W << BYE    
 
 def Sdot():
-    print S
+    print(S)
 W['?'] = VM(Sdot)
 
-def WORDS():
-    print W
+def WORDS(ctx):
+    print(ctx.dump())
 W << WORDS
 
 def DumpExit():
@@ -400,7 +453,7 @@ if __name__ == '__main__':
     ini = sys.argv[0][:-3]+'.ini'
     for source in [ini] + sys.argv[1:]:
         with open(source) as SourceFile:
-            S // SourceFile.read()
-            INTERPRET()
+            vm // SourceFile.read()
+            INTERPRET(vm)
 #     REPL()
 #     WEB()
