@@ -17,3 +17,6 @@ release:
 
 update:
 	git submodule update --init --recursive
+
+distill:
+	git checkout distill -- test_metaL.py
