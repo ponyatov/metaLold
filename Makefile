@@ -15,6 +15,11 @@ $(MODULE)_$(TODAY).pdf: book/$(MODULE).pdf
 # /screen /ebook /prepress
 #	$(MAKE) all && $(MAKE) pdf
 
+merge:
+	$(MAKE) pdf
+	git checkout master
+	git checkout ponyatov -- Makefile book/ metaL.py metaL.ml
+	
 release:
 	git tag $(TODAY) && git push --tags
 

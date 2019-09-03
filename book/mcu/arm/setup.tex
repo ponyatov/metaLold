@@ -18,7 +18,7 @@
 на более контролируемый инструмент}\ CubeMX.
 Его использование обеспечит вам быстрый старт, он возьмет на себя часть
 сложности по начальной инициализации микроконтроллера. При этом никто не
-запрещает вам спутстится на более низкий уровень, уйти на программирование на
+запрещает вам спуститься на более низкий уровень, уйти на программирование на
 чистом CMSIS, и избавиться от vendor lock\ --- с этого момента вы не будете
 зависеть от закидонов ST Microelectronics, известной своей политикой левой пятки
 с библиотеками StdPeriph, HAL и напахал.
@@ -26,7 +26,7 @@
 \secrel{Расширение \metal/mcu}
 
 \noindent
-Если вы этого еще не сделале, склонируйте корневой проект \metal:
+Если вы этого еще не сделали, склонируйте корневой проект \metal:
 
 \begin{verbatim}
 $ cd ~
@@ -73,5 +73,55 @@ Java required !
 \fig{mcu/arm/stm32l0.png}{width=\textwidth}
 
 \fig{mcu/arm/f0install.png}{height=.35\textheight} Install Now
+
+\secrel{Atollic TrueSTUDIO}
+
+\url{https://atollic.com/truestudio/}
+
+\href{http://download.atollic.com/TrueSTUDIO/installers/Atollic_TrueSTUDIO_for_STM32_linux_x86_64_v9.3.0_20190212-0734.tar.gz}{Download v9.3.0}
+
+\href{http://easyelectronics.ru/cozdanie-minimalnogo-proekta-pod-stm32-v-atollic-true-studio.html}{пошаговое руководство по созданию пустого проекта без Makefile}
+
+\begin{itemize}
+\item
+\href{https://istarik.ru/blog/arduino/102.html}{Описание платы F103 BluePill и запуск Arduino STM32}
+\item
+\href{https://istarik.ru/blog/arduino/104.html}{прерывания Arduino STM32}
+\item
+\href{https://istarik.ru/blog/arduino/105.html}{таймеры и ШИМ Arduino STM32}
+\item
+\href{https://istarik.ru/blog/stm32/107.html}{Перешивка BluePill в ST-Link}
+\item
+\href{https://istarik.ru/blog/stm32/106.html}{создание проекта в CubeMX и программирование через USB Serial}
+\end{itemize}
+
+\begin{lstlisting}
+$ cd /tmp/ ; tar zx < ~/Загрузки/Atollic_TrueSTUDIO_for_STM32_linux_x86_64_v9.3.0_20190212-0734.tar.gz
+$ cd Atollic_TrueSTUDIO_for_STM32_9.3.0_installer/
+$ sudo ./install.sh
+
+Do you want to install to '/opt/Atollic_TrueSTUDIO_for_STM32_x86_64_9.3.0/'?
+3) Change
+
+/home/ponyatov/metaL/mcu/Atollic
+
+~/metaL/mcu$ ./Atollic/ide/TrueSTUDIO
+
+Workspace: /home/ponyatov/metaL/mcu/test
+[v] use as default
+
+File > New > General Project > cubeF030
+
+File > New > Convert to C/C++ Project
+
+C Project > Executable/Atollic ARM Tools
+
+project > \rms > Properties > 
+	Resourse > UTF-8/Unix > Apply
+	C/C++ Build
+		> Settings > [x] GNU Elf parser
+		> Toolchain Editor > Current builder > GNU Make builder
+
+\end{lstlisting}
 
 \secup

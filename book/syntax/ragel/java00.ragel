@@ -1,0 +1,6 @@
+package io.github.ponyatov.metal;
+
+%%{
+	machine lexer;
+	main := any;
+}%%

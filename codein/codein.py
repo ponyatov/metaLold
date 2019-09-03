@@ -79,7 +79,7 @@ def t_number(t):
 class Symbol(Source): pass
 def t_symbol(t):
 	r'[a-zA-Z0-9_]+'
-	return Symbol(t)
+	t.value = Symbol(t) ; return t
 
 class Semicolon(Source): pass
 def t_semicolon(t):
@@ -170,6 +170,8 @@ def t_error(t): raise SyntaxError(t)
 def p_error(p): raise SyntaxError(p)
 
 def p_repl_none(p): ' repl : '
+def p_repl_comment(p):
+	' repl : repl comment '
 def p_repl_recur(p):
 	' repl : repl expression '
 	print p[2], p[2].__class__
@@ -179,6 +181,11 @@ def p_ex_include(p):
 	print p[1],p[1].__class__
 	print p[2],p[2].__class__
 	p[0] = p[1].nest.append(p[2])
+
+def p_ex_vardef(p):
+	' expression : symbol symbol semicolon '
+#	p[0] = p[1] / p[2] ; 
+	print p[1]/p[2] ; sys.exit(0)
 
 lexer = lex.lex()
 

@@ -1,0 +1,2 @@
+python wxide.py
+pause

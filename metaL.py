@@ -97,6 +97,11 @@ class Frame:
     
     def eval(self,ctx):
         return ctx // self
+
+    def gen(self):
+        src = self.val
+        for i in self.nest: src += i.gen() + '\n'
+        return src
     
     ## in Python source code
     def py(self,parent):
@@ -232,6 +237,7 @@ class Cmd(Active):
         self.fn = F
         self.immed = I
     def eval(self,ctx):
+#        for i in self.nest: vm // i
         self.fn(ctx)
 
 class VM(Active):
@@ -336,9 +342,10 @@ class Web(Net):
         from flask_wtf import FlaskForm
         from wtforms   import TextAreaField,SubmitField
         
-        app = Flask(self.val)
+        self << Import('flask') ; flask = self['flask'].module
+        app = flask.Flask(self.val)
         app.config['SECRET_KEY'] = os.urandom(32)
-
+        
         class CLI(FlaskForm):
             pad = TextAreaField('pad',
                                 render_kw={'rows':5,'autofocus':'true'},

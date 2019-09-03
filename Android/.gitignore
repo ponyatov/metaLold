@@ -11,3 +11,4 @@
 /build
 /captures
 .externalNativeBuild
+app/src/main/java/io/github/ponyatov/metal/FORTH.java
