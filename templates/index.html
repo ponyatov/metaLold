@@ -1,13 +1,23 @@
-<title>metaL</title>
+{% block head %}
+<head>
+<title>{{ctx.head()}}</title>
+<link rel="shortcut icon" href="/logo.png">
+<link rel="stylesheet" href="/dark.css">
+{% block lib %}
+{% endblock %}
+</head>
+{% endblock %}
 
-<link rel="stylesheet" type="text/css" href="/css/dark.css">
-
-<pre id=words>{{ W.dump() }}</pre>
-
-<pre id=stack>{{ W['S'].dump() }}</pre>
+{% block dump %}
+<pre id=dump>{{ctx.dump()}}</pre>
+{% endblock %}
 
 <form id=cli method=post>
 {{form.hidden_tag()}}
 {{form.pad()}}
 {{form.go()}}
 </form>
+
+{% block script %}
+<script></script>
+{% endblock %}

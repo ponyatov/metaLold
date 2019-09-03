@@ -1,0 +1,13 @@
+
+`HLK-RM04
+	RT5350F	`SoC	/=
+.
+
+`OLinuXino	
+	RT5350F	`SoC	/=
+	32		Mb		`DRAM	/=
+	`EN25Q64		`Flash
+		`SPI		`type	/=
+							/=
+	`1.1.3	version	`uboot	/=	
+.

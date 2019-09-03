@@ -1,0 +1,68 @@
+{% extends "index.html" %}
+
+{% block lib %}
+<script src="/go.js"></script>
+{% endblock %}
+
+{% block dump %}
+<style>
+#plot { width:95%; height:85%; border: 1px solid white; }
+</style>
+
+<ul>
+<li><a href=https://gojs.net/latest/intro/>https://gojs.net/latest/intro/</a>
+<li><a href=https://gojs.net/latest/learn/index.html>https://gojs.net/latest/learn/index.html</a>
+<li><a href=https://itnext.io/creating-simple-application-with-gojs-part-1-e3c320765def>https://itnext.io/creating-simple-application-with-gojs-part-1-e3c320765def</a>
+</ul>
+
+<div id=plot></div>
+{% endblock %}
+
+{% block script %}
+<script>
+
+var $ = go.GraphObject.make;
+var dia = $(go.Diagram, "plot", {
+		"toolManager.mouseWheelBehavior": go.ToolManager.WheelZoom,
+	});
+
+dia.model = $(go.TreeModel);
+dia.model.nodeDataArray = [
+
+	{% autoescape false %}
+		{{ctx.plot()}}
+	{% endautoescape %}
+	
+	];
+	
+dia.nodeTemplate =
+	$(go.Node, "Auto",
+		{ background: "transparent" },
+		$(go.Shape,
+			{ figure: "RoundedRectangle", fill: "darkblue" }),
+		$(go.TextBlock,
+			{stroke:"white", font:"{{web['font']['size'].val}} {{web['font'].val}}"},
+			new go.Binding("text", "head"))
+	);
+	
+dia.linkTemplate =
+    $(go.Link,
+    	$(go.Shape, { stroke:"white" }),
+    	$(go.Shape, { toArrow: "StretchedDiamond", stroke:"white", fill:"darkgreen" }),
+    	$(go.TextBlock,
+    		{
+    			stroke:"yellow", background:"black", 
+    			font:"{{web['font']['size'].val}} {{web['font'].val}}",
+    			segmentIndex: 0, segmentFraction: 0.8
+    		},
+    		new go.Binding("text", "link"))
+   	);
+   	
+dia.layout = new go.ForceDirectedLayout();
+   	
+window.onload = function() {
+	console.log(go)
+}
+
+</script>
+{% endblock %}

@@ -2,7 +2,7 @@ MODULE = $(notdir $(CURDIR))
 TODAY = $(shell date +%d%m%y)
 
 .PHONY: all
-all: book
+all: book test jslibs
 
 book:
 	$(MAKE) -C book
@@ -13,14 +13,16 @@ $(MODULE)_$(TODAY).pdf: book/$(MODULE).pdf
 		-dNOPAUSE -dQUIET -dBATCH \
 		-sOutputFile=$@ $<
 # /screen /ebook /prepress
+#	$(MAKE) all && $(MAKE) pdf
 
 release:
-	$(MAKE) all && $(MAKE) pdf
 	git tag $(TODAY) && git push --tags
-
-update:
-	git submodule update --init --recursive
 
 test:
 	py.test --cov=metaL test_metaL.py
 	coverage html
+
+jslibs: static/go.js
+
+static/go.js:
+	wget -c -O $@ https://cdnjs.cloudflare.com/ajax/libs/gojs/2.0.5/go.js

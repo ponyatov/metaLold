@@ -16,7 +16,7 @@ class TestFrame:
         
     def test_dump_pad(self):
         hello = Frame('hello')
-        assert hello._pad(2) == '\n' + ' '*4 *2
+        assert hello._pad(2) == '\n' + '\t' * 2
     
     def test_dump_val(self):
         hello = Frame('hello')
@@ -178,6 +178,61 @@ class TestNumber:
         num = Number('-012.340')
         assert type(num.val) == float
         assert num.test() == '<number:-12.34>'
+        
+    def test_add(self):
+        a = Number(-12.34)
+        b = Number(+56.78)
+        c = String('')
+        assert (a+b).test() == '<number:44.44>'
+        try: a+c ; assert False
+        except TypeError: assert True
+
+    def test_sub(self):
+        a = Number(-12.34)
+        b = Number(+56.78)
+        c = String('')
+        assert (a-b).test() == '<number:-69.12>'
+        try: a-c ; assert False
+        except TypeError: assert True
+
+    def test_mul(self):
+        a = Number(-12.34)
+        b = Number(+56.78)
+        c = String('')
+        assert (a*b).test() == '<number:-700.6652>'
+        try: a*c ; assert False
+        except TypeError: assert True
+
+    def test_div(self):
+        a = Number(-12.34)
+        b = Number(+56.78)
+        c = String('')
+        assert (a/b).test() == '<number:-0.2173300457907714>'
+        assert (a.__div__(b)).test() == '<number:-0.2173300457907714>'
+        try: a/c ; assert False
+        except TypeError: assert True
+
+    def test_mod(self):
+        a = Number(-12.34)
+        b = Number(+56.78)
+        c = String('')
+        assert (a%b).test() == '<number:44.44>'
+        try: a%c ; assert False
+        except TypeError: assert True
+
+    def test_neg(self):
+        a = Number(-12.34)
+        assert (-a).test() == '<number:12.34>'
+        
+    def test_int(self):
+        a = Number(-12.34)
+        b = int(a)
+        assert b == -12
+
+    def test_toint(self):
+        a = Number(-12.34)
+        b = a.toint()
+        assert b.test() == '<integer:-12>'
 
 class TestInteger:
     
@@ -186,6 +241,16 @@ class TestInteger:
         assert type(num.val) == int
         assert num.test() == '<integer:-1234>'
         
+    def test_int(self):
+        a = Integer(-12.34)
+        b = int(a)
+        assert b == -12
+
+    def test_toint(self):
+        a = Integer(-12.34)
+        b = a.toint()
+        assert b.test() == '<integer:-12>'
+
 class TestHex:
     
     def test_hex(self):
@@ -193,12 +258,119 @@ class TestHex:
         assert type(hex.val) == int
         assert hex.test() == '<hex:0xDEADBEEF>'
         
+    def test_int(self):
+        a = Hex('0xDeadBeef')
+        b = int(a)
+        assert b == 3735928559
+
+    def test_toint(self):
+        a = Hex('0xDeadBeef')
+        b = a.toint()
+        assert b.test() == '<integer:3735928559>'
+
 class TestBin:
     
     def test_bin(self):
         bin = Bin('0b1101')
         assert type(bin.val) == int
         assert bin.test() == '<bin:0b1101>'
+
+    def test_int(self):
+        a = Bin('0b1101')
+        b = int(a)
+        assert b == 13
+
+    def test_toint(self):
+        a = Bin('0b1101')
+        b = a.toint()
+        assert b.test() == '<integer:13>'
+
+############################################################## no-syntax parser
+
+class TestPLY:
+    
+    def test_eol(self):
+        lexer = lex.lex()
+        lexer.input("'\\t\\r\nx'")
+        assert lexer.token().test() == r'<string:\t\r\nx>'
+        
+    def test_inc(self):
+        vm // String('.inc /dev/null') ; INTERPRET(vm)
+        assert vm.test(voc=False) == '<vm:metaL>'
+
+################################################################### interpreter
+
+class TestInterpreter:
+    
+    def test_empty(self):
+        DOT(vm)
+        assert vm.test(voc=False) == '<vm:metaL>'
+        vm // String('')
+        assert vm.test(voc=False) == '<vm:metaL>\t<string:>'
+        INTERPRET(vm)
+        assert vm.test(voc=False) == '<vm:metaL>'
+        
+    def test_symbol(self):
+        DOT(vm)
+        assert vm.test(voc=False) == '<vm:metaL>'
+        vm // String('`quoted')
+        assert vm.test(voc=False) == '<vm:metaL>\t<string:`quoted>'
+        INTERPRET(vm)
+        assert vm.test(voc=False) == '<vm:metaL>\t<symbol:quoted>'
+        
+    def test_string(self):
+        DOT(vm)
+        assert vm.test(voc=False) == '<vm:metaL>'
+        vm // String("\t\r\n'test\\t\\r\\nstring'\n")
+        assert vm.test(voc=False) == \
+                        "<vm:metaL>\t<string:\\t\\r\\n'test\\t\\r\\nstring'\\n>"
+        INTERPRET(vm)
+        assert vm.test(voc=False) == '<vm:metaL>\t<string:test\\t\\r\\nstring>'
+        
+    def test_numbers(self):
+        DOT(vm)
+        assert vm.test(voc=False) == '<vm:metaL>'
+        vm // String('-01 +02.30 -04e+5 0xDeadBeef 0b1101')
+        assert vm.test(voc=False) == \
+            '<vm:metaL>\t<string:-01 +02.30 -04e+5 0xDeadBeef 0b1101>'
+        INTERPRET(vm)
+        assert vm.test(voc=False) == \
+            '<vm:metaL>\t<integer:-1>\t<number:2.3>\t<number:-400000.0>'+\
+            '\t<hex:0xDEADBEEF>\t<bin:0b1101>'
+        
+        
+###################################################################### compiler
+        
+class TestCompiler:
+    
+    def no_test_compile(self):
+        DOT(vm)
+        assert vm.test(voc=False) == '<vm:metaL>'
+        vm // String('[ ] { }')
+        assert vm.test(voc=False) == '<vm:metaL>\t<string:[ ] { }>'
+        INTERPRET(vm)
+        assert vm.test(voc=False) == '<vm:metaL>\t<symbol:quoted>'
+
+################################################################## web platform
+
+class TestWeb:
+    
+    def test_create(self):
+        web = Web('test')
+        assert web.test(voc=False) == '<web:test>'
+        assert web['IP'].test() == '<ip:127.0.0.1>'
+        assert web['PORT'].test() == '<port:8888>'
+        assert web['font'].test() == '<font:monospace>\tsize <size:3mm>'
+        assert web['back'].test() == '<color:black>'
+        assert web['color'].test() == '<color:lightgreen>'
+
+################################################################### system init
+
+class TestInit:
+    
+    def test_init(self):
+        sys.argv = [sys.argv[0],'/dev/null']
+        INIT(vm) 
 
 ######################################################## Python code generation
 
@@ -234,4 +406,16 @@ class TestPython:
         bin = Bin('0b1101')
         assert bin.py(None) == r"0b1101"
         
+    def test_import(self):
+        os = Import('os')
+        assert os.test() == '<import:os>'
+        assert 'sys' in os.module.__dict__
         
+################################################# embedded C/C++ code generator
+
+class TestCpp:
+    
+    def test_frame(self):
+        assert C('C99').test() == '<c:C99>'
+        assert Cpp('C++03').test() == '<cpp:C++03>'
+
