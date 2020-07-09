@@ -1,8 +1,15 @@
-## metaL/py : homoiconic metaprogramming system
-## (c) Dmitry Ponyatov <dponyatov@gmail.com> CC BY-NC-ND
-## wiki: https://github.com/ponyatov/metaL/wiki
+MODULE = 'metaL'
+TITLE = '[meta]programming [L]anguage'
+ABOUT = 'homoiconic metaprogramming system'
+AUTHOR = 'Dmitry Ponyatov'
+EMAIL = 'dponyatov@gmail.com'
+YEAR = 2020
+LICENSE = 'MIT'
+GITHUB = 'https://github.com/ponyatov/metaL'
+LOGO = 'logo.png'
 
-import os,sys
+import os, sys, re
+import config
 
 ########################################## Marvin Minsky frame model /extended/
 
