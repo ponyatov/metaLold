@@ -1,0 +1,24 @@
+* {
+    /* background: black;
+    color: lightgreen; */
+    font-family: monospace;
+    /* font-size: 3mm; */
+}
+
+.navbar-fixed-bottom {
+    height: 17;
+}
+
+@media print {
+    body {
+        margin-top: 10px;
+    }
+    .navbar {
+        display: block;
+        border-width: 0 !important;
+        height: 2cm;
+    }
+    .navbar-toggle {
+        display: none;
+    }
+}
