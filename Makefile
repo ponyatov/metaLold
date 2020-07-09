@@ -1,5 +1,9 @@
-MODULE = $(notdir $(CURDIR))
-TODAY = $(shell date +%d%m%y)
+CWD     = $(CURDIR)
+MODULE  = $(shell echo $(notdir $(CWD)) | tr "[:upper:]" "[:lower:]" )
+OS     ?= $(shell uname -s)
+
+NOW = $(shell date +%d%m%y)
+REL = $(shell git rev-parse --short=4 HEAD)
 
 .PHONY: all
 all: book test jslibs
@@ -21,7 +25,8 @@ merge:
 	git checkout ponyatov -- Makefile book/ metaL.py metaL.ml
 	
 release:
-	git tag $(TODAY) && git push --tags
+	git tag $(NOW)-$(REL)
+	git push -v && git push -v --tags
 
 test:
 	py.test --cov=metaL test_metaL.py
