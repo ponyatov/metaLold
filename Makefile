@@ -1,33 +1,97 @@
-MODULE = $(notdir $(CURDIR))
-TODAY = $(shell date +%d%m%y)
+CWD     = $(CURDIR)
+MODULE  = $(notdir $(CWD))
+OS     ?= $(shell uname -s)
 
-.PHONY: all
-all: book test jslibs
+NOW = $(shell date +%d%m%y)
+REL = $(shell git rev-parse --short=4 HEAD)
 
-book:
-	$(MAKE) -C book
-	
-pdf: $(MODULE)_$(TODAY).pdf
-$(MODULE)_$(TODAY).pdf: book/$(MODULE).pdf
-	gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook \
-		-dNOPAUSE -dQUIET -dBATCH \
-		-sOutputFile=$@ $<
-# /screen /ebook /prepress
-#	$(MAKE) all && $(MAKE) pdf
+PIP = $(CWD)/bin/pip3
+PY  = $(CWD)/bin/python3
+PYT = $(CWD)/bin/pytest
 
-merge:
-	$(MAKE) pdf
-	git checkout master
-	git checkout ponyatov -- Makefile book/ metaL.py metaL.ml
-	
+IP	 ?= 127.0.0.1
+PORT ?= 19999
+
+WGET = wget -c --no-check-certificate
+
+
+
+.PHONY: all py test web
+all: py
+
+py: $(PY) $(MODULE).py $(MODULE).ini
+	$(PY) -i $(MODULE).py
+test: $(PYT) test_$(MODULE).py
+	$^
+# 	py.test --cov=metaL test_metaL.py
+# 	coverage html
+web: 
+	IP=$(IP) PORT=$(PORT) $^
+
+
+
+.PHONY: install update
+
+install: $(OS)_install $(PIP) js
+	$(PIP) install    -r requirements.txt
+	$(MAKE) requirements.txt
+
+update: $(OS)_update $(PIP)
+	$(PIP) install -U    pip
+	$(PIP) install -U -r requirements.txt
+	$(MAKE) requirements.txt
+
+$(PIP) $(PY):
+	python3 -m venv .
+	$(PIP) install -U pip pylint autopep8
+	$(MAKE) requirements.txt
+$(PYT):
+	$(PIP) install -U pytest
+	$(MAKE) requirements.txt
+
+.PHONY: requirements.txt
+requirements.txt: $(PIP)
+	$< freeze | grep -v 0.0.0 > $@
+
+.PHONY: Linux_install Linux_update
+
+Linux_install Linux_update:
+	sudo apt update
+	sudo apt install -u `cat apt.txt`
+
+
+.PHONY: js
+js: static/jquery.js static/bootstrap.css static/bootstrap.js
+
+JQUERY_VER = 3.5.0
+static/jquery.js:
+	$(WGET) -O $@ https://code.jquery.com/jquery-$(JQUERY_VER).min.js
+
+BOOTSTRAP_VER = 3.4.1
+BOOTSTRAP_URL = https://stackpath.bootstrapcdn.com/bootstrap/$(BOOTSTRAP_VER)/
+static/bootstrap.css:
+	$(WGET) -O $@ https://bootswatch.com/3/darkly/bootstrap.min.css
+static/bootstrap.js:
+	$(WGET) -O $@ $(BOOTSTRAP_URL)/js/bootstrap.min.js
+
+
+
+.PHONY: master shadow release
+
+MERGE  = Makefile README.md .gitignore .vscode apt.txt requirements.txt
+MERGE += $(MODULE).py test_$(MODULE).py $(MODULE).ini static templates
+MERGE += $(MODULE).nimble src tests
+
+master:
+	git checkout $@
+	git pull -v
+	git checkout shadow -- $(MERGE)
+
+shadow:
+	git checkout $@
+	git pull -v
+
 release:
-	git tag $(TODAY) && git push --tags
-
-test:
-	py.test --cov=metaL test_metaL.py
-	coverage html
-
-jslibs: static/go.js
-
-static/go.js:
-	wget -c -O $@ https://cdnjs.cloudflare.com/ajax/libs/gojs/2.0.5/go.js
+	git tag $(NOW)-$(REL)
+	git push -v && git push -v --tags
+	$(MAKE) shadow

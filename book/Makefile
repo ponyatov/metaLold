@@ -107,3 +107,11 @@ metaL.pdf: $(TEX) $(LST) $(FIG)
 
 /tmp/%.pdf: mcu/%.dot
 	dot -T pdf -o /tmp/crop.pdf $< && pdfcrop /tmp/crop.pdf $@
+
+# pdf: $(MODULE)_$(TODAY).pdf
+# $(MODULE)_$(TODAY).pdf: book/$(MODULE).pdf
+# 	gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook \
+# 		-dNOPAUSE -dQUIET -dBATCH \
+# 		-sOutputFile=$@ $<
+# # /screen /ebook /prepress
+# #	$(MAKE) all && $(MAKE) pdf
