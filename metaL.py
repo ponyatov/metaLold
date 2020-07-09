@@ -105,6 +105,8 @@ class Object:
     def __setitem__(self, key, that):
         if isinstance(that, str):
             that = String(that)
+        if isinstance(that, int):
+            that = Integer(that)
         self.slot[key] = that
         self.sync()
         return self
@@ -302,6 +304,9 @@ class File(IO):
 class Png(File):
     pass
 
+class Makefile(File):
+    def __init__(self, V='Makefile'):
+        File.__init__(self, V)
 
 ## network
 
@@ -323,18 +328,81 @@ class Url(Net):
     def html(self):
         return '<a href="%s">%s</a>' % (self.val, self.val)
 
+## web
+
+class Web(Net):
+    def __init__(self, V):
+        Net.__init__(self, V.val)
+        self['ip'] = IP(config.HTTP_IP)
+        self['port'] = IP(config.HTTP_PORT)
+        self.sync()
+
+
+web = vm['web'] = Web(vm)
+
+## database
+
+class DB(Object):
+    pass
+
+class Redis(DB):
+    def __init__(self, V):
+        DB.__init__(self, V)
+        self['ip'] = IP(config.REDIS_IP)
+        self['port'] = IP(config.REDIS_PORT)
+        self.sync()
+
+
+vm['redis'] = Redis(config.REDIS_IP)
+
 ## metainfo
 
 
 vm['MODULE'] = Module(MODULE)
 vm['TITLE'] = '[meta]programming [L]anguage'
-vm['ABOUT'] = 'homoiconic metaprogramming system'
+vm['ABOUT'] = '''homoiconic metaprogramming system
+* specialized language for generative (meta)programming
+* web application engine over Flask (mostly for prototyping)
+* self-transformational knowledge base'''
 vm['AUTHOR'] = 'Dmitry Ponyatov'
 vm['EMAIL'] = Email('dponyatov@gmail.com')
 vm['LICENSE'] = 'MIT'
-vm['YEAR'] = Integer(2020)
+vm['YEAR'] = 2020
 vm['GITHUB'] = Url(GITHUB)
 vm['LOGO'] = Png(LOGO)
+
+
+##################################################
+## metacircular
+##################################################
+
+metaL = vm['metaL'] = Module(MODULE)
+
+metaL['MODULE'] = vm['MODULE']
+metaL['TITLE'] = vm['TITLE']
+metaL['ABOUT'] = vm['ABOUT']
+metaL['AUTHOR'] = vm['AUTHOR'] // vm['EMAIL']
+metaL['EMAIL'] = vm['EMAIL']
+metaL['LICENSE'] = vm['LICENSE']
+metaL['YEAR'] = vm['YEAR']
+metaL['GITHUB'] = vm['GITHUB']
+metaL['LOGO'] = vm['LOGO']
+
+dir = Dir(metaL.val)
+metaL << dir
+
+readme = File('README.md')
+dir // readme
+readme // ('#  `%s`' % metaL.val)
+readme // ('## %s' % metaL['TITLE'].val)
+readme // ''
+readme // vm['ABOUT']
+readme // ''
+readme // ('(c) %s <<%s>> %s %s' %
+           (metaL['AUTHOR'].val, metaL['EMAIL'].val, metaL['YEAR'].val, metaL['LICENSE'].val))
+readme // ''
+readme // ('github: %s\n\nwiki: %s/wiki' %
+           (metaL['GITHUB'].val, metaL['GITHUB'].val))
 
 ##################################################
 

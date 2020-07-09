@@ -1,25 +1,13 @@
-# metaL
-## homoiconic metaprogramming system
+#  `metaL`
+## [meta]programming [L]anguage
 
-(c) Dmitry Ponyatov <<dponyatov@gmail.com>> CC BY-NC-ND
+homoiconic metaprogramming system
+* specialized language for generative (meta)programming
+* web application engine over Flask (mostly for prototyping)
+* self-transformational knowledge base
 
-* multiparadigm programming language
-* distributed/web application engine
-* self-transformational knowledge base engine
-* mobile/embedded/IoT development platform
+(c) Dmitry Ponyatov <<dponyatov@gmail.com>> 2020 MIT
 
 github: https://github.com/ponyatov/metaL
 
 wiki: https://github.com/ponyatov/metaL/wiki
-
-### install
-
-```
-git clone -o gh https://github.com/ponyatov/metaL
-cd metaL
-python3 -m venv .
-. bin/activate
-pip install -U pip
-pip install -U -r requirements.txt
-pip freeze > requirements.txt
-```
