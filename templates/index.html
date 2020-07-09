@@ -1,23 +1,88 @@
-{% block head %}
+<!DOCTYPE html>
+<html lang="ru">
+
 <head>
-<title>{{ctx.head()}}</title>
-<link rel="shortcut icon" href="/logo.png">
-<link rel="stylesheet" href="/dark.css">
-{% block lib %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{{ctx.head()}}</title>
+
+    <link rel="shortcut icon" href="/{{vm['LOGO'].val}}">
+    <link rel="stylesheet" type="text/css" href="/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/css.css">
+
+    <script src="/jquery.js"></script>
+    <script src="/bootstrap.js"></script>
+
+{% block head%}
 {% endblock %}
 </head>
+
+<div class="container">
+
+{% block header %}
+
+<div class="navbar navbar-default navbar-fixed-top" id="header">
+
+<div class="navbar-collapse collapse" id="menu">
+<ul class="nav navbar-nav">
+{% for item in vm['menu'] %}
+{% autoescape false %}
+<li>{{item.html()}}</li>
+{% endautoescape %}
+{% endfor %}
+</ul>
+</div>
+
+<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu">
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+
+<a class="navbar-brand" href="{{vm['GITHUB'].val}}/wiki"><img src="/{{vm['LOGO'].val}}" height=64px></a>
+
+<div class="navbar-header ">
+    <h1>{{ctx.head(test=True)}}</h1>
+</div>
+
+</div>
+
 {% endblock %}
 
-{% block dump %}
-<pre id=dump>{{ctx.dump()}}</pre>
+{% block body %}
+
+<pre>{{ctx.html()}}</pre>
+
 {% endblock %}
 
-<form id=cli method=post>
-{{form.hidden_tag()}}
-{{form.pad()}}
-{{form.go()}}
-</form>
-
-{% block script %}
-<script></script>
+{% block footer %}
+<div class="navbar navbar-default navbar-fixed-bottom" id="footer">
+<span id="statusbar">dsadkasjlkj</a>
+</div>
 {% endblock %}
+
+</div>
+
+<script>
+
+$(document).ready(function(){
+//if (window.matchMedia("screen").matches) {
+    // \ fix fixed header/footer paddings
+    function fixpads() {
+        $(document.body).css('margin-top', $('#header').height() * 1.1);
+        $('#footer').css('height',$('#statusbar').height(),'important');
+        $(document.body).css('margin-bottom', $('#footer').height() * 1.1);
+    }
+    fixpads();
+    $(window).resize(function(){
+        fixpads();
+    })
+    // /
+//}
+});
+
+</script>

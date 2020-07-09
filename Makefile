@@ -81,7 +81,6 @@ static/bootstrap.js:
 
 MERGE  = Makefile README.md .gitignore .vscode apt.txt requirements.txt
 MERGE += $(MODULE).py test_$(MODULE).py $(MODULE).ini static templates config.py
-MERGE += $(MODULE).nimble src tests
 
 master:
 	git checkout $@

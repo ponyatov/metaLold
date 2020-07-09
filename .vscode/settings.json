@@ -1,0 +1,50 @@
+{
+    "python.pythonPath": "./bin/python3",
+    "python.formatting.provider": "autopep8",
+    "python.formatting.autopep8Path": "./bin/autopep8",
+    "python.formatting.autopep8Args": ["--ignore=E26,E302,E401,E402"],
+
+    "multiCommand.commands": [
+        {
+            // configure recommendation: bind F12 key on this command for handy projects rebuild/run
+            "command": "multiCommand.f12",
+            "sequence": [
+                "workbench.action.files.saveAll",
+                // "workbench.action.terminal.focus",
+                {"command": "workbench.action.terminal.sendSequence","args": {"text": "\u000Dclear ; make py \u000D"}}
+            ],
+        },
+        {
+            // configure recommendation: bind F11 key on this command for doxygen run
+            "command": "multiCommand.f11",
+            "sequence": [
+                "workbench.action.files.saveAll",
+                // "workbench.action.terminal.focus",
+                {"command": "workbench.action.terminal.sendSequence","args": {"text": "\u000Dexit()\u000Dclear ; make py \u000D"}}
+            ],
+        },
+    ],
+
+    // ignore large files for VSCode sync
+    "files.watcherExclude": {
+        // "**/bin/**": true, "**/include/**":true, "**/lib*/**":true,
+        // "**/share/**":true, "**/*.pyc": true,
+        // "**/docs/**":true,
+        // "**/buildroot-*/**": true,
+        // "**/firmware/**": true,
+    },
+
+    "files.exclude": {
+        // "bin": true, "include":true, "lib*":true, "share":true,
+        // "pyvenv.cfg":true, "**/*.pyc": true,
+        // "**/docs/**":true,
+    },
+
+    "editor.tabSize": 4,
+
+    "files.associations": {
+        // "**/templates/*.html": "django-html",
+        // "**/templates/*": "django-txt",
+        "**/requirements{/**,*}.{txt,in}": "pip-requirements"
+    },
+}

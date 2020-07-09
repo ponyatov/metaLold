@@ -1,0 +1,23 @@
+{% block head %}
+<head>
+<title>{{ctx.head()}}</title>
+<link rel="shortcut icon" href="/logo.png">
+<link rel="stylesheet" href="/dark.css">
+{% block lib %}
+{% endblock %}
+</head>
+{% endblock %}
+
+{% block dump %}
+<pre id=dump>{{ctx.dump()}}</pre>
+{% endblock %}
+
+<form id=cli method=post>
+{{form.hidden_tag()}}
+{{form.pad()}}
+{{form.go()}}
+</form>
+
+{% block script %}
+<script></script>
+{% endblock %}
