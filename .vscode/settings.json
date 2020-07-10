@@ -20,7 +20,7 @@
             "sequence": [
                 "workbench.action.files.saveAll",
                 // "workbench.action.terminal.focus",
-                {"command": "workbench.action.terminal.sendSequence","args": {"text": "\u000Dexit()\u000Dclear ; make py \u000D"}}
+                {"command": "workbench.action.terminal.sendSequence","args": {"text": "\u000Dstorage.put(None) ; exit()\u000Dclear ; make py \u000D"}}
             ],
         },
     ],
