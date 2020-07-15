@@ -1,0 +1,46 @@
+{
+
+    "multiCommand.commands": [
+        {
+            // configure recommendation: bind F12 key on this command for handy projects rebuild/run
+            "command": "multiCommand.f12",
+            "sequence": [
+                "workbench.action.files.saveAll",
+                // "workbench.action.terminal.focus",
+                {"command": "workbench.action.terminal.sendSequence","args": {"text": "\u000Dclear ; make all \u000D"}}
+            ],
+        },
+        {
+            // configure recommendation: bind F11 key on this command for doxygen run
+            "command": "multiCommand.f11",
+            "sequence": [
+                "workbench.action.files.saveAll",
+                // "workbench.action.terminal.focus",
+                {"command": "workbench.action.terminal.sendSequence","args": {"text": "\u000Dclear ; make test \u000D"}}
+            ],
+        },
+    ],
+
+    // ignore large files for VSCode sync
+    "files.watcherExclude": {
+        // "**/bin/**": true, "**/include/**":true, "**/lib*/**":true,
+        // "**/share/**":true, "**/*.pyc": true,
+        "**/tmp/**":true,
+        "**/buildroot-*/**": true,
+        // "**/firmware/**": true,
+    },
+
+    "files.exclude": {
+        // "bin": true, "include":true, "lib*":true, "share":true,
+        // "pyvenv.cfg":true, "**/*.pyc": true,
+        // "**/docs/**":true,
+    },
+
+    "editor.tabSize": 4,
+
+    "files.associations": {
+        // "**/templates/*.html": "django-html",
+        // "**/templates/*": "django-txt",
+        // "**/requirements{/**,*}.{txt,in}": "pip-requirements"
+    },
+}

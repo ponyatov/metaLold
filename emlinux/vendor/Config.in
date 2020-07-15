@@ -1,0 +1,3 @@
+comment "https://github.com/ponyatov/nimbook/wiki/emLinux"
+
+source "$BR2_EXTERNAL_VENDOR_PATH/package/nim/Config.in"

@@ -1,0 +1,3 @@
+CPU = i486
+
+QEMU_APPEND += "vga=0x315"

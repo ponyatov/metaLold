@@ -16,35 +16,57 @@ import config
 
 import redis
 
-with redis.Redis(host=config.REDIS_IP, port=config.REDIS_PORT, db=0) as root:
-    redis = redis.Redis(host=config.REDIS_IP, port=config.REDIS_PORT,
+with redis.Redis(host=config.REDIS_HOST, port=config.REDIS_PORT, db=0) as root:
+    redis = redis.Redis(host=config.REDIS_HOST, port=config.REDIS_PORT,
                         db=root[MODULE])
 
-import json
 from xxhash import xxh32
-import threading, queue
+import json, queue, threading
 
-storage = queue.Queue()#0x111)
+class Storage:
 
-def storage_daemon():
-    time.sleep(2)
-    while True:
-        try:
-            item = storage.get(timeout=1)
-            if not item:
-                break
-            js = item.json()
-            redis[item.gid] = js
-            print(js)
-            print(item.head())
-        except queue.Empty:
-            pass
+    def __init__(self, queue_size):
+        self.storage = queue.Queue(queue_size)
+        self.thread = None
 
-# threading.Thread(target=storage_daemon).start()
+    def __len__(self):
+        return self.storage.qsize()
 
-# storage.put(None) ; exit()
-# exit()
+    def start(self):
+        self.thread = threading.Thread(target=storage_daemon)
+        self.thread.start()
 
+    def stop(self):
+        if self.thread:
+            self.put(None)
+            self.thread.join()
+
+    def get(self, timeout=1):
+        return self.storage.get(timeout)
+
+    def put(self, item, timeout=1):
+        return self.storage.put(item, timeout)
+
+    def send(self, item):
+        js = item.json()
+        redis[item.gid] = js
+        print(js)
+        print(item.head())
+
+    def daemon(self):#, threaded=True):
+        while True:
+            try:
+                item = self.get(timeout=1)
+                if not item: # stop system marker
+                    self.put(item) # forward to other daemons
+                    break
+                self.send(item)
+            except queue.Empty:
+                if not self.threaded: # don't loop in emergency flush
+                    break
+
+
+storage = Storage(0x111)
 
 ## graph
 
@@ -67,7 +89,13 @@ class Object:
         # update global hash
         self.gid = '%.8x' % hash(self)
         ## sync with storage
-        storage.put(self)
+        while True:
+            try:
+                storage.put(self, timeout=1)
+                break
+            except queue.Full:
+                storage.flush()
+                continue
         ## bypass object
         return bypass
 
@@ -213,18 +241,48 @@ class Number(Primitive):
         Primitive.__init__(self, float(V))
         self.sync(self)
 
+    def plus(self, ctx):
+        return self.__class__(+self.val)
+
+    def minus(self, ctx):
+        return self.__class__(-self.val)
+
+    def add(self, that, ctx):
+        assert type(self) == type(that)
+        return self.__class__(self.val + that.val)
+
+    def sub(self, that, ctx):
+        assert type(self) == type(that)
+        return self.__class__(self.val - that.val)
+
+    def mul(self, that, ctx):
+        assert type(self) == type(that)
+        return self.__class__(self.val * that.val)
+
+    def div(self, that, ctx):
+        assert type(self) == type(that)
+        return self.__class__(self.val / that.val)
+
+    def pow(self, that, ctx):
+        assert type(self) == type(that)
+        return self.__class__(self.val ** that.val)
+
 class Integer(Number):
     def __init__(self, V):
         Primitive.__init__(self, int(V))
         self.sync(self)
 
-    def add(self, that, ctx):
-        assert isinstance(that, type(self))
-        return Integer(self.val + that.val)
+    # def add(self, that, ctx):
+    #     assert type(self) == type(that)
+    #     return Integer(self.val + that.val)
 
-    def sub(self, that, ctx):
-        assert isinstance(that, type(self))
-        return Integer(self.val - that.val)
+    # def sub(self, that, ctx):
+    #     assert type(self) == type(that)
+    #     return Integer(self.val - that.val)
+
+    # def pow(self, that, ctx):
+    #     assert type(self) == type(that)
+    #     return Number(self.val ** that.val)
 
 class Hex(Integer):
     def __init__(self, V):
@@ -263,11 +321,24 @@ class Op(Active):
         # greedy computation for all subtrees
         greedy = list(map(lambda i: i.eval(ctx), self.nest))
         if self.val == '+':
+            if len(greedy) == 1:
+                return greedy[0].plus(ctx)
             assert len(greedy) == 2
             return greedy[0].add(greedy[1], ctx)
         if self.val == '-':
+            if len(greedy) == 1:
+                return greedy[0].minus(ctx)
             assert len(greedy) == 2
             return greedy[0].sub(greedy[1], ctx)
+        if self.val == '*':
+            assert len(greedy) == 2
+            return greedy[0].mul(greedy[1], ctx)
+        if self.val == '/':
+            assert len(greedy) == 2
+            return greedy[0].div(greedy[1], ctx)
+        if self.val == '^':
+            assert len(greedy) == 2
+            return greedy[0].pow(greedy[1], ctx)
         raise Error((self))
 
 class VM(Active):
@@ -277,7 +348,15 @@ class VM(Active):
 ctx = vm = VM(MODULE)
 vm << vm
 
+## debug/control
+
+def BYE(ctx=vm):
+    storage.stop()
+    os._exit(0)
+    # sys.exit(0)
+
 ## metainfo
+
 
 vm['TITLE'] = '[meta]programming [L]anguage'
 vm['ABOUT'] = '''homoiconic metaprogramming system
@@ -528,7 +607,7 @@ vm['GITHUB'] = Url(GITHUB + MODULE)
 class Web(Net):
     def __init__(self, V):
         Net.__init__(self, V.val)
-        self['ip'] = IP(config.HTTP_IP)
+        self['host'] = IP(config.HTTP_HOST)
         self['port'] = IP(config.HTTP_PORT)
         self.sync(self)
 
@@ -543,65 +622,13 @@ class DB(Object):
 class Redis(DB):
     def __init__(self, V):
         DB.__init__(self, V)
-        self['ip'] = IP(config.REDIS_IP)
+        self['host'] = IP(config.REDIS_HOST)
         self['port'] = IP(config.REDIS_PORT)
         self.sync(self)
 
 
-vm['redis'] = Redis(config.REDIS_IP)
+vm['redis'] = Redis(config.REDIS_HOST)
 
-
-##################################################
-## metacircular
-##################################################
-
-metaL = vm['metaL'] = vm['MODULE'] = Module(MODULE)
-
-metaL['TITLE'] = vm['TITLE']
-metaL['ABOUT'] = vm['ABOUT']
-
-dir = metaL['dir']
-
-# readme = File('README.md')
-# dir // readme
-readme = metaL['readme']
-readme // ('#  `%s`' % metaL.val)
-readme // ('## %s' % metaL['TITLE'].val)
-readme // ''
-readme // vm['ABOUT']
-readme // ''
-readme // ('(c) %s <<%s>> %s %s' %
-           (metaL['AUTHOR'].val, metaL['EMAIL'].val, metaL['YEAR'].val, metaL['LICENSE'].val))
-readme // ''
-readme // ('github: %s\n\nwiki: %s/wiki' %
-           (metaL['GITHUB'].val, metaL['GITHUB'].val))
-readme // '''
-### Links
-
-* https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book.html
-* https://github.com/ponyatov/OGP/blob/master/OGP.ipynb
-'''
-
-mk = File('Makefile')
-dir // mk
-
-ini = File('metaL.ini')
-dir // ini
-
-giti = File('.gitignore')
-dir // giti
-
-py = metaL['py'] = PFile('metaL.py')
-dir // py
-
-graph = Section('graph')
-
-obj = Class('Object')
-graph // obj
-
-py // graph
-
-dir
 
 ##################################################
 
@@ -617,27 +644,3 @@ ctx
 
 # storage.put(None) ; exit()
 # exit()
-
-rwd = Module('rwd')
-rwd['TITLE'] = 'Redis Web daemon /Nim/'
-rwdir = rwd['dir'] = Dir(rwd)
-rwmk = NMakefile()
-rwdir // rwmk
-rwsrc = Dir('src')
-rwdir // rwsrc
-nim = File(rwd.val + '.nim')
-rwsrc // nim
-nimble = NimbleFile(rwd.val + '.nimble')
-rwdir // nimble
-apt = File('apt.txt')
-rwdir // apt
-apt // 'git make tcc'
-rwrd = File('README.md')
-rwdir // rwrd
-rwrd // ('#  `%s`' % rwd['MODULE'].val)
-rwrd // ('## %s' % rwd['TITLE'].val)
-rwrd // ('\n(c) %s <<%s>> 2020 MIT' % (rwd['AUTHOR'].val, rwd['EMAIL'].val))
-rwrd // ('\ngithub: %s' % rwd['GITHUB'].val)
-rwrd // '\nwiki/ru: https://github.com/ponyatov/nimbook/wiki/rwd'
-
-vm

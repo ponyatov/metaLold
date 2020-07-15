@@ -60,6 +60,7 @@ class TestOperators:
         assert sub.eval(vm).test() ==\
             '\n<integer:666>'
 
+
 # class TestFrame:
 
 #     def test_empty(self):

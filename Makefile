@@ -9,31 +9,29 @@ PIP = $(CWD)/bin/pip3
 PY  = $(CWD)/bin/python3
 PYT = $(CWD)/bin/pytest
 
-IP	 ?= 127.0.0.1
+HOST ?= 127.0.0.1
 PORT ?= 19999
 
 WGET = wget -c --no-check-certificate
 
 
 
-.PHONY: all py test web
-all: py
+%: $(PY) $(MODULE).py %.py $(PYT) test_$(MODULE).py test_%.py
+	$(PYT) test_$(MODULE).py test_$@.py
+	$(PY) -i $@.py
 
-py: $(PY) $(MODULE).py $(MODULE).ini
-	$(MAKE) test
-	IP=$(IP) PORT=$(PORT) $(PY) -i $(MODULE).py
-test: $(PYT) test_$(MODULE).py
-	IP=$(IP) PORT=$(PORT) $^
+TESTS = $(shell ls test_*.py)
+.PHONY: test
+test: $(PYT) $(TESTS)
+	HOST=$(HOST) PORT=$(PORT) $^
 # 	py.test --cov=metaL test_metaL.py
 # 	coverage html
-web: $(PY) web.py $(MODULE).py $(MODULE).ini
-	IP=$(IP) PORT=$(PORT) $^
 
 
 
 .PHONY: install update
 
-install: $(OS)_install $(PIP) js
+install: $(OS)_install $(PIP) js doc
 	$(PIP) install    -r requirements.txt
 	$(MAKE) requirements.txt
 
@@ -77,10 +75,22 @@ static/bootstrap.js:
 
 
 
+doc: doc/SICP_ru.pdf doc/SICP_en.pdf
+doc/SICP_ru.pdf:
+	$(WGET) -O $@ http://newstar.rinet.ru/~goga/sicp/sicp.pdf
+doc/SICP_en.pdf:
+	$(WGET) -O $@ https://web.mit.edu/alexmv/6.037/sicp.pdf
+
+
+
 .PHONY: master shadow release
 
-MERGE  = Makefile README.md .gitignore .vscode apt.txt requirements.txt
+MERGE  = Makefile README.md .gitignore apt.txt requirements.txt
 MERGE += $(MODULE).py test_$(MODULE).py $(MODULE).ini web.py static templates config.py
+MERGE += metacirc.py emlinux.py nim.py rwd.py nimde.py redisview.py
+MERGE += $(MODULE) emlinux
+MERGE += doc
+MERGE += test_parser.py parser.py
 
 master:
 	git checkout $@

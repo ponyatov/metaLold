@@ -1,0 +1,54 @@
+config BR2_PACKAGE_HOST_NIM_ARCH_SUPPORTS
+	bool
+	default y if BR2_HOSTARCH = "x86_64"
+	default y if BR2_HOSTARCH = "x86"
+
+config BR2_PACKAGE_NIM_ARCH_SUPPORTS
+	bool
+	default y if BR2_i386 || BR2_x86_64 || BR2_powerpc || BR2_arm || BR2_mipsel
+	# nim needs host-nim
+	depends on BR2_PACKAGE_HOST_ERLANG_ARCH_SUPPORTS
+
+comment "nim needs a toolchain w/ dynamic library, threads"
+	depends on BR2_USE_MMU # fork()
+	depends on BR2_PACKAGE_ERLANG_ARCH_SUPPORTS
+	depends on BR2_STATIC_LIBS || !BR2_TOOLCHAIN_HAS_THREADS
+
+config BR2_PACKAGE_NIM
+	bool "nim"
+	depends on BR2_USE_MMU # fork()
+	depends on !BR2_STATIC_LIBS
+	depends on BR2_TOOLCHAIN_HAS_THREADS
+	depends on BR2_PACKAGE_NIM_ARCH_SUPPORTS
+	help
+      Nim is a programming language uses translator and native C/C++ compiler
+      it is Pythonic, has rich type system, multiplatform, and fast in compile & run
+
+      https://nim-lang.org/
+      https://github.com/ponyatov/nimbook/wiki
+
+if BR2_PACKAGE_NIM
+
+config BR2_PACKAGE_NIM_JESTER
+	bool "jester: web server framework"
+    default y
+	help
+      web server framework
+
+      https://github.com/dom96/jester
+      https://github.com/ponyatov/nimbook/wiki/jester
+
+config BR2_PACKAGE_NIM_SDL2
+	bool "sdl2: portable low-level gamedev library"
+    default y if BR2_PACKAGE_SDL2
+    depends on BR2_PACKAGE_SDL2
+	help
+      portable low-level gamedev library:
+      - 2D bitblit graphics
+      - simple net
+      - contollers (keyboard/joysticks)
+
+      https://github.com/nim-lang/sdl2
+      https://github.com/ponyatov/nimbook/wiki/SDL
+
+endif # BR2_PACKAGE_NIM

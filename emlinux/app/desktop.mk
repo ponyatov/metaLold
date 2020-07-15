@@ -1,0 +1,1 @@
+QEMU_ARGS += -m 256m

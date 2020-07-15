@@ -35,5 +35,5 @@ def path(path):
     return flask.render_template('index.html', vm=vm, ctx=ctx)
 
 
-app.run(host=config.HTTP_IP, port=config.HTTP_PORT,
+app.run(host=config.HTTP_HOST, port=config.HTTP_PORT,
         debug=True, extra_files=sys.argv)
