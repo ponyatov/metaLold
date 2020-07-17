@@ -31,7 +31,7 @@ test: $(PYT) $(TESTS)
 
 .PHONY: install update
 
-install: $(OS)_install $(PIP) js doc
+install: $(OS)_install $(PIP) js doc libtcc
 	$(PIP) install    -r requirements.txt
 	$(MAKE) requirements.txt
 
@@ -105,3 +105,26 @@ release:
 	git tag $(NOW)-$(REL)
 	git push -v && git push -v --tags
 	$(MAKE) shadow
+
+
+
+TCC_VER = 0.9.27
+TCC     = tcc-$(TCC_VER)
+TCC_GZ  = $(TCC).tar.bz2
+
+TMP = $(CWD)/tmp
+
+gz: $(TMP)/$(TCC_GZ)
+$(TMP)/$(TCC_GZ):
+	$(WGET) -O $@ http://download.savannah.gnu.org/releases/tinycc/$(TCC_GZ)
+
+.PHONY: libtcc
+libtcc: tcclib/lib/libtcc.so
+tcclib/lib/libtcc.so:
+	$(MAKE) $(TMP)/$(TCC)/README
+	cd $(TMP)/$(TCC) ;\
+	./configure --prefix=$(CWD)/tcclib --cc=tcc --disable-static &&\
+	$(MAKE) -j4 && $(MAKE) install
+	rm -rf $(TMP)/$(TCC) $(TMP)/$(TCC_GZ)
+$(TMP)/$(TCC)/README: $(TMP)/$(TCC_GZ)
+	cd $(TMP) ; bzcat $< | tar x && touch $@

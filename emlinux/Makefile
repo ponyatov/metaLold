@@ -1,6 +1,7 @@
 APP = desktop
-HW  = miniG4
+HW  = qemu386
 #qemu386
+#miniG4
 
 include app/$(APP).mk
 include hw/$(HW).mk
@@ -39,6 +40,11 @@ VENDOR = $(CWD)/vendor
 dirs:
 	mkdir -p $(GZ) $(TMP) $(SRC) $(FW)
 
+.PHONY: distclean
+distclean:
+	rm -rf $(TMP)/* $(FW)/* ; $(MAKE) dirs
+	cd $(BUILDROOT) ; $(MAKE) $@
+
 .PHONY: gz
 gz: $(GZ)/$(BUILDROOT_GZ)
 $(GZ)/$(BUILDROOT_GZ):
@@ -53,9 +59,10 @@ CONFIG_KERNEL    += $(CWD)/arch/$(ARCH).kernel $(CWD)/cpu/$(CPU).kernel $(CWD)/h
 CONFIG_ROOT       = $(CWD)/all/root $(CWD)/app/$(APP).root
 
 .PHONY: build
+$(BUILDROOT)/.config: build
 build: $(BUILDROOT)/README
 	cd $(BUILDROOT) ; $(XMAKE) distclean ; $(XMAKE) allnoconfig
-	$(MAKE) rebuild
+#	$(MAKE) rebuild
 
 APPFILES = $(shell find app/$(APP).root -type f )
 

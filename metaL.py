@@ -161,18 +161,19 @@ class Object:
     ## operator
 
     def __getitem__(self, key):
-        if isinstance(key, Object):
-            return self.nest[key.val]
-        elif isinstance(key, int):
+        if isinstance(key,str):
+            return self.slot[key]
+        elif isinstance(key,int):
             return self.nest[key]
         else:
-            return self.slot[key]
+            raise TypeError(key)
 
     def __setitem__(self, key, that):
         if isinstance(that, str):
             that = String(that)
         if isinstance(that, int):
             that = Integer(that)
+        assert isinstance(key, str)
         self.slot[key] = that
         return self.sync(self)
 
@@ -198,6 +199,25 @@ class Object:
     def eval(self, ctx): raise Error((self))
     def apply(self, that, ctx): raise Error((self))
 
+    def push(self, that, ctx):
+        return self // that
+
+    def lshift(self, that, ctx):
+        return self << that
+
+    def rshift(self, that, ctx):
+        return self >> that
+
+    def eq(self, that, ctx):
+        ctx['%s' % self.val] = that
+        return that
+
+    def dot(self, that, ctx):
+        try:
+            return self[that.val]
+        except KeyError:
+            return Undef(that.val) // self
+
     ## codegen
 
     def file(self): return self.json()
@@ -210,6 +230,10 @@ class Object:
 
 class Error(Object, BaseException):
     pass
+
+class Undef(Object):
+    def eq(self, that, ctx):
+        return self.nest[0].__setitem__(self.val, that)
 
 ## primitive
 
@@ -318,27 +342,45 @@ class Active(Object):
 
 class Op(Active):
     def eval(self, ctx):
+        # quote
+        if self.val == '`':
+            return self.nest[0]
+        # a.b operator without b.eval
+        if self.val == '.':
+            assert len(self.nest) == 2
+            lval = self.nest[0].eval(ctx)
+            rval = self.nest[1]
+            return lval.dot(rval, ctx)
         # greedy computation for all subtrees
         greedy = list(map(lambda i: i.eval(ctx), self.nest))
-        if self.val == '+':
-            if len(greedy) == 1:
+        # unary
+        if len(greedy) == 1:
+            if self.val == '+':
                 return greedy[0].plus(ctx)
-            assert len(greedy) == 2
-            return greedy[0].add(greedy[1], ctx)
-        if self.val == '-':
-            if len(greedy) == 1:
+            if self.val == '-':
                 return greedy[0].minus(ctx)
-            assert len(greedy) == 2
-            return greedy[0].sub(greedy[1], ctx)
-        if self.val == '*':
-            assert len(greedy) == 2
-            return greedy[0].mul(greedy[1], ctx)
-        if self.val == '/':
-            assert len(greedy) == 2
-            return greedy[0].div(greedy[1], ctx)
-        if self.val == '^':
-            assert len(greedy) == 2
-            return greedy[0].pow(greedy[1], ctx)
+        # binary
+        if len(greedy) == 2:
+            if self.val == '//':
+                return greedy[0].push(greedy[1], ctx)
+            if self.val == '<<':
+                return greedy[0].lshift(greedy[1], ctx)
+            if self.val == '>>':
+                return greedy[0].rshift(greedy[1], ctx)
+            if self.val == '=':
+                return greedy[0].eq(greedy[1], ctx)
+            if self.val == '+':
+                return greedy[0].add(greedy[1], ctx)
+            if self.val == '-':
+                return greedy[0].sub(greedy[1], ctx)
+            if self.val == '*':
+                return greedy[0].mul(greedy[1], ctx)
+            if self.val == '/':
+                return greedy[0].div(greedy[1], ctx)
+            if self.val == '^':
+                return greedy[0].pow(greedy[1], ctx)
+            if self.val == ':':
+                return greedy[0].colon(greedy[1], ctx)
         raise Error((self))
 
 class VM(Active):
@@ -358,6 +400,7 @@ def BYE(ctx=vm):
 ## metainfo
 
 
+vm['MODULE'] = MODULE
 vm['TITLE'] = '[meta]programming [L]anguage'
 vm['ABOUT'] = '''homoiconic metaprogramming system
 * specialized language for generative (meta)programming
@@ -397,6 +440,9 @@ class Class(Meta):
     def apply(self, that, ctx):
         return self.cls(that.val)
 
+    def colon(self, that, ctx):
+        return self.apply(that, ctx)
+
     def py(self):
         p = '\nclass %s' % self.val
         p += ':\n'
@@ -422,6 +468,8 @@ class Module(Meta):
         self['readme'] = File('README.md')
         self['dir'] // self['readme']
 
+
+vm >> Class(Module)
 
 class Section(Meta):
     def py(self):
