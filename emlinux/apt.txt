@@ -1,3 +1,4 @@
 git make build-essential
 libncurses-dev
 gettext
+u-boot-tools

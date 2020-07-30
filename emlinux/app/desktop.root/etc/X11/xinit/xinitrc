@@ -34,4 +34,5 @@ fi
 
 #xclock &
 xterm &
-exec fluxbox
+#exec fluxbox
+exec ratpoison

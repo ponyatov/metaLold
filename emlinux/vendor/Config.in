@@ -1,3 +1,15 @@
 comment "https://github.com/ponyatov/nimbook/wiki/emLinux"
+comment "************************************************"
 
+source "$BR2_EXTERNAL_VENDOR_PATH/../app/console.kconfig"
+source "$BR2_EXTERNAL_VENDOR_PATH/../hw/hw.kconfig"
+source "$BR2_EXTERNAL_VENDOR_PATH/../cpu/cpu.kconfig"
+comment "******************* platform *******************"
+source "$BR2_EXTERNAL_VENDOR_PATH/sound.kconfig"
+source "$BR2_EXTERNAL_VENDOR_PATH/X11.kconfig"
+source "$BR2_EXTERNAL_VENDOR_PATH/SDL.kconfig"
+source "$BR2_EXTERNAL_VENDOR_PATH/SDL2.kconfig"
+source "$BR2_EXTERNAL_VENDOR_PATH/GL.kconfig"
+
+comment "********************** SDK *********************"
 source "$BR2_EXTERNAL_VENDOR_PATH/package/nim/Config.in"

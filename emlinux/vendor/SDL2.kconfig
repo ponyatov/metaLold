@@ -1,0 +1,25 @@
+config BR2_VENDOR_SDL2
+	bool "SDL2"
+    help
+        SDL v.2
+    depends on BR2_VENDOR_APP_DESKTOP||BR2_VENDOR_APP_GAMEBOX
+    default y if BR2_VENDOR_APP_GAMEBOX
+
+if BR2_VENDOR_SDL2
+
+config BR2_VENDOR_SDL2_X11
+	bool "x11"
+    default y
+    select BR2_PACKAGE_SDL2_X11 if BR2_VENDOR_X11
+
+config BR2_VENDOR_SDL2_IMAGE
+	bool "image"
+    default y
+    select BR2_PACKAGE_SDL2_IMAGE
+
+config BR2_VENDOR_SDL2_TTF
+	bool "ttf"
+    default y
+    select BR2_PACKAGE_SDL2_TTF
+
+endif # BR2_VENDOR_SDL2

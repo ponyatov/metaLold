@@ -1,11 +1,10 @@
-APP = desktop
-HW  = qemu386
-#qemu386
-#miniG4
+-include local.mk
+APP ?= desktop
+HW  ?= qemu386
 
-include app/$(APP).mk
-include hw/$(HW).mk
-include cpu/$(CPU).mk
+include  app/$(APP).mk
+include   hw/$(HW).mk
+include  cpu/$(CPU).mk
 include arch/$(ARCH).mk
 
 
@@ -27,7 +26,7 @@ BUILDROOT_GZ  = $(BUILDROOT).tar.bz2
 
 
 .PHONY: all
-all: dirs gz fw emu
+all: dirs gz build emu
 
 GZ  ?= $(HOME)/gz
 TMP ?= $(CWD)/tmp
@@ -52,24 +51,19 @@ $(GZ)/$(BUILDROOT_GZ):
 
 XMAKE = $(MAKE) BR2_EXTERNAL=$(VENDOR)
 
-CONFIG_BUILDROOT  = $(CWD)/all/all.buildroot $(CWD)/app/$(APP).buildroot
+CONFIG_BUILDROOT  = $(CWD)/all/all.buildroot
 CONFIG_BUILDROOT += $(CWD)/arch/$(ARCH).buildroot $(CWD)/cpu/$(CPU).buildroot $(CWD)/hw/$(HW).buildroot
-CONFIG_KERNEL     = $(CWD)/all/all.kernel $(CWD)/app/$(APP).kernel
+CONFIG_BUILDROOT += $(CWD)/app/$(APP).buildroot
+CONFIG_KERNEL     = $(CWD)/all/all.kernel
 CONFIG_KERNEL    += $(CWD)/arch/$(ARCH).kernel $(CWD)/cpu/$(CPU).kernel $(CWD)/hw/$(HW).kernel
+CONFIG_KERNEL    += $(CWD)/app/$(APP).kernel
 CONFIG_ROOT       = $(CWD)/all/root $(CWD)/app/$(APP).root
 
+# APPFILES = $(shell find app/$(APP).root -type f )
+
 .PHONY: build
-$(BUILDROOT)/.config: build
-build: $(BUILDROOT)/README
-	cd $(BUILDROOT) ; $(XMAKE) distclean ; $(XMAKE) allnoconfig
-#	$(MAKE) rebuild
-
-APPFILES = $(shell find app/$(APP).root -type f )
-
-.PHONY: rebuild
-rebuild: $(BUILDROOT)/output/images/bzImage
-$(BUILDROOT)/output/images/bzImage: $(CONFIG_BUILDROOT) $(CONFIG_KERNEL) $(BUILDROOT)/.config $(APPFILES)
-	cd $(BUILDROOT) ;\
+build: 
+	cd $(BUILDROOT) ; $(XMAKE) allnoconfig ;\
 	cat $(CONFIG_BUILDROOT) >> .config &&\
 	echo "BR2_DL_DIR=\"$(TMP)\"" >> .config &&\
 	echo "BR2_ROOTFS_OVERLAY=\"$(CONFIG_ROOT)\"" >> .config &&\
@@ -78,25 +72,34 @@ $(BUILDROOT)/output/images/bzImage: $(CONFIG_BUILDROOT) $(CONFIG_KERNEL) $(BUILD
 	$(XMAKE) menuconfig       &&\
 	$(XMAKE) linux-menuconfig &&\
 	$(XMAKE)
-	$(MAKE) fw
+	$(MAKE) $(KERNEL)
 
 KERNEL = $(FW)/$(APP)_$(HW)_kernel
-
-.PHONY: fw
-fw: $(KERNEL)
-$(KERNEL): $(BUILDROOT)/output/images/bzImage
-	cp $< $@
 
 .PHONY: kernel
 kernel:
 	cd $(BUILDROOT) ;\
 	$(XMAKE) linux-menuconfig &&\
 	$(XMAKE)
-	$(MAKE) fw
+
+.PHONY: fw
+fw: $(KERNEL)
+ifeq ($(ARCH),i386)
+$(KERNEL): $(BUILDROOT)/output/images/bzImage
+	cp $< $@
+else
+$(KERNEL): $(BUILDROOT)/output/images/zImage
+	cp $< $@
+endif
+
 
 .PHONY: emu
 emu: $(KERNEL)
 	qemu-system-$(ARCH) -kernel $< -append "console=ttyS0 $(QEMU_APPEND)" -serial stdio $(QEMU_ARGS)
+#	-vga cirrus
+#	-vga std
+#	-device virtio-gpu-pci (high res with defects)
+#	-vga qxl
 
 
 

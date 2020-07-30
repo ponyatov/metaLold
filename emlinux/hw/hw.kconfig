@@ -1,0 +1,21 @@
+
+choice
+	prompt "$HW"
+	help
+	    Hardware Board
+
+    config BR2_VENDOR_HW_QEMU386
+	bool "qemu386"
+    depends on BR2_i386
+
+    config BR2_VENDOR_HW_RPI3BP
+	bool "rpi3Bp"
+    depends on BR2_arm
+
+    config BR2_VENDOR_HW_MINIG4
+	bool "miniG4"
+    depends on BR2_powerpc
+
+
+endchoice
+

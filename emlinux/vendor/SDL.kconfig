@@ -1,0 +1,44 @@
+config BR2_VENDOR_SDL
+	bool "SDL"
+    help
+        SDL v.1
+    depends on BR2_VENDOR_APP_DESKTOP||BR2_VENDOR_APP_GAMEBOX
+    default y if BR2_VENDOR_APP_CONSOLE
+
+if BR2_VENDOR_SDL
+
+config BR2_VENDOR_SDL_FB
+	bool "framebuffer"
+    default y
+    select BR2_PACKAGE_SDL_FBCON
+
+config BR2_VENDOR_SDL_X11
+	bool "x11"
+    default y
+    select BR2_PACKAGE_SDL_X11 if BR2_VENDOR_X11
+
+config BR2_VENDOR_SDL_IMAGE
+	bool "image"
+    default y
+    select BR2_PACKAGE_SDL_IMAGE
+    select BR2_PACKAGE_SDL_IMAGE_BMP
+    select BR2_PACKAGE_SDL_IMAGE_JPEG
+    select BR2_PACKAGE_SDL_IMAGE_PNG
+
+config BR2_VENDOR_SDL_TTF
+	bool "ttf"
+    default y
+    select BR2_PACKAGE_SDL_TTF
+
+config BR2_VENDOR_SDL_SOUND
+	bool "sound"
+    default y if BR2_VENDOR_SOUND
+    select BR2_PACKAGE_SDL_MIXER
+    select BR2_PACKAGE_SDL_SOUND
+
+config BR2_VENDOR_SDL_NET
+	bool "net"
+    default y
+
+
+endif # BR2_VENDOR_SDL

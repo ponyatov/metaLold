@@ -1,0 +1,29 @@
+
+choice
+	prompt "$APP"
+	help
+	    Application
+
+    config BR2_VENDOR_APP_CONSOLE
+	bool "console"
+    help
+        minimal console Linux
+
+    config BR2_VENDOR_APP_DESKTOP
+	bool "desktop"
+    help
+        desktop system (win95-like functional)
+    select BR2_PACKAGE_GNUCHESS
+
+    config BR2_VENDOR_APP_GAMEBOX
+	bool "gamebox"
+    help
+        low-end indie game console
+    select BR2_PACKAGE_ALSA_UTILS
+    select BR2_PACKAGE_CHOCOLATE_DOOM
+    select BR2_PACKAGE_DOOM_WAD
+    select BR2_PACKAGE_GNUCHESS
+    select BR2_PACKAGE_LBREAKOUT2
+    select BR2_PACKAGE_LTRIS
+
+endchoice

@@ -1,18 +1,26 @@
+## @file
+## @brief powered by `metaL`
+
 MODULE = 'metaL'
 TITLE = '[meta]programming [L]anguage'
-ABOUT = 'homoiconic metaprogramming system'
+ABOUT = '''
+homoiconic metaprogramming system
+* powered by `metaL`'''
 AUTHOR = 'Dmitry Ponyatov'
 EMAIL = 'dponyatov@gmail.com'
 YEAR = 2020
 LICENSE = 'MIT'
-GITHUB = 'https://github.com/ponyatov/'
+GITHUB = 'https://github.com/ponyatov'
 LOGO = 'logo.png'
 
-import os, sys, re, time
+
 import config
+import os, sys
+import re, time
 
+## @defgroup persist Persistence
 
-## persistent storage
+import xxhash
 
 import redis
 
@@ -26,7 +34,7 @@ import json, queue, threading
 class Storage:
 
     def __init__(self, queue_size):
-        self.storage = queue.Queue(queue_size)
+        self.storage = queue.Queue()#queue_size)
         self.thread = None
 
     def __len__(self):
@@ -68,26 +76,37 @@ class Storage:
 
 storage = Storage(0x111)
 
-## graph
+## @defgroup object Object
 
+## @brief base object graph node
+## @ingroup object
 class Object:
+
+    ## construct object
+    ## @param[in] V given scalar value
     def __init__(self, V):
-        if isinstance(V, Object):
-            V = V.val
-        # name / scalar value
+        ## name / scalar value
         self.val = V
-        # attributes = dict = env
+        ## attributes = dict = env
         self.slot = {}
-        # nested AST = vector = stack = queue
+        ## nested AST = vector = stack = queue
         self.nest = []
-        # global storage id (unison hash)
-        self.sync(self) # self.gid
+        ## global storage id
+        ## @ingroup persist
+        self.gid = self.sync().gid
 
-    ## storage
+    ## @name storage/hot-update
+    ## @{
 
-    def sync(self, bypass):
+    ## this method must be called on any object update
+    ## (compute hash, update persistent memory,..)
+    ##
+    ## mostly used in operator methods in form of `return self.sync()`
+    ## @ingroup persist
+    ## @returns self
+    def sync(self):
         # update global hash
-        self.gid = '%.8x' % hash(self)
+        self.gid = hash(self)
         ## sync with storage
         while True:
             try:
@@ -96,39 +115,55 @@ class Object:
             except queue.Full:
                 storage.flush()
                 continue
-        ## bypass object
-        return bypass
+        return self
 
+    ## fast object hashing for global storage id
+    ## @ingroup persist
     def __hash__(self):
-        hsh = xxh32(self._type())
+        hsh = xxhash.xxh32()
+        hsh.update(self._type())
         hsh.update('%s' % self.val)
         for i in self.slot:
-            hsh.update('%s=%s' % (i, self.slot[i].gid))
+            hsh.update(i)
+            hsh.update(self.slot[i].gid.to_bytes(8, 'little'))
         for j in self.nest:
-            hsh.update(j.gid)
+            hsh.update(j.gid.to_bytes(8, 'little'))
         return hsh.intdigest()
 
+    ## serialize to .json
+    ## @ingroup persist
     def json(self):
-        js = {
-            "gid": self.gid,
-            "type": self._type(), "val": self.val,
-            "slot": {},
-            "nest": []
-        }
-        js["nest"] = [j.gid for j in self.nest]
-        return json.dumps(js)
+        js = '{"gid":"%x","type":"%s","val":"%s",' % (
+            self.gid, self._type(), self.val)
+        slots = []
+        for k in sorted(self.slot.keys()):
+            slots.append('"%s":"%.8x"' % (k, self.slot[k].gid))
+        js += '"slot":{%s},' % ','.join(slots)
+        nested = []
+        for i in self.nest:
+            nest.append('"%.8x"' % i.gid)
+        js += '"nest":[%s]' % ','.join(nested)
+        return js + "}"
 
-    ## dump
+    ## @}
 
+    ## @name dump
+    ## @{
+
+    ## `print` callback
     def __repr__(self): return self.dump()
 
-    def test(self): return self.dump(test=True, tab='\t')
+    ## dump for tests (no hash/gid in headers)
+    def test(self): return self.dump(test=True)
 
-    def html(self): return self.dump(test=False, tab=' ' * 2)
-
-    def dump(self, cycle=None, depth=0, prefix='', test=False, tab='\t'):
+    ## dump in full text tree form
+    ## @param[in] cycle already dumped objects (cycle prevention registry)
+    ## @param[in] depth recursion depth
+    ## @param[in] prefix optional prefix in `<T:V>` header
+    ## @param[in] test test dump option @ref test
+    def dump(self, cycle=None, depth=0, prefix='', test=False):
         # header
-        tree = self._pad(depth, tab) + self.head(prefix, test)
+        tree = self._pad(depth) + self.head(prefix, test)
         # cycles
         if not depth:
             cycle = []
@@ -137,67 +172,107 @@ class Object:
         else:
             cycle.append(self)
         # slot{}s
-        for i in sorted(self.slot.keys()):
-            tree += self.slot[i].dump(cycle, depth + 1, '%s = ' % i, test, tab)
+        for k in sorted(self.slot.keys()):
+            tree += self.slot[k].dump(cycle, depth + 1, '%s = ' % k, test)
         # nest[]ed
-        idx = 0
-        for j in self.nest:
-            tree += j.dump(cycle, depth + 1, '%s: ' % idx, test, tab)
-            idx += 1
+        for i, j in enumerate(self.nest):
+            tree += j.dump(cycle, depth + 1, '%s: ' % i, test)
         # subtree
         return tree
 
-    def _pad(self, depth, tab='\t'): return '\n' + tab * depth
+    ## paddig for @ref dump
+    def _pad(self, depth): return '\n' + '\t' * depth
 
+    ## short `<T:V>` header only
+    ## @param[in] prefix optional prefix in `<T:V>` header
+    ## @param[in] test test dump option @ref test
     def head(self, prefix='', test=False):
         hdr = '%s<%s:%s>' % (prefix, self._type(), self._val())
         if not test:
-            hdr += ' @%s' % self.gid
+            hdr += ' #%.8x @%x' % (self.gid, id(self))
         return hdr
 
     def _type(self): return self.__class__.__name__.lower()
+
     def _val(self): return '%s' % self.val
 
-    ## operator
+    ## @}
 
+    ## @name operator
+    ## @{
+
+    ## `A[key] ~> A.slot[key:str] | A.nest[key:int] `
     def __getitem__(self, key):
-        if isinstance(key,str):
-            return self.slot[key]
-        elif isinstance(key,int):
+        if isinstance(key, int):
             return self.nest[key]
-        else:
-            raise TypeError(key)
+        if isinstance(key, str):
+            return self.slot[key]
+        raise TypeError(key)
 
+    ## `A[key] = B`
     def __setitem__(self, key, that):
+        assert isinstance(key, str)
         if isinstance(that, str):
             that = String(that)
         if isinstance(that, int):
             that = Integer(that)
-        assert isinstance(key, str)
         self.slot[key] = that
-        return self.sync(self)
+        return self.sync()
 
+    ## `A << B ~> A[B.type] = B`
     def __lshift__(self, that):
         return self.__setitem__(that._type(), that)
 
+    ## `A >> B ~> A[B.val] = B`
     def __rshift__(self, that):
         return self.__setitem__(that.val, that)
 
+    ## `A // B -> A.push(B)`
     def __floordiv__(self, that):
         if isinstance(that, str):
             that = String(that)
         self.nest.append(that)
-        return self.sync(self)
+        return self.sync()
 
-    ## stack
+    ## @}
+
+    ## @name evaluation
+    ## @{
+
+    ## evaluate in context
+    ## @param[in] ctx context
+    def eval(self, ctx): raise Error((self))
+
+    ## apply as function
+    ## @param[in] ctx context
+    def apply(self, that, ctx): raise Error((self))
+
+    ## @}
+
+    ## @name html
+    ## @{
+    def html(self, ctx): return '<pre id=dump>%s</pre>' % self.dump()
+    ## @}
+
+    ## @name stack
+    ## @{
+
+    def top(self): return self.nest[-1]
+    def tip(self): return self.nest[-2]
+    def pop(self): return self.nest.pop(-1)
+    def pip(self): return self.nest.pop(-2)
+
+    def dup(self): return self // self.top()
+    def drop(self): self.pop(); return self
+    def swap(self): return self // self.pip()
+    def over(self): return self // self.tip()
+    def press(self): self.pip(); return self
+    def dropall(self): self.nest = []; return self
+
+    ## @}
 
     def pop(self):
         return self.sync(self.nest.pop())
-
-    ## evaluate
-
-    def eval(self, ctx): raise Error((self))
-    def apply(self, that, ctx): raise Error((self))
 
     def push(self, that, ctx):
         return self // that
@@ -218,7 +293,8 @@ class Object:
         except KeyError:
             return Undef(that.val) // self
 
-    ## codegen
+    ## @name code generation
+    ## @{
 
     def file(self): return self.json()
     def py(self): return self.json()
@@ -226,27 +302,41 @@ class Object:
     # def cxx(self): return self.json()
     # def cc(self): return self.json()
 
-## error
+    ## @}
 
+
+## @defgroup error Error
+## @ingroup object
+
+## @ingroup error
 class Error(Object, BaseException):
     pass
 
+## @ingroup error
+## undefined variable (forward assignment)
 class Undef(Object):
     def eq(self, that, ctx):
         return self.nest[0].__setitem__(self.val, that)
 
-## primitive
+## @defgroup prim Primitive
+## @ingroup object
 
+## @ingroup prim
 class Primitive(Object):
+    ## primitives evaluates to itself
     def eval(self, ctx): return self
     def file(self): return self.val
 
+## @ingroup prim
 class Symbol(Primitive):
-    # special case: evaluates by name in context
-    def eval(self, ctx):
-        return ctx[self.val]
+    ## symbol evaluates via context lookup
+    def eval(self, ctx): return ctx[self.val]
 
+## @ingroup prim
 class String(Primitive):
+
+    def html(self, ctx): return self.val
+
     def _val(self):
         s = ''
         for c in self.val:
@@ -258,88 +348,122 @@ class String(Primitive):
                 s += c
         return s
 
-    def html(self): return self.val
+    def add(self, that, ctx):
+        if isinstance(that, Object):
+            that = String('%s' % that.val)
+        assert type(self) == type(that)
+        return self.__class__(self.val + that.val)
 
+## @ingroup prim
+## floating point
 class Number(Primitive):
     def __init__(self, V):
         Primitive.__init__(self, float(V))
-        self.sync(self)
 
+    ## @name operator
+    ## @{
+
+    ## `+A`
     def plus(self, ctx):
         return self.__class__(+self.val)
 
+    ## `-A`
     def minus(self, ctx):
         return self.__class__(-self.val)
 
+    ## `A + B`
     def add(self, that, ctx):
         assert type(self) == type(that)
         return self.__class__(self.val + that.val)
 
+    ## `A - B`
     def sub(self, that, ctx):
         assert type(self) == type(that)
         return self.__class__(self.val - that.val)
 
+    ## `A * B`
     def mul(self, that, ctx):
         assert type(self) == type(that)
         return self.__class__(self.val * that.val)
 
+    ## `A / B`
     def div(self, that, ctx):
         assert type(self) == type(that)
         return self.__class__(self.val / that.val)
 
+    ## `A ^ B`
     def pow(self, that, ctx):
         assert type(self) == type(that)
         return self.__class__(self.val ** that.val)
 
+    ## @}
+
+## @ingroup prim
 class Integer(Number):
     def __init__(self, V):
         Primitive.__init__(self, int(V))
-        self.sync(self)
 
-    # def add(self, that, ctx):
-    #     assert type(self) == type(that)
-    #     return Integer(self.val + that.val)
-
-    # def sub(self, that, ctx):
-    #     assert type(self) == type(that)
-    #     return Integer(self.val - that.val)
-
-    # def pow(self, that, ctx):
-    #     assert type(self) == type(that)
-    #     return Number(self.val ** that.val)
-
+## @ingroup prim
+## hexadecimal machine number
 class Hex(Integer):
     def __init__(self, V):
         Primitive.__init__(self, int(V[2:], 0x10))
-        self.sync(self)
 
     def _val(self):
         return hex(self.val)
 
+## @ingroup prim
+## bit string
 class Bin(Integer):
     def __init__(self, V):
         Primitive.__init__(self, int(V[2:], 0x02))
-        self.sync(self)
 
     def _val(self):
         return bin(self.val)
 
-# container
+## @defgroup cont Container
+## @ingroup object
 
+## @ingroup cont
+## generic data container
 class Container(Object):
     pass
+
+## @ingroup cont
+## var size array (Python list)
 class Vector(Container):
-    pass
-class Dict(Container):
-    pass
+    def eval(self, ctx):
+        res = self.__class__(self.val)
+        for i in self.nest:
+            res // i.eval(ctx)
+        return res
+
+## @ingroup cont
+## FIFO stack
 class Stack(Container):
     pass
 
-## active
+## @ingroup cont
+## associative array
+class Dict(Container):
+    pass
 
+
+## @defgroup active Active
+## @ingroup object
+
+## @ingroup active
+## executable data elements
 class Active(Object):
     pass
 
+## @ingroup active
+## function
+class Fn(Active):
+    pass
+
+## @ingroup active
+## operator
 class Op(Active):
     def eval(self, ctx):
         # quote
@@ -381,13 +505,18 @@ class Op(Active):
                 return greedy[0].pow(greedy[1], ctx)
             if self.val == ':':
                 return greedy[0].colon(greedy[1], ctx)
+        # unknown
         raise Error((self))
 
+## @ingroup active
+## Virtual Machine (environment + stack + message queue)
 class VM(Active):
     pass
 
 
-ctx = vm = VM(MODULE)
+## @ingroup active
+## global system VM
+vm = VM(MODULE)
 vm << vm
 
 ## debug/control

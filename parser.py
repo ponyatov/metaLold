@@ -37,8 +37,6 @@ def t_str_nl(t):
     t.lexer.lineno += len(t.value)
     t.lexer.string += t.value
 
-def t_ANY_error(t): raise SyntaxError(t)
-
 def t_exit(t):
     r'exit\(\)'
     return t
@@ -116,6 +114,8 @@ def t_symbol(t):
     return t
 
 
+def t_ANY_error(t): raise SyntaxError(t)
+
 lexer = lex.lex()
 
 
@@ -125,12 +125,12 @@ import ply.yacc as yacc
 
 precedence = (
     ('left', 'eq',),
-    ('left', 'dot',),
     ('left', 'push', 'lshift', 'rshift',),
     ('left', 'add', 'sub'),
     ('left', 'mul', 'div'),
     ('left', 'pow', ),
     ('left', 'pfx', ),
+    ('left', 'dot',),
     ('nonassoc', 'colon',),
 )
 

@@ -19,6 +19,11 @@ WGET = wget -c --no-check-certificate
 %: $(PY) $(MODULE).py %.py $(PYT) test_$(MODULE).py test_%.py
 	$(PYT) test_$(MODULE).py test_$@.py
 	$(PY) -i $@.py
+	$(MAKE) $@
+%: $(PY) $(MODULE).py %.py $(PYT) test_$(MODULE).py
+	$(PYT) test_$(MODULE).py
+	$(PY) -i $@.py
+	$(MAKE) $@
 
 TESTS = $(shell ls test_*.py)
 .PHONY: test

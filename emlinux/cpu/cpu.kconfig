@@ -1,0 +1,18 @@
+choice
+	prompt "$CPU"
+	help
+	    SoC/CPU
+
+    config BR2_VENDOR_CPU_I486
+	bool "i486"
+    depends on BR2_x86_i486
+
+    config BR2_VENDOR_CPU_BCM2937
+	bool "BCM2837"
+    depends on BR2_cortex_a53
+
+    config BR2_VENDOR_CPU_7447G4
+	bool "7447g4"
+    depends on BR2_powerpc_7400
+
+endchoice
